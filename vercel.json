@@ -1,0 +1,12 @@
+{
+  "routes": [
+    {
+      "src": "/emergency-contact",
+      "dest": "/emergency-contact.html"
+    },
+    {
+      "src": "/",
+      "dest": "/emergency-contact.html"
+    }
+  ]
+}
