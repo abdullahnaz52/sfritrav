@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Contact - Safar-ar-Rooh</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1a5e63;
+            --secondary: #d4af37;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --accent: #8e6c4c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            position: relative;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+        
+        .emergency-banner {
+            background-color: #e74c3c;
+            color: white;
+            padding: 10px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        
+        /* Main Content */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            padding: 2rem 0;
+        }
+        
+        @media (min-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-header i {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+        
+        .card-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .info-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .info-label {
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .info-value {
+            color: var(--dark);
+        }
+        
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        
+        .contact-item i {
+            color: var(--primary);
+            font-size: 1.2rem;
+            width: 30px;
+        }
+        
+        .hotel-card {
+            background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url('https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .flight-card {
+            background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--primary);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        
+        @media (min-width: 768px) {
+            .footer-content {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+        
+        .company-info {
+            flex: 1;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        
+        .social-link:hover {
+            background-color: var(--secondary);
+        }
+        
+        .powered-by {
+            text-align: center;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 1rem;
+        }
+        
+        .powered-by a {
+            color: var(--secondary);
+            text-decoration: none;
+        }
+        
+        .powered-by a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">Safar-ar-Rooh</div>
+            <div class="tagline">Hajj and Umrah Services</div>
+            <h1>Emergency Contact Information</h1>
+        </div>
+    </header>
+    
+    <div class="emergency-banner">
+        <div class="container">
+            <i class="fas fa-exclamation-triangle"></i> For Emergency Assistance Only
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="main-content">
+            <!-- Group Details Card -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-users"></i>
+                    <h2 class="card-title">Umrah Group Details</h2>
+                </div>
+                <div class="info-group">
+                    <div class="info-label">Umrah Batch</div>
+                    <div class="info-value">November 11, 2025 Group</div>
+                </div>
+                <div class="info-group">
+                    <div class="info-label">Arrived in KSA</div>
+                    <div class="info-value">November 11, 2025</div>
+                </div>
+                <div class="info-group">
+                    <div class="info-label">Route</div>
+                    <div class="info-value">Srinagar - Delhi - Jeddah - Delhi - Srinagar</div>
+                </div>
+                <div class="info-group">
+                    <div class="info-label">Citizenship</div>
+                    <div class="info-value">India</div>
+                </div>
+                <div class="info-group">
+                    <div class="info-label">Region</div>
+                    <div class="info-value">Jammu and Kashmir</div>
+                </div>
+            </div>
+            
+            <!-- Contact Information Card -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-phone-alt"></i>
+                    <h2 class="card-title">Contact Information</h2>
+                </div>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-building"></i>
+                        <div>
+                            <div class="info-label">Company Name</div>
+                            <div class="info-value">Safar-ar-Rooh | Hajj and Umrah Services</div>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <div class="info-label">Company Phone</div>
+                            <div class="info-value">(India) +91-9906124327</div>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <div class="info-label">Company Email</div>
+                            <div class="info-value">aroohsafar@gmail.com</div>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <div class="info-label">Company Address</div>
+                            <div class="info-value">New Airport Road, Hyderpora, Opposite J&K Bank near Masjid Umer, Srinagar, Jammu and Kashmir - 190014</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Hotel Information Card -->
+            <div class="card hotel-card">
+                <div class="card-header">
+                    <i class="fas fa-hotel"></i>
+                    <h2 class="card-title">Hotel Information</h2>
+                </div>
+                <div class="info-group">
+                    <div class="info-label">Makkah Hotel</div>
+                    <div class="info-value">Emaar Khair Al Masi</div>
+                </div>
+                <div class="info-group">
+                    <div class="info-label">Madina Hotel</div>
+                    <div class="info-value">Markaziyah</div>
+                </div>
+            </div>
+            
+            <!-- Flight Information Card -->
+            <div class="card flight-card">
+                <div class="card-header">
+                    <i class="fas fa-plane"></i>
+                    <h2 class="card-title">Flight Information</h2>
+                </div>
+                <div class="info-group">
+                    <div class="info-label">Airline</div>
+                    <div class="info-value">Air India (PNR-SXDQFK)</div>
+                </div>
+                <div class="info-group">
+                    <div class="info-label">Aircraft</div>
+                    <div class="info-value">AI1810 - AI2255 - AI2256 - AI1739</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="company-info">
+                    <h3>Safar-ar-Rooh</h3>
+                    <p>Your trusted partner for Hajj and Umrah services</p>
+                    <div class="social-links">
+                        <a href="https://www.instagram.com/safararrooh/" class="social-link" target="_blank">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://www.facebook.com/people/Safar-Ar-Rooh/61560501666296/?_rdr" class="social-link" target="_blank">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="powered-by">
+                Powered by <a href="https://www.neurigenx.com" target="_blank">Neurigenx</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
