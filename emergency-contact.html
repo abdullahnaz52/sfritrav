@@ -65,6 +65,33 @@
             font-size: 1.2rem;
             text-align: center;
             margin-bottom: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .whatsapp-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #25D366;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-left: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .whatsapp-cta:hover {
+            background-color: #128C7E;
+            transform: scale(1.05);
+        }
+        
+        .whatsapp-cta i {
+            font-size: 1.2rem;
         }
         
         /* Main Content */
@@ -147,14 +174,28 @@
             width: 30px;
         }
         
-        .hotel-card {
-            background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url('https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
-            background-size: cover;
-            background-position: center;
+        .whatsapp-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #25D366;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 5px;
+            transition: all 0.3s ease;
         }
         
-        .flight-card {
-            background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+        .whatsapp-btn:hover {
+            background-color: #128C7E;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .hotel-card {
+            background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url('https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
             background-size: cover;
             background-position: center;
         }
@@ -237,6 +278,9 @@
     <div class="emergency-banner">
         <div class="container">
             <i class="fas fa-exclamation-triangle"></i> For Emergency Assistance Only
+            <a href="https://wa.me/919906124327?text=Hello%20Safar-ar-Rooh%2C%20I%20need%20emergency%20assistance%20for%20the%20January%202026%20Umrah%20Group" class="whatsapp-cta" target="_blank">
+                <i class="fab fa-whatsapp"></i> WhatsApp Emergency
+            </a>
         </div>
     </div>
     
@@ -250,15 +294,11 @@
                 </div>
                 <div class="info-group">
                     <div class="info-label">Umrah Batch</div>
-                    <div class="info-value">November 11, 2025 Group</div>
+                    <div class="info-value">January 2026 Umrah Group</div>
                 </div>
                 <div class="info-group">
                     <div class="info-label">Arrived in KSA</div>
-                    <div class="info-value">November 11, 2025</div>
-                </div>
-                <div class="info-group">
-                    <div class="info-label">Route</div>
-                    <div class="info-value">Srinagar - Delhi - Jeddah - Delhi - Srinagar</div>
+                    <div class="info-value">January 2026</div>
                 </div>
                 <div class="info-group">
                     <div class="info-label">Citizenship</div>
@@ -289,6 +329,9 @@
                         <div>
                             <div class="info-label">Company Phone</div>
                             <div class="info-value">(India) +91-9906124327</div>
+                            <a href="https://wa.me/919906124327?text=Hello%20Safar-ar-Rooh%2C%20I%20need%20emergency%20assistance%20for%20the%20January%202026%20Umrah%20Group" class="whatsapp-btn" target="_blank">
+                                <i class="fab fa-whatsapp"></i> Message on WhatsApp
+                            </a>
                         </div>
                     </div>
                     <div class="contact-item">
@@ -316,28 +359,17 @@
                 </div>
                 <div class="info-group">
                     <div class="info-label">Makkah Hotel</div>
-                    <div class="info-value">Emaar Khair Al Masi</div>
+                    <div class="info-value">Oscorn Hotel</div>
                 </div>
                 <div class="info-group">
                     <div class="info-label">Madina Hotel</div>
-                    <div class="info-value">Markaziyah</div>
+                    <div class="info-value">Manar Al Madinah</div>
                 </div>
             </div>
             
-            <!-- Flight Information Card -->
-            <div class="card flight-card">
-                <div class="card-header">
-                    <i class="fas fa-plane"></i>
-                    <h2 class="card-title">Flight Information</h2>
-                </div>
-                <div class="info-group">
-                    <div class="info-label">Airline</div>
-                    <div class="info-value">Air India (PNR-SXDQFK)</div>
-                </div>
-                <div class="info-group">
-                    <div class="info-label">Aircraft</div>
-                    <div class="info-value">AI1810 - AI2255 - AI2256 - AI1739</div>
-                </div>
+            <!-- Empty card to maintain layout -->
+            <div class="card" style="visibility: hidden;">
+                <!-- This card is hidden but maintains the grid layout -->
             </div>
         </div>
     </div>
