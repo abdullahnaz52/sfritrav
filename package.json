@@ -1,0 +1,19 @@
+{
+  "name": "sfritrav",
+  "version": "1.0.0",
+  "description": "SfriTrav - Kashmir Travel, Hajj & Umrah, Lifestyle Blog",
+  "type": "module",
+  "engines": {
+    "node": ">=18.x"
+  },
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "vercel": "^33.0.0"
+  },
+  "keywords": ["travel", "kashmir", "hajj", "umrah", "blog"],
+  "license": "MIT"
+}
