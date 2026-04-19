@@ -1,195 +1,144 @@
 /**
- * Vercel Serverless Function: /api/generate-article
- * Generates travel/lifestyle articles using Groq API (free tier)
- * Model: llama-3.3-70b-versatile — fast, high quality, FREE
- * Free tier: 14,400 req/day, 30 req/min — plenty for 3 articles/day
- * Sign up at: https://console.groq.com
- * CRON: Called daily via Vercel Cron Jobs
+ * /api/generate-article.js
+ * Generates articles using Groq API (free tier)
+ * Model: llama-3.3-70b-versatile
+ * Sign up free at: https://console.groq.com
  */
 
 const GROQ_API = 'https://api.groq.com/openai/v1/chat/completions';
 
-// Rate limiting store (in-memory, resets per cold start)
 const rateLimitStore = new Map();
-
-function checkRateLimit(ip, limit = 10, windowMs = 60000) {
+function checkRateLimit(ip) {
   const now = Date.now();
-  const key = ip;
-  let record = rateLimitStore.get(key);
-  if (!record) { record = { count: 0, reset: now + windowMs }; rateLimitStore.set(key, record); }
-  if (now > record.reset) { record.count = 0; record.reset = now + windowMs; }
-  record.count++;
-  return record.count <= limit;
+  let r = rateLimitStore.get(ip) || { count: 0, reset: now + 60000 };
+  if (now > r.reset) { r.count = 0; r.reset = now + 60000; }
+  r.count++; rateLimitStore.set(ip, r);
+  return r.count <= 20;
 }
+function sanitize(s) { return typeof s === 'string' ? s.replace(/[<>&"'`]/g, '').substring(0, 300) : ''; }
+function slugify(t) { return String(t).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').substring(0, 100); }
 
-function sanitizeInput(str) {
-  if (typeof str !== 'string') return '';
-  return str.replace(/[<>&"'`]/g, '').substring(0, 200);
-}
-
-const CATEGORY_CONTEXT = {
-  kashmir: 'Kashmir Valley travel, Dal Lake, Gulmarg, Pahalgam, Srinagar, trekking, houseboats, Kashmiri cuisine, culture, tourism',
-  'hajj-umrah': 'Hajj pilgrimage, Umrah journey, Makkah, Madinah, spiritual travel, Islamic tourism, Nusuk platform, SafarArRooh, pilgrimage tips',
-  lifestyle: 'Islamic lifestyle, modest living, Kashmiri crafts, travel lifestyle, cultural experiences, food and culture',
-  perfumes: 'Arabic attars, oud perfumes, Islamic fragrances, non-alcoholic perfumes, luxury perfumery, SafarOoh shop',
-  'india-travel': 'India travel destinations, heritage sites, cultural tourism, budget travel India, offbeat destinations',
+const CAT_CONTEXT = {
+  'health':        'Health tips, fitness, nutrition, preventive care, diseases, wellness habits for Indian audiences',
+  'travel':        'Travel destinations in India and worldwide, itineraries, budget travel, hidden gems, travel tips',
+  'politics':      'Indian and global politics, elections, government policies, geopolitics',
+  'entertainment': 'Bollywood, Hollywood, OTT series, celebrities, movies, music, awards',
+  'sports':        'Cricket, IPL, football, kabaddi, Olympics, Indian sports, athlete profiles',
+  'technology':    'Smartphones, gadgets, AI, apps, tech companies, reviews, how-to guides',
+  'business':      'Indian stock market, startups, economy, personal finance, investing, Sensex, Nifty',
+  'women-health':  "Women's health, PCOS, skincare, fertility, hormones, beauty tips for Indian women",
+  'men-health':    "Men's health, fitness, testosterone, grooming, hair loss, lifestyle tips",
+  'food':          'Indian recipes, restaurant reviews, food trends, nutrition, street food, cooking tips',
+  'environment':   'Climate change in India, pollution, sustainable living, weather events, conservation',
+  'fashion':       'Fashion trends, styling tips, Indian fashion, beauty products, makeup, skincare',
+  'mental-health': 'Mental health awareness, stress, anxiety, depression, therapy, mindfulness for Indian readers',
+  'jobs':          'Government jobs in India, UPSC, SSC, private sector careers, job tips, resume advice',
+  'ayurveda':      'Ayurvedic remedies, herbs, holistic wellness, traditional Indian medicine, home remedies',
+  'kids':          'Parenting tips, child development, education, school, kids health, activities for children',
+  'global-news':   'International news, world affairs, global events, foreign policy, conflicts, diplomacy',
+  'india-news':    'Breaking news from India, current events, government announcements, economy, society',
 };
 
 export default async function handler(req, res) {
-  // Security headers
   res.setHeader('X-Content-Type-Options', 'nosniff');
-  res.setHeader('X-Frame-Options', 'DENY');
-  res.setHeader('X-XSS-Protection', '1; mode=block');
-  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
-  res.setHeader('Content-Security-Policy', "default-src 'none'");
-
-  // Only POST
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  // Rate limit by IP
-  const ip = req.headers['x-forwarded-for']?.split(',')[0] || req.socket?.remoteAddress || 'unknown';
-  if (!checkRateLimit(ip, 20, 60000)) {
-    return res.status(429).json({ error: 'Rate limit exceeded' });
-  }
+  const ip = req.headers['x-forwarded-for']?.split(',')[0] || 'unknown';
+  if (!checkRateLimit(ip)) return res.status(429).json({ error: 'Rate limit exceeded' });
 
-  // Validate auth token (set ARTICLE_GEN_SECRET in Vercel env)
-  const authHeader = req.headers['authorization'] || '';
-  const secret = process.env.ARTICLE_GEN_SECRET;
-  if (secret && authHeader !== `Bearer ${secret}`) {
-    // Allow calls without auth from same origin (browser clients)
-    const origin = req.headers.origin || '';
-    if (!origin.includes('sfritrav.com') && !origin.includes('localhost')) {
-      return res.status(401).json({ error: 'Unauthorized' });
-    }
-  }
-
-  // Parse body
   let category, topic;
   try {
     const body = typeof req.body === 'object' ? req.body : JSON.parse(req.body);
-    category = sanitizeInput(body.category || 'kashmir');
-    topic = sanitizeInput(body.topic || 'Kashmir Valley travel tips');
-  } catch {
-    return res.status(400).json({ error: 'Invalid request body' });
-  }
+    category = sanitize(body.category || 'health');
+    topic    = sanitize(body.topic    || 'Health tips for 2025');
+  } catch { return res.status(400).json({ error: 'Invalid request body' }); }
 
-  // Validate category
-  const validCats = ['kashmir', 'hajj-umrah', 'lifestyle', 'perfumes', 'india-travel'];
-  if (!validCats.includes(category)) category = 'kashmir';
+  const validCats = Object.keys(CAT_CONTEXT);
+  if (!validCats.includes(category)) category = 'health';
 
-  const context = CATEGORY_CONTEXT[category] || '';
-
-  const systemPrompt = `You are a senior travel and lifestyle editor for SfriTrav.com, an Indian travel blog focused on Kashmir, Hajj & Umrah pilgrimages, luxury perfumes, and lifestyle. 
-Your writing is expert, warm, culturally sensitive, and SEO-optimised for Indian audiences.
-Write in clear British English with an authoritative but approachable tone.
-Always provide factually accurate, helpful information.
-Format responses as clean JSON only — no markdown code fences.`;
+  const systemPrompt = `You are a professional journalist and content editor for SfriTrav.com, a popular Indian news and lifestyle blog. 
+Write in clear, modern English. Be factual, helpful, and engaging. 
+Target audience: Indian readers aged 18-45.
+Format your response as a single valid JSON object — no markdown fences, no extra text.`;
 
   const userPrompt = `Write a detailed blog article about: "${topic}"
+Category: ${category} — Context: ${CAT_CONTEXT[category]}
 
-Context for this category (${category}): ${context}
+Requirements:
+- 500-800 words, well-structured with H2 subheadings
+- SEO-optimised with natural keywords
+- Include specific facts, numbers, and actionable advice
+- Relevant to Indian readers where applicable
+- Mention current year (2025) context where relevant
 
-The article should:
-- Be 600-900 words, well-structured with H2/H3 subheadings
-- Be SEO-optimised with natural keyword placement
-- Include practical, actionable advice
-- Reference SafarArRooh (https://safararrooh.com) for Hajj/Umrah, Nusuk (https://nusuk.sa), or SafarOoh Shop (https://safarooh.shop) for perfumes where naturally relevant (not forced)
-- Be culturally accurate and respectful of Islamic practices
-- Include specific INR prices where relevant (approximate 2025 figures)
-
-Return ONLY this JSON (no extra text, no markdown fences):
+Return ONLY this JSON (no code fences, no extra text):
 {
-  "title": "SEO-optimised article title",
-  "excerpt": "155-character meta description / excerpt",
+  "title": "Compelling SEO headline under 70 chars",
+  "excerpt": "Engaging meta description 120-155 chars",
   "readTime": "X min",
-  "tags": ["tag1", "tag2", "tag3", "tag4", "tag5"],
-  "body": "Full article HTML with <h2>, <h3>, <p>, <ul>, <li>, <blockquote>, <a> tags only. No scripts. No inline styles.",
-  "slug": "url-friendly-slug"
+  "tags": ["tag1","tag2","tag3","tag4","tag5"],
+  "body": "Full article HTML using only <h2><h3><p><ul><li><ol><strong><em><blockquote><a> tags",
+  "slug": "url-friendly-slug-under-60-chars"
 }`;
 
   try {
     const apiKey = process.env.GROQ_API_KEY;
-    if (!apiKey) {
-      // Return mock article if no API key (dev mode)
-      console.warn('GROQ_API_KEY not set — returning mock article');
-      return res.status(200).json(mockArticle(topic, category));
-    }
+    if (!apiKey) return res.status(200).json(mockArticle(topic, category));
 
     const response = await fetch(GROQ_API, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-      },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
       body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile', // Free, fast, high quality
+        model: 'llama-3.3-70b-versatile',
         max_tokens: 2000,
         temperature: 0.7,
         messages: [
           { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt },
+          { role: 'user',   content: userPrompt },
         ],
       }),
     });
 
-    if (!response.ok) {
-      const errText = await response.text();
-      console.error('Groq API error:', response.status, errText);
-      return res.status(200).json(mockArticle(topic, category)); // Graceful fallback
-    }
+    if (!response.ok) { const e = await response.text(); console.error('Groq error:', response.status, e); return res.status(200).json(mockArticle(topic, category)); }
 
     const data = await response.json();
     const content = data.choices?.[0]?.message?.content || '';
 
-    // Parse JSON response
     let article;
     try {
-      // Strip any accidental markdown fences
-      const clean = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+      const clean = content.replace(/```json\n?/g,'').replace(/```\n?/g,'').trim();
       article = JSON.parse(clean);
-    } catch {
-      console.error('JSON parse failed:', content.substring(0, 200));
-      return res.status(200).json(mockArticle(topic, category));
-    }
+    } catch { console.error('JSON parse fail:', content.substring(0,200)); return res.status(200).json(mockArticle(topic, category)); }
 
-    // Sanitize output
-    article.title = (article.title || topic).substring(0, 200);
+    article.title   = (article.title   || topic).substring(0, 200);
     article.excerpt = (article.excerpt || '').substring(0, 200);
-    article.slug = (article.slug || slugify(article.title)).substring(0, 100);
-    article.tags = (article.tags || []).slice(0, 8).map(t => String(t).substring(0, 50));
-    article.readTime = article.readTime || '7 min';
-    // Body: strip script tags for safety
-    article.body = (article.body || '').replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '').replace(/on\w+="[^"]*"/g, '');
+    article.slug    = (article.slug    || slugify(article.title)).substring(0, 100);
+    article.tags    = (article.tags    || []).slice(0, 8).map(t => String(t).substring(0, 50));
+    article.readTime = article.readTime || '6 min';
+    article.body    = (article.body    || '').replace(/<script[^>]*>[\s\S]*?<\/script>/gi,'').replace(/on\w+="[^"]*"/g,'');
+    article.category = category;
 
-    // Cache-Control: articles are good for 1 hour
     res.setHeader('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=7200');
     return res.status(200).json(article);
 
-  } catch (err) {
-    console.error('generate-article error:', err);
-    return res.status(200).json(mockArticle(topic, category));
-  }
-}
-
-function slugify(text) {
-  return String(text).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').substring(0, 100);
+  } catch (err) { console.error('generate-article error:', err); return res.status(200).json(mockArticle(topic, category)); }
 }
 
 function mockArticle(topic, category) {
   return {
-    title: `Discover ${topic}: A Complete Travel Guide`,
-    excerpt: `Everything you need to know about ${topic}. Expert tips, practical advice, and insider knowledge for your next journey.`,
-    readTime: '6 min',
-    tags: [topic, category, 'Travel', 'Guide', 'India'],
-    slug: slugify(`discover-${topic}`),
-    body: `<p>Welcome to your complete guide to <strong>${topic}</strong>. This is one of the most sought-after experiences in the region, and with good reason.</p>
-<h2>Getting Started</h2>
-<p>Planning your visit requires some advance preparation. The best time to visit is typically between October and March when the weather is most favorable.</p>
-<h2>What to Expect</h2>
-<p>The experience is truly unique — a blend of culture, natural beauty, and authentic local hospitality that you won't find anywhere else in India.</p>
-<h2>Practical Information</h2>
-<p>Budget approximately ₹3,000–₹8,000 per day inclusive of accommodation, meals, and local transport. Book in advance during peak season.</p>
-<h2>Final Thoughts</h2>
-<p>Whether you're a first-time visitor or returning traveller, this destination never ceases to inspire. Add it to your bucket list today.</p>`
+    title: `${topic}: Complete Guide for 2025`,
+    excerpt: `Everything you need to know about ${topic}. Expert tips, facts, and actionable advice for Indian readers in 2025.`,
+    readTime: '5 min', category,
+    tags: [topic, category, 'India', '2025', 'Guide'],
+    slug: slugify(topic),
+    body: `<p>This comprehensive guide covers everything you need to know about <strong>${topic}</strong> in 2025.</p>
+<h2>Why This Matters</h2>
+<p>Understanding ${topic} is increasingly important for Indians today. With changing lifestyle patterns and growing awareness, this topic has never been more relevant.</p>
+<h2>Key Facts</h2>
+<p>Research and expert opinion consistently point to several important considerations. Staying informed helps you make better decisions for yourself and your family.</p>
+<h2>Practical Advice</h2>
+<p>Start with small, sustainable changes. Consult qualified professionals for personalised guidance. Use reliable sources for ongoing information.</p>
+<h2>Next Steps</h2>
+<p>Take action today. Share this article with someone who could benefit from it. Bookmark SfriTrav.com for daily updates on ${category} and more.</p>`
   };
 }
