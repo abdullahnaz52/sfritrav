@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search — SfriTrav</title>
+  <meta name="description" content="Search through Kashmir travel guides, Hajj & Umrah articles, perfume reviews and lifestyle content on SfriTrav.">
+  <meta name="robots" content="noindex, follow">
+  <link rel="stylesheet" href="/public/css/style.css">
+  <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+  <style>
+    .search-hero { background: linear-gradient(135deg, #0f3460 0%, #16213e 100%); padding: 3rem 0 2rem; color: #fff; }
+    .search-hero h1 { font-size: clamp(1.6rem, 4vw, 2.4rem); margin-bottom: 1.5rem; }
+    .search-box { display: flex; gap: .5rem; max-width: 640px; }
+    .search-input { flex: 1; padding: .875rem 1.25rem; border-radius: 8px; border: none; font-size: 1rem; outline: none; }
+    .search-input:focus { box-shadow: 0 0 0 3px rgba(255,255,255,.3); }
+    .search-btn { padding: .875rem 1.5rem; background: var(--accent, #e63946); color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .search-btn:hover { opacity: .9; }
+    .search-filters { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: 1.25rem; }
+    .filter-btn { padding: .35rem .9rem; border-radius: 20px; border: 1px solid rgba(255,255,255,.4); background: transparent; color: #fff; font-size: .85rem; cursor: pointer; transition: all .2s; }
+    .filter-btn.active, .filter-btn:hover { background: rgba(255,255,255,.2); border-color: #fff; }
+    .search-results { padding: 2.5rem 0; }
+    .results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+    .no-results { text-align: center; padding: 4rem 1rem; color: var(--text-muted, #666); }
+    .no-results .nr-icon { font-size: 3rem; margin-bottom: 1rem; }
+    .highlight { background: #fff3cd; padding: 0 2px; border-radius: 2px; }
+    .search-suggestion { margin-top: 2rem; padding: 1.5rem; background: var(--bg-alt, #f8f9fa); border-radius: 12px; }
+    .suggestion-tags { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem; }
+    .sug-tag { padding: .3rem .75rem; background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e5e5); border-radius: 20px; font-size: .85rem; cursor: pointer; transition: all .2s; text-decoration: none; color: inherit; }
+    .sug-tag:hover { background: var(--accent, #e63946); color: #fff; border-color: var(--accent, #e63946); }
+  </style>
+</head>
+<body>
+
+<header class="site-header" id="siteHeader">
+  <div class="container header-inner">
+    <a href="/" class="logo" aria-label="SfriTrav Home">
+      <span class="logo-icon">✈</span>
+      <span class="logo-text">SfriTrav<span class="logo-dot">.</span>com</span>
+    </a>
+    <nav class="main-nav" id="mainNav" aria-label="Main navigation">
+      <ul class="nav-list">
+        <li><a href="/" class="nav-link">Home</a></li>
+        <li><a href="/pages/category.html?cat=kashmir" class="nav-link">Kashmir</a></li>
+        <li><a href="/pages/category.html?cat=hajj-umrah" class="nav-link">Hajj & Umrah</a></li>
+        <li><a href="/pages/category.html?cat=perfumes" class="nav-link">Perfumes</a></li>
+        <li><a href="/pages/category.html?cat=india-travel" class="nav-link">India</a></li>
+        <li><a href="/pages/about.html" class="nav-link">About</a></li>
+      </ul>
+    </nav>
+    <div class="header-actions">
+      <a href="/pages/search.html" class="btn-icon" aria-label="Search">🔍</a>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="search-hero">
+    <div class="container">
+      <h1>Search SfriTrav</h1>
+      <div class="search-box" role="search">
+        <label for="searchInput" class="sr-only">Search articles</label>
+        <input type="search" id="searchInput" class="search-input" placeholder="Search Kashmir, Hajj, perfumes, travel…" autocomplete="off" spellcheck="false">
+        <button class="search-btn" id="searchBtn" aria-label="Submit search">Search</button>
+      </div>
+      <div class="search-filters" role="group" aria-label="Filter by category">
+        <button class="filter-btn active" data-cat="all">All</button>
+        <button class="filter-btn" data-cat="kashmir">🏔️ Kashmir</button>
+        <button class="filter-btn" data-cat="hajj-umrah">🕌 Hajj & Umrah</button>
+        <button class="filter-btn" data-cat="perfumes">🌹 Perfumes</button>
+        <button class="filter-btn" data-cat="lifestyle">✨ Lifestyle</button>
+        <button class="filter-btn" data-cat="india-travel">🇮🇳 India</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="search-results">
+    <div class="container">
+      <div class="results-header" id="resultsHeader" style="display:none">
+        <p class="results-count" id="resultsCount"></p>
+        <p class="results-query" id="resultsQuery" style="color:var(--text-muted,#666); font-size:.9rem;"></p>
+      </div>
+      <div class="articles-grid" id="resultsGrid"></div>
+
+      <!-- Initial state -->
+      <div id="initialState">
+        <div class="search-suggestion">
+          <strong>Popular searches:</strong>
+          <div class="suggestion-tags">
+            <a class="sug-tag" href="#" data-query="Dal Lake">Dal Lake</a>
+            <a class="sug-tag" href="#" data-query="Hajj 2025">Hajj 2025</a>
+            <a class="sug-tag" href="#" data-query="Nusuk">Nusuk App</a>
+            <a class="sug-tag" href="#" data-query="Gulmarg skiing">Gulmarg Skiing</a>
+            <a class="sug-tag" href="#" data-query="Attar perfume">Attar Perfume</a>
+            <a class="sug-tag" href="#" data-query="Umrah India">Umrah India</a>
+            <a class="sug-tag" href="#" data-query="Varanasi">Varanasi</a>
+            <a class="sug-tag" href="#" data-query="Pahalgam">Pahalgam</a>
+            <a class="sug-tag" href="#" data-query="Kashmiri food">Kashmiri Food</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-bottom">
+    <div class="container">
+      <p>&copy; <span id="footerYear"></span> SfriTrav.com</p>
+    </div>
+  </div>
+</footer>
+
+<a href="#" class="back-to-top" id="backToTop" aria-label="Back to top">↑</a>
+
+<script src="/public/js/security.js" defer></script>
+<script>
+(function() {
+  'use strict';
+
+  const ALL_ARTICLES = [
+    { id:'a001', slug:'dal-lake-houseboat-guide-2025', category:'kashmir', title:'Dal Lake Houseboat Experience: The Complete 2025 Guide', excerpt:"Everything you need to know about staying on a traditional shikara-accessed houseboat on Dal Lake in Srinagar.", readTime:'7 min', date:'2025-01-15', tags:['Dal Lake','Houseboat','Srinagar','Kashmir','Budget Travel'] },
+    { id:'a002', slug:'nusuk-app-hajj-guide', category:'hajj-umrah', title:'How to Use the Nusuk App for Hajj 2025: Step-by-Step Guide', excerpt:"The Saudi Ministry's official Nusuk platform is now mandatory for pilgrims. Register, book, and manage your Hajj digitally.", readTime:'9 min', date:'2025-01-14', tags:['Nusuk','Hajj 2025','Digital Hajj','Saudi Arabia','Pilgrimage'] },
+    { id:'a003', slug:'best-attars-for-hajj', category:'perfumes', title:'Best Attars (Ittars) to Carry for Hajj & Umrah: 2025 Guide', excerpt:"The Prophet ﷺ loved fragrance. Here are the finest non-alcoholic attars for your Hajj and Umrah journey.", readTime:'6 min', date:'2025-01-13', tags:['Attar','Ittar','Hajj Perfume','Non-alcoholic','Islamic Fragrance'] },
+    { id:'a004', slug:'gulmarg-skiing-guide', category:'kashmir', title:"Gulmarg Skiing: Asia's Best Ski Resort on a Budget", excerpt:"Gulmarg is on the global ski map with the world's highest gondola and incredible powder snow.", readTime:'8 min', date:'2025-01-12', tags:['Gulmarg','Skiing','Kashmir Winter','Gondola','Snow Sports'] },
+    { id:'a005', slug:'umrah-budget-guide-indians', category:'hajj-umrah', title:'Umrah on a Budget: Complete Guide for Indian Pilgrims 2025', excerpt:"Performing Umrah from India without breaking the bank — every cost with real 2025 prices.", readTime:'10 min', date:'2025-01-11', tags:['Umrah','India','Budget Pilgrimage'] },
+    { id:'a006', slug:'kashmiri-cuisine-guide', category:'lifestyle', title:'Kashmiri Cuisine: 15 Dishes You Must Try', excerpt:"From Rogan Josh to Kahwa tea — 15 dishes that define Kashmir's culinary tradition.", readTime:'6 min', date:'2025-01-10', tags:['Kashmiri Food','Wazwan','Rogan Josh','Cuisine'] },
+    { id:'a007', slug:'top-arabic-luxury-perfumes-india', category:'perfumes', title:'Top 10 Arabic Luxury Perfumes Available in India 2025', excerpt:"Arabian oud-and-musk tradition has taken India by storm. 10 luxury Arabic fragrances you can buy now.", readTime:'7 min', date:'2025-01-09', tags:['Arabic Perfume','Oud','Luxury Fragrance','India'] },
+    { id:'a008', slug:'varanasi-72-hour-guide', category:'india-travel', title:'Varanasi in 72 Hours: The Definitive Guide', excerpt:"Three days in the holiest city on the Ganges — Ganga Aarti to hidden ghats only locals know.", readTime:'9 min', date:'2025-01-08', tags:['Varanasi','Ganga','India Travel','Ghats'] },
+    { id:'a009', slug:'pahalgam-betaab-valley-guide', category:'kashmir', title:"Pahalgam & Betaab Valley: Kashmir's Crown Jewels", excerpt:"Pahalgam's meadows, Betaab Valley's glamour, and Lidder River's calm — one destination, three worlds.", readTime:'7 min', date:'2025-01-07', tags:['Pahalgam','Betaab Valley','Kashmir','Lidder River'] },
+  ];
+
+  const IMG = {
+    kashmir: 'https://images.unsplash.com/photo-1566837945700-30057527ade0?w=600&q=75',
+    'hajj-umrah': 'https://images.unsplash.com/photo-1597474671882-98b0b8e5c0a4?w=600&q=75',
+    perfumes: 'https://images.unsplash.com/photo-1541643600914-78b084683702?w=600&q=75',
+    lifestyle: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&q=75',
+    'india-travel': 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=600&q=75',
+  };
+
+  const CAT_NAME = { kashmir:'Kashmir', 'hajj-umrah':'Hajj & Umrah', perfumes:'Perfumes', lifestyle:'Lifestyle', 'india-travel':'India Travel' };
+
+  let activeCat = 'all';
+
+  function highlightText(text, query) {
+    if (!query) return text;
+    const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return text.replace(new RegExp(`(${escaped})`, 'gi'), '<mark class="highlight">$1</mark>');
+  }
+
+  function formatDate(d) {
+    return new Date(d).toLocaleDateString('en-IN', { year:'numeric', month:'short', day:'numeric' });
+  }
+
+  function getAIArticles() {
+    try { return JSON.parse(localStorage.getItem('sfritrav_ai_articles') || '[]'); } catch { return []; }
+  }
+
+  function doSearch(query) {
+    const q = query.trim().toLowerCase();
+    const grid = document.getElementById('resultsGrid');
+    const header = document.getElementById('resultsHeader');
+    const initialState = document.getElementById('initialState');
+
+    if (!q) {
+      grid.innerHTML = '';
+      header.style.display = 'none';
+      initialState.style.display = '';
+      return;
+    }
+
+    initialState.style.display = 'none';
+    header.style.display = 'flex';
+
+    const corpus = [...ALL_ARTICLES, ...getAIArticles()];
+    const results = corpus.filter(a => {
+      if (activeCat !== 'all' && a.category !== activeCat) return false;
+      const searchable = [a.title, a.excerpt, ...(a.tags || []), a.category].join(' ').toLowerCase();
+      return q.split(/\s+/).every(word => searchable.includes(word));
+    }).sort((a, b) => {
+      // Boost title matches
+      const ta = a.title.toLowerCase().includes(q) ? 1 : 0;
+      const tb = b.title.toLowerCase().includes(q) ? 1 : 0;
+      return tb - ta || new Date(b.date) - new Date(a.date);
+    });
+
+    document.getElementById('resultsCount').textContent = `${results.length} result${results.length !== 1 ? 's' : ''}`;
+    document.getElementById('resultsQuery').textContent = `for "${query}"${activeCat !== 'all' ? ` in ${CAT_NAME[activeCat]}` : ''}`;
+
+    if (results.length === 0) {
+      grid.innerHTML = `<div class="no-results">
+        <div class="nr-icon">🔍</div>
+        <h2>No results found</h2>
+        <p>Try different keywords or browse our <a href="/">latest articles</a>.</p>
+      </div>`;
+      return;
+    }
+
+    grid.innerHTML = results.map(a => `
+      <article class="card">
+        <a href="/pages/article.html?slug=${a.slug}" class="card-img-wrap">
+          <img src="${IMG[a.category] || IMG['india-travel']}" alt="${a.title}" loading="lazy" width="600" height="340">
+          <span class="card-cat">${CAT_NAME[a.category] || a.category}</span>
+        </a>
+        <div class="card-body">
+          <h2 class="card-title"><a href="/pages/article.html?slug=${a.slug}">${highlightText(a.title, query)}</a></h2>
+          <p class="card-excerpt">${highlightText(a.excerpt, query)}</p>
+          <div class="card-meta">
+            <time datetime="${a.date}">${formatDate(a.date)}</time>
+            <span class="dot">·</span>
+            <span>${a.readTime} read</span>
+          </div>
+        </div>
+      </article>`).join('');
+  }
+
+  // Init from URL param
+  const params = new URLSearchParams(window.location.search);
+  const initQ = params.get('q') || '';
+  if (initQ) {
+    document.getElementById('searchInput').value = initQ;
+    doSearch(initQ);
+  }
+
+  // Debounce
+  let debounceTimer;
+  document.getElementById('searchInput').addEventListener('input', function() {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => doSearch(this.value), 250);
+  });
+
+  document.getElementById('searchInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') { clearTimeout(debounceTimer); doSearch(this.value); }
+  });
+
+  document.getElementById('searchBtn').addEventListener('click', () => doSearch(document.getElementById('searchInput').value));
+
+  // Category filters
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      activeCat = this.dataset.cat;
+      doSearch(document.getElementById('searchInput').value);
+    });
+  });
+
+  // Suggestion tags
+  document.querySelectorAll('.sug-tag').forEach(tag => {
+    tag.addEventListener('click', function(e) {
+      e.preventDefault();
+      const q = this.dataset.query;
+      document.getElementById('searchInput').value = q;
+      doSearch(q);
+      document.getElementById('searchInput').focus();
+    });
+  });
+
+  // Header scroll + back to top
+  window.addEventListener('scroll', () => {
+    document.getElementById('siteHeader').classList.toggle('scrolled', window.scrollY > 50);
+    document.getElementById('backToTop').classList.toggle('visible', window.scrollY > 400);
+  }, { passive: true });
+
+  document.getElementById('backToTop').addEventListener('click', e => { e.preventDefault(); window.scrollTo({ top:0, behavior:'smooth' }); });
+
+  document.getElementById('hamburger').addEventListener('click', function() {
+    const nav = document.getElementById('mainNav');
+    const open = nav.classList.toggle('open');
+    this.setAttribute('aria-expanded', open);
+  });
+
+  document.getElementById('footerYear').textContent = new Date().getFullYear();
+})();
+</script>
+</body>
+</html>
