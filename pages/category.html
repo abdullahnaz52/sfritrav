@@ -4,384 +4,136 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title id="pageTitle">Category — SfriTrav</title>
-  <meta name="description" id="pageDesc" content="Explore travel articles by category on SfriTrav.">
-  <meta name="robots" content="index, follow">
+  <meta name="description" id="pageDesc" content="Browse articles by category on SfriTrav.">
   <link rel="canonical" id="canonicalLink" href="https://sfritrav.com/pages/category.html">
   <link rel="stylesheet" href="/public/css/style.css">
-  <!-- Open Graph -->
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="SfriTrav">
-  <meta property="og:title" id="ogTitle" content="Category — SfriTrav">
-  <meta property="og:description" id="ogDesc" content="Explore travel articles by category on SfriTrav.">
-  <meta property="og:image" content="https://sfritrav.com/images/og-cover.jpg">
-  <!-- Preload -->
-  <link rel="preload" href="/public/css/style.css" as="style">
-  <link rel="preconnect" href="https://images.unsplash.com">
-  <!-- Favicon -->
-  <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
-  <!-- AdSense placeholder -->
-  <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
+  <link rel="icon" href="/images/favicon.ico">
 </head>
 <body>
 
-<!-- ===== HEADER (same as index) ===== -->
 <header class="site-header" id="siteHeader">
   <div class="container header-inner">
-    <a href="/" class="logo" aria-label="SfriTrav Home">
-      <span class="logo-icon">✈</span>
-      <span class="logo-text">SfriTrav<span class="logo-dot">.</span>com</span>
-    </a>
-    <nav class="main-nav" id="mainNav" aria-label="Main navigation">
+    <a href="/" class="logo">SfriTrav<span class="logo-dot">.</span>com</a>
+    <nav class="main-nav" id="mainNav">
       <ul class="nav-list">
         <li><a href="/" class="nav-link">Home</a></li>
-        <li class="has-dropdown">
-          <a href="#" class="nav-link">Kashmir <span class="arrow">▾</span></a>
-          <ul class="dropdown">
-            <li><a href="/pages/category.html?cat=kashmir">All Kashmir</a></li>
-            <li><a href="/pages/article.html?slug=dal-lake-houseboat-guide-2025">Dal Lake</a></li>
-            <li><a href="/pages/article.html?slug=gulmarg-skiing-guide">Gulmarg</a></li>
-            <li><a href="/pages/article.html?slug=pahalgam-betaab-valley-guide">Pahalgam</a></li>
-          </ul>
-        </li>
-        <li class="has-dropdown">
-          <a href="#" class="nav-link">Hajj & Umrah <span class="arrow">▾</span></a>
-          <ul class="dropdown">
-            <li><a href="/pages/category.html?cat=hajj-umrah">All Articles</a></li>
-            <li><a href="https://safararrooh.com" target="_blank" rel="noopener">SafarArRooh</a></li>
-            <li><a href="https://nusuk.sa" target="_blank" rel="noopener">Nusuk Official</a></li>
-          </ul>
-        </li>
-        <li><a href="/pages/category.html?cat=perfumes" class="nav-link">Perfumes</a></li>
-        <li><a href="/pages/category.html?cat=india-travel" class="nav-link">India</a></li>
-        <li><a href="/pages/about.html" class="nav-link">About</a></li>
+        <li><a href="/pages/category.html?cat=india-news" class="nav-link">India</a></li>
+        <li><a href="/pages/category.html?cat=health" class="nav-link">Health</a></li>
+        <li><a href="/pages/category.html?cat=sports" class="nav-link">Sports</a></li>
+        <li><a href="/pages/category.html?cat=entertainment" class="nav-link">Entertainment</a></li>
+        <li><a href="/pages/category.html?cat=technology" class="nav-link">Tech</a></li>
+        <li><a href="/pages/category.html?cat=business" class="nav-link">Business</a></li>
+        <li><a href="/pages/category.html?cat=travel" class="nav-link">Travel</a></li>
+        <li><a href="/pages/category.html?cat=food" class="nav-link">Food</a></li>
+        <li><a href="/pages/category.html?cat=jobs" class="nav-link">Jobs</a></li>
       </ul>
     </nav>
     <div class="header-actions">
-      <a href="/pages/search.html" class="btn-icon" aria-label="Search">🔍</a>
-      <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
+      <a href="/pages/search.html" class="btn-search">🔍</a>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
     </div>
   </div>
 </header>
 
-<!-- ===== MAIN ===== -->
-<main id="main-content">
-
-  <!-- Category Hero -->
-  <section class="cat-hero" id="catHero">
+<main>
+  <div class="cat-hero" id="catHero">
     <div class="container">
-      <nav class="breadcrumb" aria-label="breadcrumb">
-        <ol>
-          <li><a href="/">Home</a></li>
-          <li aria-current="page" id="breadcrumbCat">Category</li>
-        </ol>
-      </nav>
-      <div class="cat-hero-inner">
-        <span class="cat-badge" id="catBadge">Category</span>
-        <h1 id="catHeading">Articles</h1>
-        <p id="catSubheading">Explore all articles in this category.</p>
-      </div>
+      <nav class="breadcrumb"><a href="/">Home</a><span>›</span><span id="breadcrumbCat">Category</span></nav>
+      <h1 id="catHeading">Articles</h1>
+      <p id="catSubheading"></p>
     </div>
-  </section>
+  </div>
 
-  <!-- Filters + Sort -->
-  <div class="container">
-    <div class="list-controls">
-      <div class="results-count" id="resultsCount">Loading articles…</div>
-      <div class="sort-wrap">
-        <label for="sortSelect" class="sr-only">Sort by</label>
-        <select id="sortSelect" class="sort-select">
-          <option value="newest">Newest First</option>
-          <option value="oldest">Oldest First</option>
-          <option value="readtime">Read Time</option>
-        </select>
-      </div>
+  <div class="container" style="padding-top:1.5rem; padding-bottom:3rem;">
+    <div class="sort-row">
+      <span id="resultsCount" style="font-size:.85rem;color:var(--ink-muted);">Loading…</span>
+      <select id="sortSelect" class="sort-select">
+        <option value="newest">Newest First</option>
+        <option value="oldest">Oldest First</option>
+      </select>
     </div>
-
-    <!-- Articles Grid -->
-    <div class="articles-grid" id="articlesGrid">
-      <!-- Skeleton loaders -->
-      <div class="card skeleton"></div>
-      <div class="card skeleton"></div>
-      <div class="card skeleton"></div>
-      <div class="card skeleton"></div>
-      <div class="card skeleton"></div>
-      <div class="card skeleton"></div>
+    <div class="cards-grid" id="articlesGrid">
+      <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div></div>
+      <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div></div>
+      <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div></div>
+      <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div></div>
     </div>
-
     <div class="load-more-wrap" id="loadMoreWrap" style="display:none">
       <button class="btn btn-outline" id="loadMoreBtn">Load More Articles</button>
     </div>
   </div>
-
-  <!-- Newsletter CTA -->
-  <section class="newsletter-section">
-    <div class="container">
-      <div class="newsletter-cta">
-        <div class="nl-text">
-          <h2>Never Miss a Story</h2>
-          <p>Get the best travel guides, Hajj tips &amp; lifestyle articles straight to your inbox.</p>
-        </div>
-        <form class="nl-form" id="nlFormCat" novalidate>
-          <div class="nl-input-wrap">
-            <input type="email" id="nlEmailCat" name="email" placeholder="your@email.com" required autocomplete="email">
-            <button type="submit" class="btn btn-primary">Subscribe</button>
-          </div>
-          <p class="nl-privacy">No spam, ever. <a href="/privacy-policy.html">Privacy Policy</a>.</p>
-          <div class="form-msg" id="nlMsgCat" role="alert" aria-live="polite"></div>
-          <!-- Honeypot -->
-          <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
-        </form>
-      </div>
-    </div>
-  </section>
-
 </main>
 
-<!-- ===== FOOTER ===== -->
 <footer class="site-footer">
-  <div class="container footer-grid">
-    <div class="footer-brand">
-      <a href="/" class="logo footer-logo">
-        <span class="logo-icon">✈</span>
-        <span class="logo-text">SfriTrav<span class="logo-dot">.</span>com</span>
-      </a>
-      <p>Authentic travel guides and lifestyle content from India. Your journey starts here.</p>
-      <div class="social-links">
-        <a href="#" aria-label="Facebook" rel="noopener">📘</a>
-        <a href="#" aria-label="Instagram" rel="noopener">📸</a>
-        <a href="#" aria-label="YouTube" rel="noopener">▶️</a>
-        <a href="#" aria-label="Twitter/X" rel="noopener">🐦</a>
-      </div>
-    </div>
-    <div class="footer-links">
-      <h3>Categories</h3>
-      <ul>
-        <li><a href="/pages/category.html?cat=kashmir">Kashmir Travel</a></li>
-        <li><a href="/pages/category.html?cat=hajj-umrah">Hajj &amp; Umrah</a></li>
-        <li><a href="/pages/category.html?cat=perfumes">Perfumes</a></li>
-        <li><a href="/pages/category.html?cat=lifestyle">Lifestyle</a></li>
-        <li><a href="/pages/category.html?cat=india-travel">India Travel</a></li>
-      </ul>
-    </div>
-    <div class="footer-links">
-      <h3>Info</h3>
-      <ul>
-        <li><a href="/pages/about.html">About Us</a></li>
-        <li><a href="/pages/contact.html">Contact</a></li>
-        <li><a href="/privacy-policy.html">Privacy Policy</a></li>
-        <li><a href="/terms.html">Terms of Service</a></li>
-        <li><a href="/disclaimer.html">Disclaimer</a></li>
-        <li><a href="/feed.xml">RSS Feed</a></li>
-        <li><a href="/sitemap.xml">Sitemap</a></li>
-      </ul>
-    </div>
-    <div class="footer-links">
-      <h3>Partners</h3>
-      <ul>
-        <li><a href="https://safararrooh.com" target="_blank" rel="noopener">SafarArRooh</a></li>
-        <li><a href="https://nusuk.sa" target="_blank" rel="noopener">Nusuk</a></li>
-        <li><a href="https://safarooh.shop" target="_blank" rel="noopener">SafarOoh Shop</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <div class="container">
-      <p>&copy; <span id="footerYear"></span> SfriTrav.com — All rights reserved.</p>
-      <p>Made with ❤️ in Kashmir, India</p>
-    </div>
+  <div class="footer-bottom" style="padding:1.25rem 0;text-align:center;font-size:.78rem;color:rgba(255,255,255,.4);">
+    <div class="container"><p>&copy; <span class="footer-year"></span> SfriTrav.com | <a href="/" style="color:rgba(255,255,255,.4)">Home</a> · <a href="/privacy-policy.html" style="color:rgba(255,255,255,.4)">Privacy</a> · <a href="/pages/contact.html" style="color:rgba(255,255,255,.4)">Contact</a></p></div>
   </div>
 </footer>
 
-<a href="#" class="back-to-top" id="backToTop" aria-label="Back to top">↑</a>
+<button class="back-top" id="backTop">↑</button>
 
-<script src="/public/js/security.js" defer></script>
-<script src="/public/js/cache.js" defer></script>
+<script src="/public/js/app.js" defer></script>
 <script>
-// ===== Category Page Script =====
-(function() {
-  'use strict';
+document.addEventListener('DOMContentLoaded', function() {
+  const CATS = window.SfriTrav?.CATEGORIES || {};
+  const params = new URLSearchParams(location.search);
+  const cat = params.get('cat') || 'all';
+  const meta = CATS[cat] || { label: 'All Articles', color: 'news', emoji: '📰' };
 
-  // Category metadata
-  const CAT_META = {
-    'kashmir': {
-      name: 'Kashmir Travel',
-      desc: 'Explore the paradise on Earth — Dal Lake, Gulmarg, Pahalgam, Sonamarg and the magical valleys of Kashmir.',
-      color: '#1a7a5e',
-      emoji: '🏔️',
-    },
-    'hajj-umrah': {
-      name: 'Hajj & Umrah',
-      desc: "Complete guides for Hajj and Umrah pilgrims — Nusuk app, budget tips, packing lists, and spiritual preparation.",
-      color: '#c0930f',
-      emoji: '🕌',
-    },
-    'perfumes': {
-      name: 'Perfumes & Attars',
-      desc: 'Arabic oud, Indian attars, non-alcoholic fragrances — discover the world of Islamic perfumery.',
-      color: '#7c3aed',
-      emoji: '🌹',
-    },
-    'lifestyle': {
-      name: 'Lifestyle',
-      desc: 'Travel culture, Kashmiri cuisine, wellness tips, and the art of slow travel across South Asia.',
-      color: '#dc2626',
-      emoji: '✨',
-    },
-    'india-travel': {
-      name: 'India Travel',
-      desc: 'Incredible India — from the ghats of Varanasi to the beaches of Goa. Your guide to travelling India.',
-      color: '#ea580c',
-      emoji: '🇮🇳',
-    },
-  };
-
-  // Seed articles (same as app.js — in production, fetch from an API/KV store)
-  const ALL_ARTICLES = [
-    { id:'a001', slug:'dal-lake-houseboat-guide-2025', category:'kashmir', title:'Dal Lake Houseboat Experience: The Complete 2025 Guide', excerpt:"Everything you need to know about staying on a traditional shikara-accessed houseboat on Dal Lake.", readTime:'7 min', date:'2025-01-15', tags:['Dal Lake','Houseboat','Srinagar','Kashmir'] },
-    { id:'a002', slug:'nusuk-app-hajj-guide', category:'hajj-umrah', title:'How to Use the Nusuk App for Hajj 2025: Step-by-Step Guide', excerpt:"The Saudi Ministry's official Nusuk platform is now mandatory for pilgrims. Here's how to use it.", readTime:'9 min', date:'2025-01-14', tags:['Nusuk','Hajj 2025','Pilgrimage'] },
-    { id:'a003', slug:'best-attars-for-hajj', category:'perfumes', title:'Best Attars (Ittars) to Carry for Hajj & Umrah: 2025 Guide', excerpt:"The Prophet ﷺ loved fragrance. Here are the finest non-alcoholic attars for your pilgrimage.", readTime:'6 min', date:'2025-01-13', tags:['Attar','Ittar','Hajj Perfume'] },
-    { id:'a004', slug:'gulmarg-skiing-guide', category:'kashmir', title:"Gulmarg Skiing: Asia's Best Ski Resort on a Budget", excerpt:"Gulmarg is on the global ski map with the world's highest gondola. Here's your ski trip guide.", readTime:'8 min', date:'2025-01-12', tags:['Gulmarg','Skiing','Kashmir Winter'] },
-    { id:'a005', slug:'umrah-budget-guide-indians', category:'hajj-umrah', title:'Umrah on a Budget: Complete Guide for Indian Pilgrims 2025', excerpt:"Performing Umrah from India without breaking the bank — every cost with real 2025 prices.", readTime:'10 min', date:'2025-01-11', tags:['Umrah','India','Budget Pilgrimage'] },
-    { id:'a006', slug:'kashmiri-cuisine-guide', category:'lifestyle', title:'Kashmiri Cuisine: 15 Dishes You Must Try', excerpt:"From Rogan Josh to Kahwa tea — 15 dishes that define the valley's centuries-old culinary tradition.", readTime:'6 min', date:'2025-01-10', tags:['Kashmiri Food','Wazwan','Rogan Josh'] },
-    { id:'a007', slug:'top-arabic-luxury-perfumes-india', category:'perfumes', title:'Top 10 Arabic Luxury Perfumes Available in India 2025', excerpt:"Arabian perfumery's oud-and-musk tradition has taken India by storm. 10 luxury Arabic fragrances to buy.", readTime:'7 min', date:'2025-01-09', tags:['Arabic Perfume','Oud','India'] },
-    { id:'a008', slug:'varanasi-72-hour-guide', category:'india-travel', title:'Varanasi in 72 Hours: The Definitive Guide', excerpt:"Three days in the holiest city on the Ganges — from the Ganga Aarti to hidden ghats only locals know.", readTime:'9 min', date:'2025-01-08', tags:['Varanasi','Ganga','Ghats'] },
-    { id:'a009', slug:'pahalgam-betaab-valley-guide', category:'kashmir', title:"Pahalgam & Betaab Valley: Kashmir's Crown Jewels", excerpt:"Pahalgam's meadows, Betaab Valley's glamour, and Lidder River's calm — one destination, three worlds.", readTime:'7 min', date:'2025-01-07', tags:['Pahalgam','Betaab Valley','Kashmir'] },
-  ];
-
-  const IMG = {
-    kashmir: ['https://images.unsplash.com/photo-1566837945700-30057527ade0?w=600&q=75','https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=75','https://images.unsplash.com/photo-1598090894937-9a0e2e66f4e0?w=600&q=75'],
-    'hajj-umrah': ['https://images.unsplash.com/photo-1597474671882-98b0b8e5c0a4?w=600&q=75','https://images.unsplash.com/photo-1564769662533-4f00a87b4056?w=600&q=75'],
-    perfumes: ['https://images.unsplash.com/photo-1541643600914-78b084683702?w=600&q=75','https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=600&q=75'],
-    lifestyle: ['https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&q=75','https://images.unsplash.com/photo-1519121785383-3229633bb75b?w=600&q=75'],
-    'india-travel': ['https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=600&q=75','https://images.unsplash.com/photo-1532664189809-02133fee698d?w=600&q=75'],
-  };
-
-  function getImg(cat, idx) {
-    const imgs = IMG[cat] || IMG['india-travel'];
-    return imgs[idx % imgs.length];
-  }
-
-  function formatDate(d) {
-    return new Date(d).toLocaleDateString('en-IN', { year:'numeric', month:'short', day:'numeric' });
-  }
-
-  function cardHTML(a, idx) {
-    return `<article class="card" data-id="${a.id}">
-      <a href="/pages/article.html?slug=${a.slug}" class="card-img-wrap">
-        <img src="${getImg(a.category, idx)}" alt="${a.title}" loading="lazy" width="600" height="340">
-        <span class="card-cat">${CAT_META[a.category]?.emoji || ''} ${CAT_META[a.category]?.name || a.category}</span>
-      </a>
-      <div class="card-body">
-        <h2 class="card-title"><a href="/pages/article.html?slug=${a.slug}">${a.title}</a></h2>
-        <p class="card-excerpt">${a.excerpt}</p>
-        <div class="card-meta">
-          <time datetime="${a.date}">${formatDate(a.date)}</time>
-          <span class="dot">·</span>
-          <span>${a.readTime} read</span>
-        </div>
-        <div class="card-tags">${a.tags.slice(0,3).map(t=>`<span class="tag">${t}</span>`).join('')}</div>
-      </div>
-    </article>`;
-  }
-
-  // ===== Init =====
-  const params = new URLSearchParams(window.location.search);
-  const cat = params.get('cat') || 'kashmir';
-  const meta = CAT_META[cat] || { name: 'Articles', desc: '', emoji: '📖', color: '#1a7a5e' };
-
-  // Update page meta
-  document.title = `${meta.name} — SfriTrav`;
-  document.getElementById('pageTitle').textContent = `${meta.name} — SfriTrav`;
-  document.getElementById('pageDesc').content = meta.desc;
-  document.getElementById('ogTitle').content = `${meta.name} — SfriTrav`;
-  document.getElementById('ogDesc').content = meta.desc;
+  document.title = `${meta.label} — SfriTrav`;
+  document.getElementById('pageTitle').textContent = `${meta.label} — SfriTrav`;
+  document.getElementById('pageDesc').content = `Browse ${meta.label} articles on SfriTrav.`;
   document.getElementById('canonicalLink').href = `https://sfritrav.com/pages/category.html?cat=${cat}`;
-  document.getElementById('catBadge').textContent = `${meta.emoji} ${meta.name}`;
-  document.getElementById('catHeading').textContent = meta.name;
-  document.getElementById('catSubheading').textContent = meta.desc;
-  document.getElementById('breadcrumbCat').textContent = meta.name;
+  document.getElementById('catHeading').textContent = `${meta.emoji || ''} ${meta.label}`;
+  document.getElementById('breadcrumbCat').textContent = meta.label;
 
-  // Set hero accent colour
-  document.documentElement.style.setProperty('--cat-color', meta.color);
-
-  // Also load AI-generated articles from sessionStorage/localStorage
-  function getAIArticles() {
-    try {
-      const raw = localStorage.getItem('sfritrav_ai_articles');
-      if (!raw) return [];
-      const parsed = JSON.parse(raw);
-      return Array.isArray(parsed) ? parsed : [];
-    } catch { return []; }
+  let PAGE = 1; const PER = 8;
+  function getArticles() {
+    const all = window.SfriTrav?.allArticles() || [];
+    const filtered = cat === 'all' ? all : all.filter(a => a.category === cat);
+    const sort = document.getElementById('sortSelect').value;
+    return filtered.sort((a,b) => sort === 'oldest'
+      ? new Date(a.date) - new Date(b.date)
+      : new Date(b.date) - new Date(a.date));
   }
-
-  // Filter + sort
-  let PAGE = 1;
-  const PER_PAGE = 6;
-
-  function getFiltered(sortBy) {
-    const base = [...ALL_ARTICLES, ...getAIArticles()].filter(a => a.category === cat);
-    if (sortBy === 'oldest') return base.sort((a,b) => new Date(a.date) - new Date(b.date));
-    if (sortBy === 'readtime') return base.sort((a,b) => parseInt(a.readTime) - parseInt(b.readTime));
-    return base.sort((a,b) => new Date(b.date) - new Date(a.date));
-  }
-
   function render() {
-    const sortBy = document.getElementById('sortSelect').value;
-    const articles = getFiltered(sortBy);
+    const articles = getArticles();
     const grid = document.getElementById('articlesGrid');
-    const count = document.getElementById('resultsCount');
-
-    const slice = articles.slice(0, PAGE * PER_PAGE);
-    count.textContent = `${articles.length} article${articles.length !== 1 ? 's' : ''} found`;
-    grid.innerHTML = slice.map((a, i) => cardHTML(a, i)).join('') || '<p class="empty-state">No articles in this category yet — check back soon!</p>';
-
-    const lmw = document.getElementById('loadMoreWrap');
-    lmw.style.display = slice.length < articles.length ? 'flex' : 'none';
+    const slice = articles.slice(0, PAGE * PER);
+    document.getElementById('resultsCount').textContent = `${articles.length} article${articles.length !== 1 ? 's' : ''}`;
+    const getImg = window.SfriTrav?.getImg || (() => '');
+    grid.innerHTML = slice.map((a,i) => {
+      const catInfo = CATS[a.category] || { label: a.category, color: 'news' };
+      return `<article class="card">
+        <a href="/pages/article.html?slug=${a.slug}" class="card-img-wrap">
+          <img class="card-img" src="${getImg(a.category, i)}" alt="${a.title}" loading="lazy">
+        </a>
+        <div class="card-body">
+          <span class="tag ${catInfo.color}">${catInfo.label}</span>
+          <h3 class="card-title"><a href="/pages/article.html?slug=${a.slug}">${a.title}</a></h3>
+          <p class="card-excerpt">${a.excerpt}</p>
+          <div class="card-meta"><time>${new Date(a.date).toLocaleDateString('en-IN',{month:'short',day:'numeric',year:'numeric'})}</time><span class="dot">·</span><span>${a.readTime}</span></div>
+        </div>
+      </article>`;
+    }).join('') || '<p class="empty-state">No articles yet — check back soon!</p>';
+    document.getElementById('loadMoreWrap').style.display = slice.length < articles.length ? 'block' : 'none';
   }
-
   document.getElementById('sortSelect').addEventListener('change', () => { PAGE = 1; render(); });
   document.getElementById('loadMoreBtn').addEventListener('click', () => { PAGE++; render(); });
-
-  // Newsletter
-  document.getElementById('nlFormCat').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    const email = document.getElementById('nlEmailCat').value.trim();
-    const msg = document.getElementById('nlMsgCat');
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      msg.textContent = 'Please enter a valid email.'; msg.className = 'form-msg error'; return;
-    }
-    try {
-      const res = await fetch('https://formspree.io/f/xpqkzzak', {
-        method:'POST', headers:{'Content-Type':'application/json','Accept':'application/json'},
-        body: JSON.stringify({ email, _subject:'SfriTrav Newsletter Subscription', source: 'category-page' })
-      });
-      if (res.ok) { msg.textContent = '🎉 Subscribed! Welcome to SfriTrav.'; msg.className = 'form-msg success'; this.reset(); }
-      else { msg.textContent = 'Something went wrong. Try again.'; msg.className = 'form-msg error'; }
-    } catch { msg.textContent = 'Network error. Please try again.'; msg.className = 'form-msg error'; }
-  });
-
-  // Header scroll
+  // Wait for app.js
+  const tryRender = (n=0) => { if (window.SfriTrav?.allArticles) render(); else if (n < 20) setTimeout(() => tryRender(n+1), 150); };
+  tryRender();
+  document.querySelectorAll('.footer-year').forEach(e => e.textContent = new Date().getFullYear());
   window.addEventListener('scroll', () => {
-    document.getElementById('siteHeader').classList.toggle('scrolled', window.scrollY > 50);
-    document.getElementById('backToTop').classList.toggle('visible', window.scrollY > 400);
+    document.getElementById('siteHeader').classList.toggle('scrolled', scrollY > 50);
+    document.getElementById('backTop').classList.toggle('visible', scrollY > 400);
   }, { passive: true });
-
-  document.getElementById('backToTop').addEventListener('click', e => { e.preventDefault(); window.scrollTo({ top:0, behavior:'smooth' }); });
-
-  // Hamburger
+  document.getElementById('backTop').addEventListener('click', e => { e.preventDefault(); scrollTo({ top:0, behavior:'smooth' }); });
   document.getElementById('hamburger').addEventListener('click', function() {
-    const nav = document.getElementById('mainNav');
-    const open = nav.classList.toggle('open');
-    this.setAttribute('aria-expanded', open);
+    document.getElementById('mainNav').classList.toggle('open');
+    this.setAttribute('aria-expanded', document.getElementById('mainNav').classList.contains('open'));
   });
-
-  // Footer year
-  document.getElementById('footerYear').textContent = new Date().getFullYear();
-
-  render();
-})();
+});
 </script>
 </body>
 </html>
