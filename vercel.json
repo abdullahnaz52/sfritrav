@@ -2,6 +2,7 @@
   "version": 2,
   "name": "sfritrav",
   "regions": ["bom1"],
+  "outputDirectory": ".",
   "crons": [
     {
       "path": "/api/cron-generate",
