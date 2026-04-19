@@ -4,10 +4,7 @@
   "regions": ["bom1"],
   "outputDirectory": ".",
   "crons": [
-    {
-      "path": "/api/cron-generate",
-      "schedule": "30 0 * * *"
-    }
+    { "path": "/api/cron-generate", "schedule": "30 0 * * *" }
   ],
   "headers": [
     {
@@ -17,28 +14,21 @@
         { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
         { "key": "X-XSS-Protection", "value": "1; mode=block" },
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" },
         { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains; preload" },
-        { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://images.unsplash.com https://www.google-analytics.com; connect-src 'self' https://formspree.io https://api.groq.com https://newsdata.io; frame-src 'none';" }
+        { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https://images.unsplash.com https://www.google-analytics.com; connect-src 'self' https://formspree.io https://api.groq.com https://trends.google.com https://timesofindia.indiatimes.com https://feeds.feedburner.com https://www.thehindu.com https://sports.ndtv.com https://feeds.feedburner.com https://www.moneycontrol.com https://www.who.int; frame-src 'none';" }
       ]
     },
     {
       "source": "/public/css/(.*)",
-      "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
-      ]
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
     },
     {
       "source": "/public/js/(.*)",
-      "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
-      ]
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
     },
     {
       "source": "/images/(.*)",
-      "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=2592000, stale-while-revalidate=86400" }
-      ]
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=2592000" }]
     },
     {
       "source": "/sw.js",
@@ -49,19 +39,18 @@
     },
     {
       "source": "/api/(.*)",
-      "headers": [
-        { "key": "Cache-Control", "value": "no-store" }
-      ]
+      "headers": [{ "key": "Cache-Control", "value": "no-store" }]
     }
   ],
   "rewrites": [
     { "source": "/sitemap.xml", "destination": "/api/sitemap" },
-    { "source": "/feed.xml", "destination": "/api/rss-feed" }
+    { "source": "/feed.xml",    "destination": "/api/rss-feed" }
   ],
   "redirects": [
-    { "source": "/home", "destination": "/", "permanent": true },
-    { "source": "/blog", "destination": "/", "permanent": true },
-    { "source": "/kashmir", "destination": "/pages/category.html?cat=kashmir", "permanent": false },
-    { "source": "/hajj", "destination": "/pages/category.html?cat=hajj-umrah", "permanent": false }
+    { "source": "/home",  "destination": "/", "permanent": true },
+    { "source": "/blog",  "destination": "/", "permanent": true },
+    { "source": "/news",  "destination": "/pages/category.html?cat=india-news", "permanent": false },
+    { "source": "/health","destination": "/pages/category.html?cat=health", "permanent": false },
+    { "source": "/sports","destination": "/pages/category.html?cat=sports", "permanent": false }
   ]
 }
