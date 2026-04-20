@@ -29,7 +29,7 @@
 
 <div class="container">
   <div class="legal-page">
-    <p class="updated">Last updated: <strong>January 15, 2025</strong></p>
+    <p class="updated">Last updated: <span id="legalYear"></span></p>
 
     <p>These Terms of Service ("Terms") govern your use of <strong>SfriTrav.com</strong> ("Website", "we", "us", "our"). By accessing or using this Website, you agree to these Terms. If you disagree, please leave the Website.</p>
 
@@ -98,5 +98,6 @@
     document.getElementById('main-nav')?.classList.toggle('open');
   });
 </script>
+<script>var el=document.getElementById("legalYear");if(el)el.textContent=new Date().getFullYear();</script>
 </body>
 </html>
