@@ -141,7 +141,7 @@ export default async function handler(req, res) {
         'Accept': 'application/json',
         'Accept-Language': 'en-US,en;q=0.9',
       },
-      signal: AbortSignal.timeout(10000),
+      signal: (() => { const c = new AbortController(); setTimeout(() => c.abort(), 10000); return c.signal; })(),
     });
 
     if (!response.ok) {
