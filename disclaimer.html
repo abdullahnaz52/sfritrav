@@ -56,7 +56,7 @@
   </section>
 
   <div class="legal-body">
-    <p class="last-updated">Last updated: January 2025</p>
+    <p class="last-updated">Last updated: <span id="legalYear"></span></p>
 
     <div class="callout">
       <p><strong>Please read this disclaimer carefully before using SfriTrav.com.</strong> By accessing or using our website, you acknowledge and agree to the terms outlined below.</p>
@@ -158,5 +158,6 @@
   });
   document.getElementById('footerYear').textContent = new Date().getFullYear();
 </script>
+<script>var el=document.getElementById("legalYear");if(el)el.textContent=new Date().getFullYear();</script>
 </body>
 </html>
