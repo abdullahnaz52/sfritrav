@@ -31,17 +31,20 @@
     <div class="ticker-inner">
       <span class="ticker-label">Breaking</span>
       <div class="ticker-track">
-        <div class="ticker-items" id="breakingTicker">
-          <span>India Q4 GDP growth data awaited this week</span><span class="ticker-sep">·</span>
-          <span>IMD predicts above-normal monsoon for 2025</span><span class="ticker-sep">·</span>
-          <span>IPL 2025 season in full swing</span><span class="ticker-sep">·</span>
-          <span>Union Budget 2025 income tax changes take effect</span><span class="ticker-sep">·</span>
-          <span>Sensex opens higher on global cues</span><span class="ticker-sep">·</span>
-          <span>India Q4 GDP growth data awaited this week</span><span class="ticker-sep">·</span>
-          <span>IMD predicts above-normal monsoon for 2025</span><span class="ticker-sep">·</span>
-          <span>IPL 2025 season in full swing</span><span class="ticker-sep">·</span>
-          <span>Union Budget 2025 income tax changes take effect</span><span class="ticker-sep">·</span>
-          <span>Sensex opens higher on global cues</span>
+        <div class="ticker-items" id="breakingTicker"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MARKET TICKER — live rates, right-to-left ===== -->
+<div class="market-bar" id="marketBar">
+  <div class="container">
+    <div class="market-inner">
+      <span class="market-label" id="marketLabel">Markets</span>
+      <div class="market-track">
+        <div class="market-items" id="marketItems">
+          <span class="market-loading">⏳ Fetching live market data…</span>
         </div>
       </div>
     </div>
@@ -119,20 +122,7 @@
       <div class="trends-inner">
         <span class="trends-label">Trending</span>
         <div class="trends-track">
-          <div class="trends-items" id="trendingItems">
-            <a href="/pages/search.html?q=health+tips">#HealthTips</a><span class="ticker-sep">·</span>
-            <a href="/pages/search.html?q=india+news">#IndiaNews</a><span class="ticker-sep">·</span>
-            <a href="/pages/search.html?q=ipl+2025">#IPL2025</a><span class="ticker-sep">·</span>
-            <a href="/pages/search.html?q=budget+2025">#Budget2025</a><span class="ticker-sep">·</span>
-            <a href="/pages/search.html?q=travel+india">#TravelIndia</a><span class="ticker-sep">·</span>
-            <a href="/pages/search.html?q=stock+market">#StockMarket</a><span class="ticker-sep">·</span>
-            <a href="/pages/search.html?q=government+jobs">#SarkariNaukri</a><span class="ticker-sep">·</span>
-            <a href="/pages/search.html?q=monsoon+2025">#Monsoon2025</a><span class="ticker-sep">·</span>
-            <a href="/pages/search.html?q=health+tips">#HealthTips</a><span class="ticker-sep">·</span>
-            <a href="/pages/search.html?q=india+news">#IndiaNews</a><span class="ticker-sep">·</span>
-            <a href="/pages/search.html?q=ipl+2025">#IPL2025</a><span class="ticker-sep">·</span>
-            <a href="/pages/search.html?q=budget+2025">#Budget2025</a>
-          </div>
+          <div class="trends-items" id="trendingItems"></div>
         </div>
       </div>
     </div>
@@ -391,5 +381,218 @@
 </div>
 
 <script src="/public/js/app.js" defer></script>
+
+<script>
+// ===== DYNAMIC TICKERS — year-safe, API-driven =====
+(function() {
+  const CY = new Date().getFullYear();
+
+  // Breaking news defaults — all year-dynamic, no hardcoded year
+  const BREAKING_DEFAULTS = [
+    'India GDP growth latest quarterly data released',
+    'IMD monsoon forecast: above-normal rainfall expected',
+    'IPL ' + CY + ' season underway — latest standings',
+    'Union Budget ' + CY + ' key announcements in effect',
+    'Sensex and Nifty: market update',
+    'RBI monetary policy committee meeting outcome',
+    'India manufacturing PMI at multi-month high',
+    'Rupee vs Dollar: latest exchange rate',
+    'UPSC ' + CY + ' civil services notifications open',
+    'India-Pakistan border: latest diplomatic updates',
+    'Wholesale price index data for ' + CY,
+    'India foreign exchange reserves hit new levels',
+  ];
+
+  // Trending hashtags — year-safe
+  const TREND_DEFAULTS = [
+    { q: 'health tips India', tag: '#HealthTips' },
+    { q: 'india news today', tag: '#IndiaNews' },
+    { q: 'ipl ' + CY, tag: '#IPL' + CY },
+    { q: 'travel india', tag: '#TravelIndia' },
+    { q: 'stock market india', tag: '#StockMarket' },
+    { q: 'government jobs india', tag: '#SarkariNaukri' },
+    { q: 'monsoon ' + CY + ' india', tag: '#Monsoon' + CY },
+    { q: 'bollywood ' + CY, tag: '#Bollywood' },
+    { q: 'cricket india', tag: '#TeamIndia' },
+    { q: 'startup india', tag: '#StartupIndia' },
+    { q: 'women health tips', tag: '#WomenHealth' },
+    { q: 'mental health awareness', tag: '#MentalHealth' },
+  ];
+
+  function buildBreakingTicker(items) {
+    // Double items for seamless CSS loop
+    const doubled = [...items, ...items];
+    return doubled.map(text =>
+      `<span>${text}</span><span class="ticker-sep">·</span>`
+    ).join('');
+  }
+
+  function buildTrendsTicker(items) {
+    const doubled = [...items, ...items];
+    return doubled.map(item =>
+      `<a href="/pages/search.html?q=${encodeURIComponent(item.q)}"><span class="trend-hash">#</span>${item.tag.replace('#','')}</a><span class="ticker-sep">·</span>`
+    ).join('');
+  }
+
+  // Set breaking ticker immediately with defaults
+  const breakEl = document.getElementById('breakingTicker');
+  if (breakEl) breakEl.innerHTML = buildBreakingTicker(BREAKING_DEFAULTS);
+
+  // Set trends ticker immediately with defaults
+  const trendEl = document.getElementById('trendingItems');
+  if (trendEl) trendEl.innerHTML = buildTrendsTicker(TREND_DEFAULTS);
+
+  // Then try to load real trends from API and update both tickers
+  fetch('/api/trending')
+    .then(r => r.ok ? r.json() : null)
+    .then(data => {
+      if (!data || !data.trending || !data.trending.length) return;
+      const trending = data.trending;
+
+      // Update breaking ticker with real headlines
+      if (breakEl) {
+        const headlines = trending.map(t => t.title);
+        breakEl.innerHTML = buildBreakingTicker(headlines);
+      }
+
+      // Update trends ticker with real topics
+      if (trendEl) {
+        const trendItems = trending.slice(0, 12).map(t => ({
+          q: t.title,
+          tag: '#' + t.title.split(' ').slice(0,2).map(w => w.replace(/[^a-zA-Z0-9]/g,'')).join('')
+        }));
+        trendEl.innerHTML = buildTrendsTicker(trendItems);
+      }
+    })
+    .catch(() => { /* keep defaults */ });
+})();
+</script>
+
+
+<script>
+/* ===== LIVE MARKET TICKER ===== */
+(function () {
+  'use strict';
+
+  const REFRESH_MS   = 60000;   // refresh every 60s
+  const RETRY_MS     = 15000;   // retry on fail after 15s
+  const SPEED_DEFAULT = 55;     // animation duration (seconds) — adjust for speed
+  const el   = document.getElementById('marketItems');
+  const label = document.getElementById('marketLabel');
+  if (!el) return;
+
+  // Type icons
+  const ICONS = {
+    index:     '📊',
+    forex:     '💱',
+    commodity: '🪙',
+    stock:     '📈',
+    etf:       '💹',
+  };
+
+  // Type short labels
+  const TYPE_LABELS = {
+    index:     'IDX',
+    forex:     'FX',
+    commodity: 'CMD',
+    stock:     'STK',
+    etf:       'ETF',
+  };
+
+  function buildItem(item) {
+    const dir    = item.direction === 'up' ? 'up' : 'down';
+    const arrow  = item.direction === 'up' ? '▲' : '▼';
+    const hasChange = item.change && item.change.trim() && item.change !== '';
+    const typeLabel = TYPE_LABELS[item.type] || '';
+    const icon  = ICONS[item.type] || '';
+
+    return `<span class="market-item" title="${item.symbol}">` +
+      `<span class="market-dot ${item.marketState === 'REGULAR' ? 'live' : 'closed'}"></span>` +
+      `<span class="market-type ${item.type}">${typeLabel}</span>` +
+      `<span class="market-name">${item.name}</span>` +
+      `<span class="market-price">${item.price}</span>` +
+      (hasChange
+        ? `<span class="market-change ${dir}"><span class="market-arrow">${arrow}</span>${item.change}</span>`
+        : '') +
+      `</span>`;
+  }
+
+  let lastFetchOk = false;
+  let retryTimer  = null;
+
+  function setSpeed(itemCount) {
+    // More items = longer animation so speed feels consistent
+    const duration = Math.max(30, Math.min(80, itemCount * 2.2));
+    el.style.animationDuration = duration + 's';
+  }
+
+  function render(data) {
+    if (!data || !data.items || !data.items.length) {
+      el.innerHTML = '<span class="market-loading">Market data unavailable — retrying…</span>';
+      label.className = 'market-label closed';
+      label.textContent = 'Markets';
+      return;
+    }
+
+    const items = data.items;
+    const anyLive = items.some(i => i.marketState === 'REGULAR');
+
+    // Update label
+    label.textContent = anyLive ? 'Live Markets' : 'Markets';
+    label.className   = 'market-label' + (anyLive ? '' : ' closed');
+
+    // Build HTML — duplicate list for seamless right-to-left loop
+    const html = items.map(buildItem).join('');
+    el.innerHTML = html + html;
+
+    setSpeed(items.length);
+    lastFetchOk = true;
+  }
+
+  async function fetchMarket() {
+    clearTimeout(retryTimer);
+    try {
+      const res = await fetch('/api/market-data');
+      // On 404 the API isn't deployed yet — show static fallback, don't retry aggressively
+      if (res.status === 404) {
+        renderFallback();
+        retryTimer = setTimeout(fetchMarket, 300000); // retry in 5 min
+        return;
+      }
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      render(data);
+      setTimeout(fetchMarket, REFRESH_MS);
+    } catch (err) {
+      // Silent — no console warning spam
+      if (!lastFetchOk) renderFallback();
+      retryTimer = setTimeout(fetchMarket, RETRY_MS);
+    }
+  }
+
+  function renderFallback() {
+    const CY = new Date().getFullYear();
+    // Static representative data shown while API deploys or is unavailable
+    const fallback = [
+      { name:'Sensex',        price:'Loading',  change:'', direction:'up', type:'index',    marketState:'CLOSED' },
+      { name:'Nifty 50',      price:'Loading',  change:'', direction:'up', type:'index',    marketState:'CLOSED' },
+      { name:'USD/INR',       price:'Loading',  change:'', direction:'up', type:'forex',    marketState:'CLOSED' },
+      { name:'Gold',          price:'Loading',  change:'', direction:'up', type:'commodity',marketState:'CLOSED' },
+      { name:'Crude Oil WTI', price:'Loading',  change:'', direction:'up', type:'commodity',marketState:'CLOSED' },
+      { name:'Silver',        price:'Loading',  change:'', direction:'up', type:'commodity',marketState:'CLOSED' },
+      { name:'Bank Nifty',    price:'Loading',  change:'', direction:'up', type:'index',    marketState:'CLOSED' },
+      { name:'S&P 500',       price:'Loading',  change:'', direction:'up', type:'index',    marketState:'CLOSED' },
+    ];
+    render({ items: fallback });
+    label.textContent = 'Markets';
+    label.className = 'market-label closed';
+  }
+
+  // Kick off immediately
+  fetchMarket();
+
+})();
+</script>
+
 </body>
 </html>
