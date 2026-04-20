@@ -62,11 +62,11 @@ export default async function handler(req, res) {
 
   if (trending.length === 0) {
     trending.push(
-      { title: 'Budget 2025 income tax relief for middle class', category: 'india-news' },
-      { title: 'IPL 2025 points table update', category: 'sports' },
-      { title: 'Best budget smartphones India April 2025', category: 'technology' },
+      { title: 'Budget 2026 income tax relief for middle class', category: 'india-news' },
+      { title: 'IPL 2026 points table update', category: 'sports' },
+      { title: 'Best budget smartphones India April 2026', category: 'technology' },
       { title: 'India heatwave red alert 12 states', category: 'environment' },
-      { title: 'Top government job openings April 2025', category: 'jobs' },
+      { title: 'Top government job openings April 2026', category: 'jobs' },
     );
   }
 
