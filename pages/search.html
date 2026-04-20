@@ -56,9 +56,9 @@
     <p style="font-weight:600;margin-bottom:.75rem;">Popular topics:</p>
     <div style="display:flex;flex-wrap:wrap;gap:.5rem;">
       <a class="sug" href="#" data-q="morning health habits">Morning Health Habits</a>
-      <a class="sug" href="#" data-q="IPL 2025">IPL 2025</a>
+      <a class="sug" href="#" data-q="IPL 2026">IPL 2026</a>
       <a class="sug" href="#" data-q="budget travel India">Budget Travel India</a>
-      <a class="sug" href="#" data-q="government jobs 2025">Govt Jobs 2025</a>
+      <a class="sug" href="#" data-q="government jobs 2026">Govt Jobs 2026</a>
       <a class="sug" href="#" data-q="skincare Indian women">Skincare Tips</a>
       <a class="sug" href="#" data-q="stock market India">Stock Market</a>
       <a class="sug" href="#" data-q="ashwagandha benefits">Ashwagandha</a>
@@ -147,6 +147,16 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('hamburger').addEventListener('click', function() { document.getElementById('mainNav').classList.toggle('open'); });
   document.querySelectorAll('.footer-year').forEach(e => e.textContent = new Date().getFullYear());
 });
+</script>
+
+<script>
+(function(){
+  const y = new Date().getFullYear();
+  const si = document.getElementById('sugIPL');
+  const sj = document.getElementById('sugJobs');
+  if(si){ si.textContent='IPL '+y; si.dataset.q='IPL '+y; }
+  if(sj){ sj.textContent='Govt Jobs '+y; sj.dataset.q='government jobs india '+y; }
+})();
 </script>
 </body>
 </html>
