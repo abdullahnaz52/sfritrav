@@ -1,16 +1,25 @@
 export default function handler(req, res) {
   if (req.method !== 'GET') return res.status(405).end();
   const base = 'https://sfritrav.com';
-  const articles = [
-    { title:'10 Morning Habits That Transform Your Health in 2025', slug:'10-morning-habits-transform-health-2025', cat:'Health & Lifestyle', date:'Wed, 15 Apr 2025 06:00:00 +0530', excerpt:'Science-backed morning routines that top doctors and wellness experts swear by.' },
-    { title:'15 Best Budget Travel Destinations in India for 2025', slug:'best-budget-travel-destinations-india-2025', cat:'Travel', date:'Tue, 14 Apr 2025 06:00:00 +0530', excerpt:'Incredible places across India where ₹5,000 a day gets you luxury-level experiences.' },
-    { title:"India's Union Budget 2025: What It Means for the Common Man", slug:'india-election-budget-2025-analysis', cat:'India News', date:'Mon, 13 Apr 2025 06:00:00 +0530', excerpt:'A plain-language breakdown of Budget 2025\'s biggest announcements.' },
-    { title:'IPL 2025: Team-by-Team Preview and Bold Predictions', slug:'ipl-2025-preview-teams-predictions', cat:'Sports', date:'Sun, 12 Apr 2025 06:00:00 +0530', excerpt:'Full squad analysis, key player battles, and trophy predictions.' },
-    { title:'The Complete Skincare Routine for Indian Skin Tones: 2025', slug:'skincare-routine-indian-women-2025', cat:"Women's Health", date:'Sat, 11 Apr 2025 06:00:00 +0530', excerpt:'Dermatologist-approved skincare tailored for Indian skin.' },
+  const now = new Date().toISOString().split('T')[0];
+  const cats = ['health','travel','politics','entertainment','sports','technology','business','women-health','men-health','food','environment','fashion','mental-health','jobs','ayurveda','kids','global-news','india-news'];
+  const staticPages = [
+    { loc:'/', priority:'1.0', changefreq:'daily' },
+    { loc:'/pages/about.html', priority:'0.7', changefreq:'monthly' },
+    { loc:'/pages/contact.html', priority:'0.6', changefreq:'monthly' },
+    { loc:'/pages/search.html', priority:'0.5', changefreq:'monthly' },
+    { loc:'/privacy-policy.html', priority:'0.4', changefreq:'yearly' },
+    { loc:'/terms.html', priority:'0.4', changefreq:'yearly' },
+    { loc:'/disclaimer.html', priority:'0.4', changefreq:'yearly' },
+    ...cats.map(c => ({ loc:`/pages/category.html?cat=${c}`, priority:'0.8', changefreq:'daily' }))
   ];
-  const items = articles.map(a=>`<item><title><![CDATA[${a.title}]]></title><link>${base}/pages/article.html?slug=${a.slug}</link><guid isPermaLink="true">${base}/pages/article.html?slug=${a.slug}</guid><description><![CDATA[${a.excerpt}]]></description><pubDate>${a.date}</pubDate><category><![CDATA[${a.cat}]]></category></item>`).join('');
-  const rss = `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>SfriTrav — News, Health, Travel, Sports &amp; More</title><link>${base}</link><atom:link href="${base}/feed.xml" rel="self" type="application/rss+xml"/><description>Your complete daily read from India.</description><language>en-IN</language><lastBuildDate>${new Date().toUTCString()}</lastBuildDate>${items}</channel></rss>`;
-  res.setHeader('Content-Type','application/rss+xml; charset=utf-8');
+  const articleSlugs = ['10-morning-habits-transform-health-2026','best-budget-travel-destinations-india-2026','india-election-budget-2026-analysis','ipl-2026-preview-teams-predictions','skincare-routine-indian-women-2026','best-smartphones-under-20000-india-2026','sensex-nifty-market-outlook-april-2026','ashwagandha-benefits-science-2026','top-government-jobs-india-april-2026','climate-india-heatwave-2026','mental-health-india-stigma-2026','indian-street-food-guide-2026'];
+  const urls = [
+    ...staticPages.map(p=>`<url><loc>${base}${p.loc}</loc><lastmod>${now}</lastmod><changefreq>${p.changefreq}</changefreq><priority>${p.priority}</priority></url>`),
+    ...articleSlugs.map(s=>`<url><loc>${base}/pages/article.html?slug=${s}</loc><lastmod>${now}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`)
+  ];
+  const xml = `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.join('')}</urlset>`;
+  res.setHeader('Content-Type','application/xml; charset=utf-8');
   res.setHeader('Cache-Control','public, s-maxage=3600');
-  return res.status(200).send(rss);
+  return res.status(200).send(xml);
 }
