@@ -50,7 +50,7 @@ export default async function handler(req, res) {
   try {
     const body = typeof req.body === 'object' ? req.body : JSON.parse(req.body);
     category = sanitize(body.category || 'health');
-    topic    = sanitize(body.topic    || 'Health tips for 2025');
+    topic    = sanitize(body.topic    || 'Health tips for 2026');
   } catch { return res.status(400).json({ error: 'Invalid request body' }); }
 
   const validCats = Object.keys(CAT_CONTEXT);
@@ -69,7 +69,7 @@ Requirements:
 - SEO-optimised with natural keywords
 - Include specific facts, numbers, and actionable advice
 - Relevant to Indian readers where applicable
-- Mention current year (2025) context where relevant
+- Mention current year (2026) context where relevant
 
 Return ONLY this JSON (no code fences, no extra text):
 {
@@ -126,12 +126,12 @@ Return ONLY this JSON (no code fences, no extra text):
 
 function mockArticle(topic, category) {
   return {
-    title: `${topic}: Complete Guide for 2025`,
-    excerpt: `Everything you need to know about ${topic}. Expert tips, facts, and actionable advice for Indian readers in 2025.`,
+    title: `${topic}: Complete Guide for 2026`,
+    excerpt: `Everything you need to know about ${topic}. Expert tips, facts, and actionable advice for Indian readers in 2026.`,
     readTime: '5 min', category,
-    tags: [topic, category, 'India', '2025', 'Guide'],
+    tags: [topic, category, 'India', '2026', 'Guide'],
     slug: slugify(topic),
-    body: `<p>This comprehensive guide covers everything you need to know about <strong>${topic}</strong> in 2025.</p>
+    body: `<p>This comprehensive guide covers everything you need to know about <strong>${topic}</strong> in 2026.</p>
 <h2>Why This Matters</h2>
 <p>Understanding ${topic} is increasingly important for Indians today. With changing lifestyle patterns and growing awareness, this topic has never been more relevant.</p>
 <h2>Key Facts</h2>
