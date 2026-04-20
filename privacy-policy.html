@@ -28,7 +28,7 @@
 
 <div class="container">
   <div class="legal-page">
-    <p class="updated">Last updated: <strong>January 15, 2025</strong> · Effective: January 15, 2025</p>
+    <p class="updated">Last updated: <span id="legalYear"></span></p>
 
     <p>Welcome to <strong>SfriTrav</strong> ("we", "our", "us"), operated from India. This Privacy Policy explains how we collect, use, disclose, and protect information when you visit <a href="https://sfritrav.com">sfritrav.com</a> ("the Website"). By using our Website, you agree to this policy.</p>
 
@@ -120,5 +120,6 @@
     document.getElementById('main-nav')?.classList.toggle('open');
   });
 </script>
+<script>var el=document.getElementById("legalYear");if(el)el.textContent=new Date().getFullYear();</script>
 </body>
 </html>
