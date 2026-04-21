@@ -31,7 +31,7 @@
     <div class="ticker-inner">
       <span class="ticker-label">Breaking</span>
       <div class="ticker-track">
-        <div class="ticker-items" id="breakingTicker"></div>
+        <div class="ticker-items" id="breakingTicker"><span style="color:rgba(255,255,255,.7)">Loading latest news…</span></div>
       </div>
     </div>
   </div>
@@ -386,167 +386,108 @@
 </div>
 
 <script src="/public/js/app.js" defer></script>
-
 <script>
-// ===== DYNAMIC TICKERS — year-safe, API-driven =====
+/* ── BREAKING NEWS TICKER ── calls /api/breaking-news every 5 min ── */
 (function() {
-  const CY = new Date().getFullYear();
+  var el = document.getElementById('breakingTicker');
+  if (!el) return;
+  var timer = null;
 
-  // Breaking news defaults — all year-dynamic, no hardcoded year
-  const BREAKING_DEFAULTS = [
-    'India GDP growth latest quarterly data released',
-    'IMD monsoon forecast: above-normal rainfall expected',
-    'IPL ' + CY + ' season underway — latest standings',
-    'Union Budget ' + CY + ' key announcements in effect',
-    'Sensex and Nifty: market update',
-    'RBI monetary policy committee meeting outcome',
-    'India manufacturing PMI at multi-month high',
-    'Rupee vs Dollar: latest exchange rate',
-    'UPSC ' + CY + ' civil services notifications open',
-    'India-Pakistan border: latest diplomatic updates',
-    'Wholesale price index data for ' + CY,
-    'India foreign exchange reserves hit new levels',
-  ];
-
-  // Trending hashtags — year-safe
-  const TREND_DEFAULTS = [
-    { q: 'health tips India', tag: '#HealthTips' },
-    { q: 'india news today', tag: '#IndiaNews' },
-    { q: 'ipl ' + CY, tag: '#IPL' + CY },
-    { q: 'travel india', tag: '#TravelIndia' },
-    { q: 'stock market india', tag: '#StockMarket' },
-    { q: 'government jobs india', tag: '#SarkariNaukri' },
-    { q: 'monsoon ' + CY + ' india', tag: '#Monsoon' + CY },
-    { q: 'bollywood ' + CY, tag: '#Bollywood' },
-    { q: 'cricket india', tag: '#TeamIndia' },
-    { q: 'startup india', tag: '#StartupIndia' },
-    { q: 'women health tips', tag: '#WomenHealth' },
-    { q: 'mental health awareness', tag: '#MentalHealth' },
-  ];
-
-  function buildBreakingTicker(items) {
-    // Double items for seamless CSS loop
-    const doubled = [...items, ...items];
-    return doubled.map(text =>
-      `<span>${text}</span><span class="ticker-sep">·</span>`
-    ).join('');
+  function render(headlines) {
+    if (!headlines || !headlines.length) return;
+    var doubled = headlines.concat(headlines);
+    el.innerHTML = doubled.map(function(h) {
+      return '<span>' + h.title + '</span>' +
+        '<span class="ticker-sep" style="margin:0 .5rem;opacity:.55">[' + h.src + ']</span>' +
+        '<span class="ticker-sep" style="margin:0 .5rem">·</span>';
+    }).join('');
   }
 
-  function buildTrendsTicker(items) {
-    const doubled = [...items, ...items];
-    return doubled.map(item =>
-      `<a href="/pages/search.html?q=${encodeURIComponent(item.q)}"><span class="trend-hash">#</span>${item.tag.replace('#','')}</a><span class="ticker-sep">·</span>`
-    ).join('');
+  function load() {
+    clearTimeout(timer);
+    fetch('/api/breaking-news')
+      .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
+      .then(function(d){
+        if (d.headlines && d.headlines.length) render(d.headlines);
+        timer = setTimeout(load, 5 * 60 * 1000);
+      })
+      .catch(function(e){
+        console.warn('[breaking]', e);
+        timer = setTimeout(load, 30000);
+      });
   }
-
-  // Set breaking ticker immediately with defaults
-  const breakEl = document.getElementById('breakingTicker');
-  if (breakEl) breakEl.innerHTML = buildBreakingTicker(BREAKING_DEFAULTS);
-
-  // Set trends ticker immediately with defaults
-  const trendEl = document.getElementById('trendingItems');
-  if (trendEl) trendEl.innerHTML = buildTrendsTicker(TREND_DEFAULTS);
-
-  // Then try to load real trends from API and update both tickers
-  fetch('/api/trending')
-    .then(r => r.ok ? r.json() : null)
-    .then(data => {
-      if (!data || !data.trending || !data.trending.length) return;
-      const trending = data.trending;
-
-      // Update breaking ticker with real headlines
-      if (breakEl) {
-        const headlines = trending.map(t => t.title);
-        breakEl.innerHTML = buildBreakingTicker(headlines);
-      }
-
-      // Update trends ticker with real topics
-      if (trendEl) {
-        const trendItems = trending.slice(0, 12).map(t => ({
-          q: t.title,
-          tag: '#' + t.title.split(' ').slice(0,2).map(w => w.replace(/[^a-zA-Z0-9]/g,'')).join('')
-        }));
-        trendEl.innerHTML = buildTrendsTicker(trendItems);
-      }
-    })
-    .catch(() => { /* keep defaults */ });
+  load();
 })();
 </script>
 
-
 <script>
-/* ===== LIVE MARKET TICKER ===== */
-(function () {
-  'use strict';
-
-  const REFRESH_MS = 60000;
-  const RETRY_MS   = 20000;
-  const el    = document.getElementById('marketItems');
-  const label = document.getElementById('marketLabel');
+/* ── MARKET TICKER ── calls /api/market-data, server handles caching ── */
+(function() {
+  var el = document.getElementById('marketItems');
+  var label = document.getElementById('marketLabel');
   if (!el) return;
 
-  const TYPE_LABELS = { index:'IDX', forex:'FX', commodity:'CMD', crypto:'CRY', stock:'STK', etf:'ETF' };
+  var TYPE_LABEL = {index:'IDX',forex:'FX',commodity:'CMD',stock:'STK',crypto:'CRY',etf:'ETF'};
+  var timer = null, lastItems = null;
 
   function buildItem(item) {
-    const dir   = item.direction === 'down' ? 'down' : 'up';
-    const arrow = dir === 'up' ? '▲' : '▼';
-    const tl    = TYPE_LABELS[item.type] || 'MKT';
-    const hasChg = item.change && item.change.trim();
-    return '<span class="market-item" title="' + item.name + '">' +
-      '<span class="market-dot ' + (item.marketState === 'REGULAR' ? 'live' : 'closed') + '"></span>' +
-      '<span class="market-type ' + item.type + '">' + tl + '</span>' +
-      '<span class="market-name">' + item.name + '</span>' +
-      '<span class="market-price">' + item.price + '</span>' +
-      (hasChg ? '<span class="market-change ' + dir + '"><span class="market-arrow">' + arrow + '</span>' + item.change + '</span>' : '') +
+    var dir = item.direction === 'down' ? 'down' : 'up';
+    var arrow = dir === 'up' ? '▲' : '▼';
+    var tl = TYPE_LABEL[item.type] || 'MKT';
+    var chg = item.change && item.change.trim();
+    return '<span class="market-item" title="' + (item.name||'') + '">' +
+      '<span class="market-dot ' + (item.marketState==='REGULAR'?'live':'closed') + '"></span>' +
+      '<span class="market-type ' + (item.type||'') + '">' + tl + '</span>' +
+      '<span class="market-name">' + (item.name||'') + '</span>' +
+      '<span class="market-price">' + (item.price||'—') + '</span>' +
+      (chg ? '<span class="market-change ' + dir + '"><span class="market-arrow">' + arrow + '</span>' + item.change + '</span>' : '') +
       '</span>';
   }
 
   function render(items) {
     if (!items || !items.length) return;
-    const html = items.map(buildItem).join('');
+    var html = items.map(buildItem).join('');
     el.innerHTML = html + html;
-    const dur = Math.max(20, Math.min(70, items.length * 2.5));
+    var dur = Math.max(25, Math.min(80, items.length * 2.8));
     el.style.animationDuration = dur + 's';
-    const anyLive = items.some(function(i){ return i.marketState === 'REGULAR'; });
-    label.textContent = anyLive ? 'Live Markets' : 'Markets';
-    label.className   = 'market-label' + (anyLive ? '' : ' closed');
+    var live = items.some(function(i){ return i.marketState === 'REGULAR'; });
+    if (label) { label.textContent = live ? 'Live Markets' : 'Markets'; label.className = 'market-label' + (live ? '' : ' closed'); }
   }
 
-  // Show placeholder names immediately while API loads
-  var NAMES = ['Sensex','Nifty 50','Bank Nifty','USD/INR','EUR/INR','Gold',
-    'Silver','Crude WTI','Brent Crude','Copper','Nat. Gas',
+  // Placeholder names while loading
+  var NAMES = ['Sensex','Nifty 50','Bank Nifty','Nifty Midcap',
+    'USD/INR','EUR/INR','GBP/INR','AED/INR','SAR/INR',
+    'Gold','Silver','Crude WTI','Brent Crude','Natural Gas','Copper',
+    'Reliance','TCS','HDFC Bank','Infosys','ICICI Bank','SBI','Airtel',
     'S&P 500','Dow Jones','Nasdaq','Bitcoin','Ethereum'];
-  var placeholder = NAMES.map(function(n){
+  el.innerHTML = NAMES.concat(NAMES).map(function(n){
     return '<span class="market-item"><span class="market-name">' + n +
-      '</span><span class="market-price" style="color:#4a5568">…</span></span>';
+      '</span><span class="market-price" style="color:#374151">…</span></span>';
   }).join('');
-  el.innerHTML = placeholder + placeholder;
 
-  var retryTimer = null;
-  var lastGoodItems = null;
-
-  function fetchMarket() {
-    clearTimeout(retryTimer);
+  function load() {
+    clearTimeout(timer);
     fetch('/api/market-data')
-      .then(function(res) {
-        if (res.status === 404) { retryTimer = setTimeout(fetchMarket, 30000); return null; }
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        return res.json();
+      .then(function(r){
+        if (r.status === 404) { timer = setTimeout(load, 60000); return null; }
+        return r.ok ? r.json() : Promise.reject('HTTP ' + r.status);
       })
-      .then(function(data) {
-        if (!data) return;
-        var items = (data.items || []).filter(function(i){ return i.price && i.price !== '—' && i.price !== ''; });
-        if (items.length) { lastGoodItems = items; render(items); }
-        else if (lastGoodItems) render(lastGoodItems);
-        setTimeout(fetchMarket, REFRESH_MS);
+      .then(function(d){
+        if (!d) return;
+        var items = (d.items||[]).filter(function(i){ return i.price && i.price !== '—'; });
+        if (items.length) { lastItems = items; render(items); }
+        else if (lastItems) render(lastItems);
+        timer = setTimeout(load, 2 * 60 * 1000);
       })
-      .catch(function() {
-        if (lastGoodItems) render(lastGoodItems);
-        retryTimer = setTimeout(fetchMarket, RETRY_MS);
+      .catch(function(e){
+        console.warn('[market]', e);
+        if (lastItems) render(lastItems);
+        timer = setTimeout(load, 30000);
       });
   }
-
-  fetchMarket();
-
+  load();
 })();
 </script>
+
+</body>
+</html>
