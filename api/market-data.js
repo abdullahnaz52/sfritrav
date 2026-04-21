@@ -1,188 +1,157 @@
 /**
- * /api/market-data.js — SfriTrav Live Market Ticker
- *
- * Uses Groq API (compound-beta with web search) to fetch real-time
- * market prices. Groq searches the web and returns current prices.
- * Falls back to er-api for forex if Groq fails.
- * Cached 60s on Vercel edge.
+ * /api/market-data.js — Live Market Ticker
+ * Groq (llama-3.3-70b) for indices/stocks/commodities — cached 10 min
+ * open.er-api.com for live forex rates — cached 5 min
+ * Call limits enforced by in-memory cache — no unnecessary API calls
  */
 
-const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
-const CACHE_TTL = 55_000;
-let _cache = null, _cacheAt = 0;
+const GROQ_URL  = 'https://api.groq.com/openai/v1/chat/completions';
+const GROQ_TTL  = 10 * 60 * 1000;
+const FOREX_TTL =  5 * 60 * 1000;
+const EDGE_TTL  = 60;
 
-function timedFetch(url, opts, ms = 12000) {
-  const ctrl = new AbortController();
-  const t = setTimeout(() => ctrl.abort(), ms);
-  return fetch(url, { ...opts, signal: ctrl.signal })
+let _groqCache = null, _groqAt = 0;
+let _fxCache   = null, _fxAt   = 0;
+
+function timedFetch(url, opts, ms = 15000) {
+  const c = new AbortController();
+  const t = setTimeout(() => c.abort(), ms);
+  return fetch(url, { ...opts, signal: c.signal })
     .then(r => { clearTimeout(t); return r; })
     .catch(e => { clearTimeout(t); throw e; });
 }
 
-/* ── Groq web-search approach ── */
-async function fetchViaGroq(apiKey) {
-  const now = new Date();
-  const dateStr = now.toLocaleDateString('en-IN', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
-
-  const prompt = `Today is ${dateStr}. Search the web for the LATEST real-time market prices right now.
-
-Find current prices for ALL of these:
-- BSE Sensex index
-- NSE Nifty 50 index  
-- Bank Nifty index
-- Nifty Midcap index
-- USD to INR exchange rate
-- EUR to INR exchange rate
-- GBP to INR exchange rate
-- Gold price (USD per troy ounce)
-- Silver price (USD per troy ounce)
-- Crude Oil WTI (USD per barrel)
-- Brent Crude (USD per barrel)
-- Natural Gas (USD per MMBtu)
-- Copper (USD per pound)
-- S&P 500 index
-- Dow Jones index
-- Nasdaq Composite index
-- Bitcoin price in INR
-- Ethereum price in INR
-
-Return ONLY a valid JSON array, no explanation, no markdown, no code fences.
-Each object must have exactly these fields:
-{"name":"...","price":"...","change":"...","direction":"up or down","type":"index or forex or commodity or crypto"}
-
-For price: include currency symbol (₹ for INR, $ for USD).
-For change: format as "+123 (+0.45%)" or "-50 (-0.12%)".
-If a price is unavailable, skip that item entirely.`;
-
-  const body = {
-    model: 'compound-beta',        // Groq's model with live web search
-    max_tokens: 2000,
-    temperature: 0,
-    messages: [
-      {
-        role: 'system',
-        content: 'You are a financial data assistant. You MUST search the web for current real-time prices. Return ONLY a valid JSON array. No markdown, no explanation.'
-      },
-      { role: 'user', content: prompt }
-    ]
-  };
-
+async function getGroqPrices(key) {
+  const yr = new Date().getFullYear();
   const r = await timedFetch(GROQ_URL, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`
-    },
-    body: JSON.stringify(body)
-  }, 25000); // Groq web search needs more time
+    headers: { 'Content-Type':'application/json', 'Authorization':`Bearer ${key}` },
+    body: JSON.stringify({
+      model: 'llama-3.3-70b-versatile',
+      max_tokens: 1500,
+      temperature: 0.1,
+      messages: [
+        { role:'system', content:'Return ONLY a raw JSON array. No markdown. No explanation.' },
+        { role:'user', content:`Give me current approximate ${yr} market prices as a JSON array.
+Include: BSE Sensex, NSE Nifty 50, Bank Nifty, Nifty Midcap 50,
+Gold (USD/oz), Silver (USD/oz), Crude Oil WTI (USD/bbl), Brent Crude (USD/bbl),
+Natural Gas (USD/MMBtu), Copper (USD/lb),
+Reliance Industries, TCS, HDFC Bank, Infosys, ICICI Bank, SBI, Airtel (all INR),
+S&P 500, Dow Jones, Nasdaq,
+Bitcoin (USD), Ethereum (USD).
 
-  if (!r.ok) throw new Error('Groq HTTP ' + r.status);
-  const data = await r.json();
-  const text = data.choices?.[0]?.message?.content || '';
+Each object: {"name":"...","price":"12345.67","chg":"+123.45","pct":"+0.29","type":"index|commodity|stock|crypto","unit":"INR|USD"}
+price and chg are plain numbers with sign. No currency symbols in price field.` }
+      ]
+    })
+  }, 20000);
 
-  // Parse JSON from response — strip any accidental markdown
-  const clean = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+  if (!r.ok) throw new Error('Groq ' + r.status);
+  const d    = await r.json();
+  const raw  = (d.choices?.[0]?.message?.content || '').replace(/```[a-z]*\n?/g,'').replace(/```/g,'').trim();
+  const m    = raw.match(/\[[\s\S]*\]/);
+  if (!m) throw new Error('no JSON array');
+  const arr  = JSON.parse(m[0]);
+  if (!Array.isArray(arr) || arr.length < 8) throw new Error('too few items');
 
-  // Find JSON array in the response
-  const match = clean.match(/\[[\s\S]*\]/);
-  if (!match) throw new Error('No JSON array in Groq response');
-
-  const items = JSON.parse(match[0]);
-  if (!Array.isArray(items) || !items.length) throw new Error('Empty array from Groq');
-
-  // Normalise
-  return items.map(item => ({
-    symbol: item.name,
-    name:   item.name,
-    type:   item.type || 'index',
-    price:  item.price || '—',
-    change: item.change || '',
-    rawChange: parseFloat((item.change || '0').replace(/[^0-9.\-]/g, '')) || 0,
-    direction: item.direction === 'down' ? 'down' : 'up',
-    marketState: 'REGULAR'
-  })).filter(i => i.price && i.price !== '—');
+  return arr.map(i => {
+    const p   = parseFloat(i.price) || 0;
+    const c   = parseFloat(i.chg)   || 0;
+    const pct = parseFloat(i.pct)   || 0;
+    if (p <= 0) return null;
+    const sym = i.unit === 'INR' ? '₹' : (i.unit === 'USD' ? '$' : '');
+    const fmt = (n) => n >= 1000
+      ? sym + n.toLocaleString(i.unit==='INR' ? 'en-IN' : 'en-US', {maximumFractionDigits:2})
+      : sym + n.toFixed(2);
+    const s = c >= 0 ? '+' : '';
+    const ps = pct >= 0 ? '+' : '';
+    return {
+      name: i.name, type: i.type || 'index',
+      price: fmt(p), rawPrice: p,
+      change: `${s}${c.toFixed(2)} (${ps}${pct.toFixed(2)}%)`,
+      rawChange: c, direction: c >= 0 ? 'up' : 'down',
+      marketState: 'CLOSED', source: 'groq'
+    };
+  }).filter(Boolean);
 }
 
-/* ── Fallback: open.er-api for forex only ── */
-async function fetchForex() {
+async function getLiveForex() {
   const r = await timedFetch('https://open.er-api.com/v6/latest/USD', {
-    headers: { 'Accept': 'application/json' }
+    headers: { Accept:'application/json' }
   }, 7000);
   if (!r.ok) throw new Error('er-api ' + r.status);
   const d = await r.json();
-  const rates = d.rates || {};
-  const inr = rates.INR;
+  if (d.result !== 'success') throw new Error('er-api error');
+  const rates = d.rates || {}, inr = rates.INR;
   if (!inr) throw new Error('no INR');
-
-  const fmt = (n, sym) => n ? sym + parseFloat(n).toFixed(2) : null;
+  const fmt = n => n ? '₹' + parseFloat(n).toFixed(2) : null;
   return [
-    { symbol:'USD/INR', name:'USD/INR', type:'forex', price:fmt(inr,'₹'),                        change:'', rawChange:0, direction:'up', marketState:'CLOSED' },
-    { symbol:'EUR/INR', name:'EUR/INR', type:'forex', price:fmt(inr/rates.EUR,'₹'),               change:'', rawChange:0, direction:'up', marketState:'CLOSED' },
-    { symbol:'GBP/INR', name:'GBP/INR', type:'forex', price:fmt(inr/rates.GBP,'₹'),               change:'', rawChange:0, direction:'up', marketState:'CLOSED' },
-    { symbol:'JPY/INR', name:'JPY/INR', type:'forex', price:fmt(inr/rates.JPY,'₹'),               change:'', rawChange:0, direction:'up', marketState:'CLOSED' },
-    { symbol:'AED/INR', name:'AED/INR', type:'forex', price:fmt(inr/rates.AED,'₹'),               change:'', rawChange:0, direction:'up', marketState:'CLOSED' },
-    { symbol:'SAR/INR', name:'SAR/INR', type:'forex', price:fmt(inr/rates.SAR,'₹'),               change:'', rawChange:0, direction:'up', marketState:'CLOSED' },
-  ].filter(x => x.price);
+    { name:'USD/INR', val:inr },
+    { name:'EUR/INR', val:rates.EUR ? inr/rates.EUR : null },
+    { name:'GBP/INR', val:rates.GBP ? inr/rates.GBP : null },
+    { name:'JPY/INR', val:rates.JPY ? inr/rates.JPY : null },
+    { name:'AED/INR', val:rates.AED ? inr/rates.AED : null },
+    { name:'SAR/INR', val:rates.SAR ? inr/rates.SAR : null },
+    { name:'SGD/INR', val:rates.SGD ? inr/rates.SGD : null },
+  ].filter(p => p.val).map(p => ({
+    name:p.name, type:'forex', price:fmt(p.val), rawPrice:p.val,
+    change:'', rawChange:0, direction:'up', marketState:'CLOSED', source:'er-api'
+  }));
 }
 
-const ORDER = { index:0, forex:1, commodity:2, crypto:3, etf:4, stock:5 };
+const ORD = {index:0,forex:1,commodity:2,stock:3,crypto:4,etf:5};
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=120');
+  res.setHeader('Cache-Control', `public, s-maxage=${EDGE_TTL}, stale-while-revalidate=120`);
   if (req.method !== 'GET') return res.status(405).end();
 
-  // Serve fresh cache
-  if (_cache && Date.now() - _cacheAt < CACHE_TTL) {
-    return res.status(200).json({ ..._cache, cached: true });
-  }
+  const key = process.env.GROQ_API_KEY;
+  const now = Date.now();
+  let items = [], sources = [];
 
-  const apiKey = process.env.GROQ_API_KEY;
-  if (!apiKey) {
-    console.error('[market] GROQ_API_KEY not set');
-    return res.status(200).json({ items: [], error: 'no api key', fetchedAt: new Date().toISOString() });
-  }
-
-  let items = [];
-  const sources = [];
-
-  /* 1. Groq web search (primary — gets all prices) */
-  try {
-    items = await fetchViaGroq(apiKey);
-    sources.push('groq');
-    console.log('[market] Groq OK:', items.length, 'items');
-  } catch (e) {
-    console.warn('[market] Groq failed:', e.message);
-    // Retry once with slightly different model
+  // Groq (10 min cache)
+  if (_groqCache && now - _groqAt < GROQ_TTL) {
+    items = [..._groqCache]; sources.push('groq-cache');
+  } else if (key) {
     try {
-      items = await fetchViaGroq(apiKey);
-      sources.push('groq-retry');
-    } catch (e2) {
-      console.warn('[market] Groq retry failed:', e2.message);
+      const gi = await getGroqPrices(key);
+      _groqCache = gi; _groqAt = now;
+      items = [...gi]; sources.push('groq');
+      console.log('[market] Groq OK:', gi.length);
+    } catch (e) {
+      console.warn('[market] Groq:', e.message);
+      if (_groqCache) { items = [..._groqCache]; sources.push('groq-stale'); }
+    }
+  } else {
+    console.warn('[market] GROQ_API_KEY not set');
+  }
+
+  // Forex (5 min cache, always replaces Groq forex)
+  let fx = [];
+  if (_fxCache && now - _fxAt < FOREX_TTL) {
+    fx = _fxCache; sources.push('fx-cache');
+  } else {
+    try {
+      fx = await getLiveForex();
+      _fxCache = fx; _fxAt = now;
+      sources.push('er-api');
+      console.log('[market] Forex OK:', fx.length);
+    } catch (e) {
+      console.warn('[market] Forex:', e.message);
+      if (_fxCache) { fx = _fxCache; sources.push('fx-stale'); }
     }
   }
 
-  /* 2. Supplement/replace forex with er-api (more accurate exchange rates) */
-  try {
-    const fx = await fetchForex();
-    sources.push('er-api');
-    const fxNames = new Set(fx.map(f => f.name));
-    // Remove Groq forex items, add er-api ones (more precise)
-    items = items.filter(i => !fxNames.has(i.name));
-    items.push(...fx);
-    console.log('[market] Forex OK:', fx.length, 'pairs');
-  } catch (e) {
-    console.warn('[market] Forex failed:', e.message);
+  if (fx.length) {
+    const fxSet = new Set(fx.map(f => f.name));
+    items = [...items.filter(i => !fxSet.has(i.name)), ...fx];
   }
 
   if (!items.length) {
-    if (_cache) return res.status(200).json({ ..._cache, cached: true, stale: true });
-    return res.status(200).json({ items: [], sources: ['none'], fetchedAt: new Date().toISOString() });
+    return res.status(200).json({ items:[], sources, fetchedAt:new Date().toISOString(), error: key?'all failed':'no GROQ_API_KEY' });
   }
 
-  items.sort((a, b) => (ORDER[a.type] ?? 9) - (ORDER[b.type] ?? 9));
-
-  const result = { items, sources, fetchedAt: new Date().toISOString(), count: items.length };
-  _cache = result; _cacheAt = Date.now();
-  return res.status(200).json(result);
+  items.sort((a,b) => (ORD[a.type]??9) - (ORD[b.type]??9));
+  return res.status(200).json({ items, sources, count:items.length, fetchedAt:new Date().toISOString() });
 }
