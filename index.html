@@ -71,6 +71,10 @@
       <span class="logo-tagline">Your Daily Read</span>
     </a>
     <nav class="main-nav" id="mainNav" aria-label="Main navigation">
+      <button class="nav-close-btn" id="navCloseBtn" aria-label="Close menu">
+        <span>Menu</span>
+        <span class="nav-close-icon">✕</span>
+      </button>
       <ul class="nav-list">
         <li><a href="/" class="nav-link active">Home</a></li>
         <li><a href="/pages/category.html?cat=india-news" class="nav-link">India</a></li>
@@ -84,14 +88,15 @@
         <li><a href="/pages/category.html?cat=food" class="nav-link">Food</a></li>
         <li><a href="/pages/category.html?cat=fashion" class="nav-link">Fashion</a></li>
         <li><a href="/pages/category.html?cat=jobs" class="nav-link">Jobs</a></li>
+        <li><a href="/pages/search.html" class="nav-link" id="mobileSearchLink">🔍 Search</a></li>
       </ul>
     </nav>
     <div class="header-actions">
       <a href="/pages/search.html" class="btn-search" aria-label="Search">🔍</a>
-      <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
     </div>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </header>
 
@@ -470,129 +475,172 @@
 
 
 <script>
-/* ===== LIVE MARKET TICKER ===== */
+/* ===== LIVE MARKET TICKER — browser-side multi-source ===== */
 (function () {
   'use strict';
 
-  const REFRESH_MS   = 60000;   // refresh every 60s
-  const RETRY_MS     = 15000;   // retry on fail after 15s
-  const SPEED_DEFAULT = 55;     // animation duration (seconds) — adjust for speed
-  const el   = document.getElementById('marketItems');
+  const REFRESH_MS = 60000;
+  const el    = document.getElementById('marketItems');
   const label = document.getElementById('marketLabel');
   if (!el) return;
 
-  // Type icons
-  const ICONS = {
-    index:     '📊',
-    forex:     '💱',
-    commodity: '🪙',
-    stock:     '📈',
-    etf:       '💹',
-  };
+  const TYPE_LABELS = { index:'IDX', forex:'FX', commodity:'CMD', stock:'STK', etf:'ETF' };
 
-  // Type short labels
-  const TYPE_LABELS = {
-    index:     'IDX',
-    forex:     'FX',
-    commodity: 'CMD',
-    stock:     'STK',
-    etf:       'ETF',
-  };
+  function fmt(n, unit) {
+    if (n == null || isNaN(n)) return '—';
+    const v = parseFloat(n);
+    if (unit === '₹' && v >= 1000) return unit + v.toLocaleString('en-IN',{maximumFractionDigits:2});
+    if (v >= 1000) return unit + v.toLocaleString('en-US',{maximumFractionDigits:2});
+    return unit + v.toFixed(2);
+  }
+  function fmtChg(c,p){ if(c==null)return''; const s=c>=0?'+':''; const ps=p>=0?'+':''; return `${s}${parseFloat(c).toFixed(2)} (${ps}${parseFloat(p).toFixed(2)}%)`; }
 
   function buildItem(item) {
-    const dir    = item.direction === 'up' ? 'up' : 'down';
-    const arrow  = item.direction === 'up' ? '▲' : '▼';
-    const hasChange = item.change && item.change.trim() && item.change !== '';
-    const typeLabel = TYPE_LABELS[item.type] || '';
-    const icon  = ICONS[item.type] || '';
-
-    return `<span class="market-item" title="${item.symbol}">` +
-      `<span class="market-dot ${item.marketState === 'REGULAR' ? 'live' : 'closed'}"></span>` +
-      `<span class="market-type ${item.type}">${typeLabel}</span>` +
+    const dir   = (item.rawChange||0) >= 0 ? 'up' : 'down';
+    const arrow = dir === 'up' ? '▲' : '▼';
+    const tl    = TYPE_LABELS[item.type] || '';
+    const isLive = item.marketState === 'REGULAR';
+    return `<span class="market-item" title="${item.name}">` +
+      `<span class="market-dot ${isLive?'live':'closed'}"></span>` +
+      `<span class="market-type ${item.type}">${tl}</span>` +
       `<span class="market-name">${item.name}</span>` +
       `<span class="market-price">${item.price}</span>` +
-      (hasChange
-        ? `<span class="market-change ${dir}"><span class="market-arrow">${arrow}</span>${item.change}</span>`
-        : '') +
+      (item.change ? `<span class="market-change ${dir}"><span class="market-arrow">${arrow}</span>${item.change}</span>` : '') +
       `</span>`;
   }
 
-  let lastFetchOk = false;
-  let retryTimer  = null;
-
-  function setSpeed(itemCount) {
-    // More items = longer animation so speed feels consistent
-    const duration = Math.max(30, Math.min(80, itemCount * 2.2));
-    el.style.animationDuration = duration + 's';
-  }
-
-  function render(data) {
-    if (!data || !data.items || !data.items.length) {
-      el.innerHTML = '<span class="market-loading">Market data unavailable — retrying…</span>';
-      label.className = 'market-label closed';
-      label.textContent = 'Markets';
-      return;
-    }
-
-    const items = data.items;
+  function render(items) {
+    if (!items || !items.length) return;
     const anyLive = items.some(i => i.marketState === 'REGULAR');
-
-    // Update label
     label.textContent = anyLive ? 'Live Markets' : 'Markets';
     label.className   = 'market-label' + (anyLive ? '' : ' closed');
-
-    // Build HTML — duplicate list for seamless right-to-left loop
     const html = items.map(buildItem).join('');
-    el.innerHTML = html + html;
-
-    setSpeed(items.length);
-    lastFetchOk = true;
+    el.innerHTML = html + html; // doubled for seamless loop
+    // Adjust speed based on item count
+    const dur = Math.max(18, Math.min(60, items.length * 2));
+    el.style.animationDuration = dur + 's';
   }
 
-  async function fetchMarket() {
-    clearTimeout(retryTimer);
-    try {
-      const res = await fetch('/api/market-data');
-      // On 404 the API isn't deployed yet — show static fallback, don't retry aggressively
-      if (res.status === 404) {
-        renderFallback();
-        retryTimer = setTimeout(fetchMarket, 300000); // retry in 5 min
-        return;
-      }
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      const data = await res.json();
-      render(data);
-      setTimeout(fetchMarket, REFRESH_MS);
-    } catch (err) {
-      // Silent — no console warning spam
-      if (!lastFetchOk) renderFallback();
-      retryTimer = setTimeout(fetchMarket, RETRY_MS);
-    }
+  /* ── Source 1: our server proxy (Yahoo Finance) ── */
+  async function fromServer() {
+    const r = await fetch('/api/market-data');
+    if (!r.ok) throw new Error('server ' + r.status);
+    const d = await r.json();
+    if (!d.items || !d.items.length) throw new Error('server empty');
+    // Filter out Loading items
+    const good = d.items.filter(i => i.price && !i.price.includes('Loading'));
+    if (!good.length) throw new Error('all loading');
+    return good;
   }
 
-  function renderFallback() {
-    const CY = new Date().getFullYear();
-    // Static representative data shown while API deploys or is unavailable
-    const fallback = [
-      { name:'Sensex',        price:'Loading',  change:'', direction:'up', type:'index',    marketState:'CLOSED' },
-      { name:'Nifty 50',      price:'Loading',  change:'', direction:'up', type:'index',    marketState:'CLOSED' },
-      { name:'USD/INR',       price:'Loading',  change:'', direction:'up', type:'forex',    marketState:'CLOSED' },
-      { name:'Gold',          price:'Loading',  change:'', direction:'up', type:'commodity',marketState:'CLOSED' },
-      { name:'Crude Oil WTI', price:'Loading',  change:'', direction:'up', type:'commodity',marketState:'CLOSED' },
-      { name:'Silver',        price:'Loading',  change:'', direction:'up', type:'commodity',marketState:'CLOSED' },
-      { name:'Bank Nifty',    price:'Loading',  change:'', direction:'up', type:'index',    marketState:'CLOSED' },
-      { name:'S&P 500',       price:'Loading',  change:'', direction:'up', type:'index',    marketState:'CLOSED' },
+  /* ── Source 2: ExchangeRate API (forex, free, no key, no CORS block) ── */
+  async function fromForex() {
+    const r = await fetch('https://open.er-api.com/v6/latest/USD');
+    if (!r.ok) throw new Error('er-api ' + r.status);
+    const d = await r.json();
+    const rates = d.rates || {};
+    const inr = rates.INR;
+    if (!inr) throw new Error('no INR');
+    const pairs = [
+      { sym:'USDINR=X', name:'USD/INR', base:'USD', unit:'₹' },
+      { sym:'EURINR=X', name:'EUR/INR', base:'EUR', unit:'₹' },
+      { sym:'GBPINR=X', name:'GBP/INR', base:'GBP', unit:'₹' },
+      { sym:'JPYINR=X', name:'JPY/INR', base:'JPY', unit:'₹' },
+      { sym:'AEDINR=X', name:'AED/INR', base:'AED', unit:'₹' },
+      { sym:'SARINR=X', name:'SAR/INR', base:'SAR', unit:'₹' },
     ];
-    render({ items: fallback });
-    label.textContent = 'Markets';
-    label.className = 'market-label closed';
+    return pairs
+      .filter(p => p.base === 'USD' || rates[p.base])
+      .map(p => {
+        const rate = p.base === 'USD' ? inr : (inr / rates[p.base]);
+        return { symbol:p.sym, name:p.name, type:'forex',
+          price: fmt(rate,'₹'), rawPrice:rate,
+          change:'', rawChange:0, rawPct:0,
+          direction:'up', marketState:'CLOSED' };
+      });
   }
 
-  // Kick off immediately
-  fetchMarket();
+  /* ── Source 3: CoinGecko (crypto prices in INR, free, no key) ── */
+  async function fromCrypto() {
+    const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,tether&vs_currencies=inr,usd');
+    if (!r.ok) throw new Error('coingecko ' + r.status);
+    const d = await r.json();
+    const items = [];
+    if (d.bitcoin)  items.push({ symbol:'BTC', name:'Bitcoin',  type:'commodity', price:fmt(d.bitcoin.inr,'₹'),  rawPrice:d.bitcoin.inr,  change:'',rawChange:0,rawPct:0,direction:'up',marketState:'REGULAR' });
+    if (d.ethereum) items.push({ symbol:'ETH', name:'Ethereum', type:'commodity', price:fmt(d.ethereum.inr,'₹'), rawPrice:d.ethereum.inr, change:'',rawChange:0,rawPct:0,direction:'up',marketState:'REGULAR' });
+    return items;
+  }
+
+  /* ── Static fallback items shown while fetching ── */
+  const STATIC_FALLBACK = [
+    { name:'Sensex',      type:'index',    price:'BSE India',    change:'', rawChange:0, direction:'up', marketState:'CLOSED' },
+    { name:'Nifty 50',    type:'index',    price:'NSE India',    change:'', rawChange:0, direction:'up', marketState:'CLOSED' },
+    { name:'Gold',        type:'commodity',price:'MCX Commodity', change:'', rawChange:0, direction:'up', marketState:'CLOSED' },
+    { name:'Crude Oil',   type:'commodity',price:'MCX Commodity', change:'', rawChange:0, direction:'up', marketState:'CLOSED' },
+    { name:'USD/INR',     type:'forex',    price:'Forex',        change:'', rawChange:0, direction:'up', marketState:'CLOSED' },
+    { name:'Bitcoin',     type:'commodity',price:'Crypto',       change:'', rawChange:0, direction:'up', marketState:'CLOSED' },
+  ];
+
+  let lastItems = null;
+
+  async function refresh() {
+    // Show last data immediately while refreshing
+    if (lastItems) render(lastItems);
+
+    let items = [];
+
+    // Always try forex first (most reliable, truly free with CORS)
+    try {
+      const forexItems = await fromForex();
+      items.push(...forexItems);
+      // Render immediately so user sees something fast
+      if (lastItems) {
+        const merged = [...lastItems];
+        forexItems.forEach(f => {
+          const i = merged.findIndex(x => x.symbol === f.symbol);
+          if (i >= 0) merged[i] = f; else merged.push(f);
+        });
+        render(merged);
+      } else {
+        render(forexItems);
+      }
+    } catch(e) { console.warn('[market] forex:', e.message); }
+
+    // Try server proxy for full data
+    try {
+      const serverItems = await fromServer();
+      // Merge: server data wins for everything except forex (er-api is more reliable)
+      const forexSyms = new Set(['USDINR=X','EURINR=X','GBPINR=X','JPYINR=X','AEDINR=X','SARINR=X']);
+      const forexFromAbove = items.filter(i => forexSyms.has(i.symbol));
+      const nonForex = serverItems.filter(i => !forexSyms.has(i.symbol));
+      items = [...nonForex, ...forexFromAbove];
+    } catch(e) {
+      console.warn('[market] server:', e.message);
+    }
+
+    // Add crypto prices (free, CORS-friendly)
+    try {
+      const crypto = await fromCrypto();
+      crypto.forEach(c => {
+        if (!items.find(i => i.symbol === c.symbol)) items.push(c);
+      });
+    } catch(e) { /* silent */ }
+
+    if (items.length) {
+      // Sort: index, forex, commodity, stock, etf
+      const ord = {index:0,forex:1,commodity:2,etf:3,stock:4};
+      items.sort((a,b) => (ord[a.type]??9) - (ord[b.type]??9));
+      lastItems = items;
+      render(items);
+    } else if (!lastItems) {
+      render(STATIC_FALLBACK);
+    }
+
+    setTimeout(refresh, REFRESH_MS);
+  }
+
+  // Start immediately
+  refresh();
 
 })();
 </script>
-
-</body>
-</html>
