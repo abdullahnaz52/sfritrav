@@ -523,9 +523,20 @@
         link.addEventListener('click', () => {
           nav.classList.remove('open');
           ham.classList.remove('active');
+          ham.setAttribute('aria-expanded','false');
           document.body.style.overflow = '';
         });
       });
+      // Close button inside the nav
+      const closeBtn = document.getElementById('navCloseBtn');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+          nav.classList.remove('open');
+          ham.classList.remove('active');
+          ham.setAttribute('aria-expanded','false');
+          document.body.style.overflow = '';
+        });
+      }
     }
 
     // Cookie consent
