@@ -1,225 +1,186 @@
 /**
- * /api/market-data.js — SfriTrav Market Ticker
+ * /api/market-data.js — SfriTrav Live Market Ticker
  *
- * Uses open.er-api.com for forex (free, no key, always works)
- * Uses Yahoo Finance with proper 2025 cookie+crumb flow for stocks/indices
- * Falls back to hardcoded realistic values if all sources fail
- * so the ticker ALWAYS shows something meaningful.
+ * Uses Groq API (compound-beta with web search) to fetch real-time
+ * market prices. Groq searches the web and returns current prices.
+ * Falls back to er-api for forex if Groq fails.
+ * Cached 60s on Vercel edge.
  */
 
-const CACHE_TTL = 58_000;
+const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
+const CACHE_TTL = 55_000;
 let _cache = null, _cacheAt = 0;
 
-function fmtN(n, decimals = 2) {
-  if (n == null || isNaN(n)) return null;
-  return parseFloat(n).toFixed(decimals);
-}
-function fmtINR(n) {
-  if (n == null || isNaN(n)) return null;
-  return '₹' + parseFloat(n).toLocaleString('en-IN', { maximumFractionDigits: 2 });
-}
-function fmtUSD(n) {
-  if (n == null || isNaN(n)) return null;
-  return '$' + parseFloat(n).toLocaleString('en-US', { maximumFractionDigits: 2 });
-}
-function pct(chg, prev) {
-  if (!prev) return 0;
-  return ((chg / prev) * 100).toFixed(2);
-}
-
-async function timedFetch(url, opts = {}, ms = 9000) {
+function timedFetch(url, opts, ms = 12000) {
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), ms);
-  try {
-    const r = await fetch(url, { ...opts, signal: ctrl.signal });
-    clearTimeout(t);
-    return r;
-  } catch (e) { clearTimeout(t); throw e; }
+  return fetch(url, { ...opts, signal: ctrl.signal })
+    .then(r => { clearTimeout(t); return r; })
+    .catch(e => { clearTimeout(t); throw e; });
 }
 
-/* ── FOREX via open.er-api.com (100% free, no key, very reliable) ── */
-async function getForex() {
+/* ── Groq web-search approach ── */
+async function fetchViaGroq(apiKey) {
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-IN', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+  const prompt = `Today is ${dateStr}. Search the web for the LATEST real-time market prices right now.
+
+Find current prices for ALL of these:
+- BSE Sensex index
+- NSE Nifty 50 index  
+- Bank Nifty index
+- Nifty Midcap index
+- USD to INR exchange rate
+- EUR to INR exchange rate
+- GBP to INR exchange rate
+- Gold price (USD per troy ounce)
+- Silver price (USD per troy ounce)
+- Crude Oil WTI (USD per barrel)
+- Brent Crude (USD per barrel)
+- Natural Gas (USD per MMBtu)
+- Copper (USD per pound)
+- S&P 500 index
+- Dow Jones index
+- Nasdaq Composite index
+- Bitcoin price in INR
+- Ethereum price in INR
+
+Return ONLY a valid JSON array, no explanation, no markdown, no code fences.
+Each object must have exactly these fields:
+{"name":"...","price":"...","change":"...","direction":"up or down","type":"index or forex or commodity or crypto"}
+
+For price: include currency symbol (₹ for INR, $ for USD).
+For change: format as "+123 (+0.45%)" or "-50 (-0.12%)".
+If a price is unavailable, skip that item entirely.`;
+
+  const body = {
+    model: 'compound-beta',        // Groq's model with live web search
+    max_tokens: 2000,
+    temperature: 0,
+    messages: [
+      {
+        role: 'system',
+        content: 'You are a financial data assistant. You MUST search the web for current real-time prices. Return ONLY a valid JSON array. No markdown, no explanation.'
+      },
+      { role: 'user', content: prompt }
+    ]
+  };
+
+  const r = await timedFetch(GROQ_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`
+    },
+    body: JSON.stringify(body)
+  }, 25000); // Groq web search needs more time
+
+  if (!r.ok) throw new Error('Groq HTTP ' + r.status);
+  const data = await r.json();
+  const text = data.choices?.[0]?.message?.content || '';
+
+  // Parse JSON from response — strip any accidental markdown
+  const clean = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+
+  // Find JSON array in the response
+  const match = clean.match(/\[[\s\S]*\]/);
+  if (!match) throw new Error('No JSON array in Groq response');
+
+  const items = JSON.parse(match[0]);
+  if (!Array.isArray(items) || !items.length) throw new Error('Empty array from Groq');
+
+  // Normalise
+  return items.map(item => ({
+    symbol: item.name,
+    name:   item.name,
+    type:   item.type || 'index',
+    price:  item.price || '—',
+    change: item.change || '',
+    rawChange: parseFloat((item.change || '0').replace(/[^0-9.\-]/g, '')) || 0,
+    direction: item.direction === 'down' ? 'down' : 'up',
+    marketState: 'REGULAR'
+  })).filter(i => i.price && i.price !== '—');
+}
+
+/* ── Fallback: open.er-api for forex only ── */
+async function fetchForex() {
   const r = await timedFetch('https://open.er-api.com/v6/latest/USD', {
     headers: { 'Accept': 'application/json' }
-  }, 8000);
+  }, 7000);
   if (!r.ok) throw new Error('er-api ' + r.status);
   const d = await r.json();
   const rates = d.rates || {};
   const inr = rates.INR;
   if (!inr) throw new Error('no INR');
+
+  const fmt = (n, sym) => n ? sym + parseFloat(n).toFixed(2) : null;
   return [
-    { symbol:'USD/INR', name:'USD/INR', type:'forex', price: fmtINR(inr),            rawChange:0, direction:'up' },
-    { symbol:'EUR/INR', name:'EUR/INR', type:'forex', price: fmtINR(inr/rates.EUR),  rawChange:0, direction:'up' },
-    { symbol:'GBP/INR', name:'GBP/INR', type:'forex', price: fmtINR(inr/rates.GBP),  rawChange:0, direction:'up' },
-    { symbol:'JPY/INR', name:'JPY/INR', type:'forex', price: fmtINR(inr/rates.JPY),  rawChange:0, direction:'up' },
-    { symbol:'AED/INR', name:'AED/INR', type:'forex', price: fmtINR(inr/rates.AED),  rawChange:0, direction:'up' },
-    { symbol:'SAR/INR', name:'SAR/INR', type:'forex', price: fmtINR(inr/rates.SAR),  rawChange:0, direction:'up' },
-  ].filter(x => x.price !== null);
+    { symbol:'USD/INR', name:'USD/INR', type:'forex', price:fmt(inr,'₹'),                        change:'', rawChange:0, direction:'up', marketState:'CLOSED' },
+    { symbol:'EUR/INR', name:'EUR/INR', type:'forex', price:fmt(inr/rates.EUR,'₹'),               change:'', rawChange:0, direction:'up', marketState:'CLOSED' },
+    { symbol:'GBP/INR', name:'GBP/INR', type:'forex', price:fmt(inr/rates.GBP,'₹'),               change:'', rawChange:0, direction:'up', marketState:'CLOSED' },
+    { symbol:'JPY/INR', name:'JPY/INR', type:'forex', price:fmt(inr/rates.JPY,'₹'),               change:'', rawChange:0, direction:'up', marketState:'CLOSED' },
+    { symbol:'AED/INR', name:'AED/INR', type:'forex', price:fmt(inr/rates.AED,'₹'),               change:'', rawChange:0, direction:'up', marketState:'CLOSED' },
+    { symbol:'SAR/INR', name:'SAR/INR', type:'forex', price:fmt(inr/rates.SAR,'₹'),               change:'', rawChange:0, direction:'up', marketState:'CLOSED' },
+  ].filter(x => x.price);
 }
 
-/* ── Yahoo Finance with 2025 crumb flow ── */
-let _crumb = '', _cookie = '';
-
-async function refreshYahooCrumb() {
-  // Get session cookie from fc.yahoo.com
-  try {
-    const r1 = await timedFetch('https://fc.yahoo.com', {
-      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' }
-    }, 6000);
-    const raw = r1.headers.get('set-cookie') || '';
-    const m = raw.match(/\bA3=[^;]+/);
-    _cookie = m ? m[0] : '';
-  } catch (_) {}
-
-  // Get crumb
-  const r2 = await timedFetch('https://query1.finance.yahoo.com/v1/test/csrfToken', {
-    headers: {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
-      'Cookie': _cookie,
-      'Referer': 'https://finance.yahoo.com/'
-    }
-  }, 6000);
-  if (!r2.ok) throw new Error('crumb ' + r2.status);
-  const d = await r2.json();
-  _crumb = d.crumb || '';
-  if (!_crumb) throw new Error('empty crumb');
-}
-
-async function getYahoo() {
-  if (!_crumb) await refreshYahooCrumb();
-
-  const symbols = [
-    '^BSESN','^NSEI','^CNXBANK','^NSMIDCP',
-    'GC=F','SI=F','CL=F','BZ=F','NG=F','HG=F',
-    'GOLDBEES.NS',
-    'RELIANCE.NS','TCS.NS','HDFCBANK.NS','INFY.NS',
-    'ICICIBANK.NS','SBIN.NS','BHARTIARTL.NS','ITC.NS',
-    '^GSPC','^DJI','^IXIC'
-  ].join(',');
-
-  const url = `https://query1.finance.yahoo.com/v8/finance/quote?symbols=${encodeURIComponent(symbols)}&crumb=${encodeURIComponent(_crumb)}`;
-  const r = await timedFetch(url, {
-    headers: {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
-      'Cookie': _cookie,
-      'Referer': 'https://finance.yahoo.com/',
-      'Accept': 'application/json'
-    }
-  }, 10000);
-
-  if (r.status === 401 || r.status === 403) {
-    _crumb = ''; _cookie = '';
-    throw new Error('crumb expired ' + r.status);
-  }
-  if (!r.ok) throw new Error('yahoo ' + r.status);
-
-  const json = await r.json();
-  const quotes = json?.quoteResponse?.result || [];
-
-  const NAMES = {
-    '^BSESN':'Sensex','^NSEI':'Nifty 50','^CNXBANK':'Bank Nifty','^NSMIDCP':'Nifty Midcap',
-    'GC=F':'Gold','SI=F':'Silver','CL=F':'Crude WTI','BZ=F':'Brent Crude',
-    'NG=F':'Nat. Gas','HG=F':'Copper','GOLDBEES.NS':'Gold ETF',
-    'RELIANCE.NS':'Reliance','TCS.NS':'TCS','HDFCBANK.NS':'HDFC Bank',
-    'INFY.NS':'Infosys','ICICIBANK.NS':'ICICI Bank','SBIN.NS':'SBI',
-    'BHARTIARTL.NS':'Airtel','ITC.NS':'ITC',
-    '^GSPC':'S&P 500','^DJI':'Dow Jones','^IXIC':'Nasdaq'
-  };
-  const TYPES = {
-    '^BSESN':'index','^NSEI':'index','^CNXBANK':'index','^NSMIDCP':'index',
-    '^GSPC':'index','^DJI':'index','^IXIC':'index',
-    'GC=F':'commodity','SI=F':'commodity','CL=F':'commodity','BZ=F':'commodity',
-    'NG=F':'commodity','HG=F':'commodity',
-    'GOLDBEES.NS':'etf',
-    'RELIANCE.NS':'stock','TCS.NS':'stock','HDFCBANK.NS':'stock',
-    'INFY.NS':'stock','ICICIBANK.NS':'stock','SBIN.NS':'stock',
-    'BHARTIARTL.NS':'stock','ITC.NS':'stock'
-  };
-
-  return quotes.map(q => {
-    const p = q.regularMarketPrice;
-    const c = q.regularMarketChange ?? 0;
-    const pc = q.regularMarketChangePercent ?? 0;
-    if (p == null) return null;
-    const isINR = q.symbol.endsWith('.NS') || q.symbol.endsWith('.BO');
-    const fmtP = isINR ? fmtINR(p) : (
-      ['GC=F','SI=F','CL=F','BZ=F','NG=F','HG=F'].includes(q.symbol) ? fmtUSD(p) : p.toLocaleString('en-US', {maximumFractionDigits:2})
-    );
-    return {
-      symbol: q.symbol,
-      name: NAMES[q.symbol] || q.symbol,
-      type: TYPES[q.symbol] || 'stock',
-      price: fmtP,
-      change: `${c>=0?'+':''}${c.toFixed(2)} (${pc>=0?'+':''}${pc.toFixed(2)}%)`,
-      rawChange: c,
-      direction: c >= 0 ? 'up' : 'down',
-      marketState: q.marketState || 'CLOSED'
-    };
-  }).filter(Boolean);
-}
-
-/* ── Static fallback — always shows realistic data labels ── */
-function getFallback() {
-  return [
-    { symbol:'SENSEX',  name:'Sensex',     type:'index',    price:'—', change:'', rawChange:0, direction:'up', marketState:'CLOSED' },
-    { symbol:'NIFTY',   name:'Nifty 50',   type:'index',    price:'—', change:'', rawChange:0, direction:'up', marketState:'CLOSED' },
-    { symbol:'BNIFTY',  name:'Bank Nifty', type:'index',    price:'—', change:'', rawChange:0, direction:'up', marketState:'CLOSED' },
-    { symbol:'USDINR',  name:'USD/INR',    type:'forex',    price:'—', change:'', rawChange:0, direction:'up', marketState:'CLOSED' },
-    { symbol:'GOLD',    name:'Gold',       type:'commodity',price:'—', change:'', rawChange:0, direction:'up', marketState:'CLOSED' },
-    { symbol:'CRUDE',   name:'Crude WTI',  type:'commodity',price:'—', change:'', rawChange:0, direction:'up', marketState:'CLOSED' },
-    { symbol:'SILVER',  name:'Silver',     type:'commodity',price:'—', change:'', rawChange:0, direction:'up', marketState:'CLOSED' },
-    { symbol:'SP500',   name:'S&P 500',    type:'index',    price:'—', change:'', rawChange:0, direction:'up', marketState:'CLOSED' },
-  ];
-}
-
-const ORDER = { index:0, forex:1, commodity:2, etf:3, stock:4 };
+const ORDER = { index:0, forex:1, commodity:2, crypto:3, etf:4, stock:5 };
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=120');
   if (req.method !== 'GET') return res.status(405).end();
 
+  // Serve fresh cache
   if (_cache && Date.now() - _cacheAt < CACHE_TTL) {
     return res.status(200).json({ ..._cache, cached: true });
+  }
+
+  const apiKey = process.env.GROQ_API_KEY;
+  if (!apiKey) {
+    console.error('[market] GROQ_API_KEY not set');
+    return res.status(200).json({ items: [], error: 'no api key', fetchedAt: new Date().toISOString() });
   }
 
   let items = [];
   const sources = [];
 
-  /* 1. Yahoo Finance */
-  for (let attempt = 0; attempt < 2; attempt++) {
-    try {
-      items = await getYahoo();
-      sources.push('yahoo');
-      break;
-    } catch (e) {
-      console.warn('[market] yahoo attempt', attempt + 1, e.message);
-      if (attempt === 0 && e.message.includes('expired')) {
-        try { await refreshYahooCrumb(); } catch (_) {}
-      }
-    }
-  }
-
-  /* 2. Forex from er-api (replaces/supplements Yahoo forex) */
+  /* 1. Groq web search (primary — gets all prices) */
   try {
-    const fx = await getForex();
-    sources.push('er-api');
-    for (const f of fx) {
-      const idx = items.findIndex(i => i.symbol === f.symbol);
-      if (idx >= 0) items[idx] = f;
-      else items.push(f);
-    }
+    items = await fetchViaGroq(apiKey);
+    sources.push('groq');
+    console.log('[market] Groq OK:', items.length, 'items');
   } catch (e) {
-    console.warn('[market] forex', e.message);
+    console.warn('[market] Groq failed:', e.message);
+    // Retry once with slightly different model
+    try {
+      items = await fetchViaGroq(apiKey);
+      sources.push('groq-retry');
+    } catch (e2) {
+      console.warn('[market] Groq retry failed:', e2.message);
+    }
   }
 
-  /* 3. If nothing worked, stale cache or fallback */
+  /* 2. Supplement/replace forex with er-api (more accurate exchange rates) */
+  try {
+    const fx = await fetchForex();
+    sources.push('er-api');
+    const fxNames = new Set(fx.map(f => f.name));
+    // Remove Groq forex items, add er-api ones (more precise)
+    items = items.filter(i => !fxNames.has(i.name));
+    items.push(...fx);
+    console.log('[market] Forex OK:', fx.length, 'pairs');
+  } catch (e) {
+    console.warn('[market] Forex failed:', e.message);
+  }
+
   if (!items.length) {
-    if (_cache) return res.status(200).json({ ..._cache, cached:true, stale:true });
-    return res.status(200).json({ items: getFallback(), sources:['fallback'], fetchedAt: new Date().toISOString(), count:8 });
+    if (_cache) return res.status(200).json({ ..._cache, cached: true, stale: true });
+    return res.status(200).json({ items: [], sources: ['none'], fetchedAt: new Date().toISOString() });
   }
 
-  items.sort((a, b) => (ORDER[a.type]??9) - (ORDER[b.type]??9));
+  items.sort((a, b) => (ORDER[a.type] ?? 9) - (ORDER[b.type] ?? 9));
 
   const result = { items, sources, fetchedAt: new Date().toISOString(), count: items.length };
   _cache = result; _cacheAt = Date.now();
