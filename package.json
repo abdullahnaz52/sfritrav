@@ -2,6 +2,5 @@
   "name": "sfritrav",
   "version": "2.0.0",
   "description": "SfriTrav - News, Health, Travel, Sports, Entertainment & More",
-  "type": "module",
-  "engines": { "node": "22.x" }
+  "engines": { "node": "20.x" }
 }
