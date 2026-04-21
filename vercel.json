@@ -2,15 +2,6 @@
   "version": 2,
   "name": "sfritrav",
   "regions": ["bom1"],
-  "functions": {
-    "api/breaking-news.js": { "maxDuration": 15 },
-    "api/market-data.js":   { "maxDuration": 30 },
-    "api/generate-article.js": { "maxDuration": 30 },
-    "api/cron-generate.js": { "maxDuration": 60 },
-    "api/trending.js":      { "maxDuration": 15 },
-    "api/sitemap.js":       { "maxDuration": 10 },
-    "api/rss-feed.js":      { "maxDuration": 10 }
-  },
   "crons": [
     { "path": "/api/cron-generate", "schedule": "30 0 * * *" }
   ],
@@ -22,7 +13,7 @@
         { "key": "X-Frame-Options",           "value": "SAMEORIGIN" },
         { "key": "Referrer-Policy",           "value": "strict-origin-when-cross-origin" },
         { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains; preload" },
-        { "key": "Content-Security-Policy",   "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https://images.unsplash.com https://www.google-analytics.com; connect-src 'self' https://api.groq.com https://open.er-api.com https://formspree.io; frame-src 'none';" }
+        { "key": "Content-Security-Policy",   "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https://images.unsplash.com https://www.google-analytics.com; connect-src 'self' https://api.groq.com https://open.er-api.com https://formspree.io https://feeds.bbci.co.uk https://feeds.reuters.com https://www.aljazeera.com; frame-src 'none';" }
       ]
     },
     {
@@ -36,14 +27,14 @@
     {
       "source": "/sw.js",
       "headers": [
-        { "key": "Cache-Control",          "value": "no-cache, no-store, must-revalidate" },
+        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" },
         { "key": "Service-Worker-Allowed", "value": "/" }
       ]
     }
   ],
   "rewrites": [
-    { "source": "/sitemap.xml", "destination": "/api/sitemap"   },
-    { "source": "/feed.xml",    "destination": "/api/rss-feed"  }
+    { "source": "/sitemap.xml", "destination": "/api/sitemap"  },
+    { "source": "/feed.xml",    "destination": "/api/rss-feed" }
   ],
   "redirects": [
     { "source": "/home",   "destination": "/",                                     "permanent": true  },
