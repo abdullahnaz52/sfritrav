@@ -2,5 +2,8 @@
   "name": "sfritrav",
   "version": "2.0.0",
   "description": "SfriTrav - News, Health, Travel, Sports, Entertainment & More",
+  "scripts": {
+    "build": "echo 'Static site - no build needed'"
+  },
   "engines": { "node": "20.x" }
 }
