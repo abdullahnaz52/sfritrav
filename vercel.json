@@ -2,11 +2,40 @@
   "version": 2,
   "name": "sfritrav",
   "regions": ["bom1"],
+  "buildCommand": "echo 'Static site - no build needed'",
+  "outputDirectory": ".",
+  "framework": null,
   "crons": [
     { "path": "/api/cron-generate", "schedule": "30 0 * * *" }
   ],
   "rewrites": [
-    { "source": "/sitemap.xml", "destination": "/api/sitemap" },
-    { "source": "/feed.xml", "destination": "/api/rss-feed" }
+    { "source": "/sitemap.xml",      "destination": "/api/sitemap" },
+    { "source": "/feed.xml",         "destination": "/api/rss-feed" },
+    { "source": "/pages/about",      "destination": "/pages/about.html" },
+    { "source": "/pages/contact",    "destination": "/pages/contact.html" },
+    { "source": "/pages/search",     "destination": "/pages/search.html" },
+    { "source": "/pages/article",    "destination": "/pages/article.html" },
+    { "source": "/pages/category",   "destination": "/pages/category.html" },
+    { "source": "/privacy-policy",   "destination": "/privacy-policy.html" },
+    { "source": "/terms",            "destination": "/terms.html" },
+    { "source": "/disclaimer",       "destination": "/disclaimer.html" }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin",  "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET, POST, OPTIONS" },
+        { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization" }
+      ]
+    },
+    {
+      "source": "/public/css/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }]
+    },
+    {
+      "source": "/public/js/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }]
+    }
   ]
 }
