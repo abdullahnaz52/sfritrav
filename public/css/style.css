@@ -106,6 +106,7 @@ input, textarea, select { font-family: inherit; }
 
 .header-actions { display:flex;align-items:center;gap:.4rem;flex-shrink:0; }
 .btn-search { display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:var(--radius-sm);background:var(--cream);border:1.5px solid var(--border);font-size:.9rem;transition:all .15s;flex-shrink:0; }
+@media(max-width:900px){ .btn-search { display:none; } }
 .btn-search:hover { background:var(--black);color:var(--white);border-color:var(--black); }
 
 /* Hamburger */
@@ -116,8 +117,20 @@ input, textarea, select { font-family: inherit; }
 .hamburger.active span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
 
 /* Mobile nav */
+/* ticker speeds set directly on elements below */
 @media(max-width:900px){
+  /* Faster tickers on mobile — directly override animation-duration */
+  .ticker-items  { animation-duration: 8s !important; }
+  .trends-items  { animation-duration: 10s !important; }
+  .market-items  { animation-duration: 18s !important; }
+  /* Hamburger: pushed to far right with margin-left:auto, search hidden */
   .hamburger { display:flex; }
+  .btn-search { display:none !important; }
+  .main-nav { display:none; flex:none; }
+  .main-nav.open { display:block; }
+  /* Logo left, hamburger right */
+  .header-inner { gap:.5rem; justify-content:space-between; }
+  .header-actions { display:none; }  /* hide search on mobile */
   .main-nav {
     display:none; position:fixed;
     top:var(--header-h); left:0; right:0;
@@ -371,7 +384,7 @@ input, textarea, select { font-family: inherit; }
 }
 .market-items {
   display: flex; gap: 0; white-space: nowrap;
-  animation: market-scroll 55s linear infinite;
+  animation: market-scroll 40s linear infinite;
   font-family: var(--font-mono); font-size: .75rem;
 }
 .market-items:hover { animation-play-state: paused; }
@@ -426,5 +439,24 @@ input, textarea, select { font-family: inherit; }
 .market-dot.live   { background: #22c55e; box-shadow: 0 0 4px #22c55e; animation: pulse-green .8s ease-in-out infinite alternate; }
 .market-dot.closed { background: #4a5568; }
 @keyframes pulse-green { from{opacity:.6} to{opacity:1} }
+
+
+/* Mobile nav close button */
+.nav-close-btn { display:none; }
+@media(max-width:900px){
+  .nav-close-btn {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:.75rem 1rem; margin-bottom:.5rem;
+    border-bottom:2px solid var(--black);
+    font-weight:700; font-size:.82rem; text-transform:uppercase; letter-spacing:.06em;
+    color:var(--ink); background:none; border-top:none; border-left:none; border-right:none;
+    width:100%; cursor:pointer;
+  }
+  .nav-close-icon {
+    width:30px; height:30px; background:var(--black); color:var(--white);
+    border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-size:1.1rem; line-height:1; flex-shrink:0; font-style:normal;
+  }
+}
 
 @media print { .site-header,.site-footer,.cookie-banner,.back-top,.ticker-bar,.trends-bar,.share-bar,.date-bar { display:none !important; } }
