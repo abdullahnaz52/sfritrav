@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search — SfriTrav</title>
+  <meta name="robots" content="noindex,follow">
+  <link rel="stylesheet" href="/public/css/style.css">
+  <link rel="icon" href="/images/favicon.ico">
+</head>
+<body>
+<header class="site-header" id="siteHeader">
+  <div class="container header-inner">
+    <a href="/" class="logo">SfriTrav<span class="logo-dot">.</span>com</a>
+    <nav class="main-nav" id="mainNav"><ul class="nav-list">
+      <li><a href="/" class="nav-link">Home</a></li>
+      <li><a href="/pages/category.html?cat=health" class="nav-link">Health</a></li>
+      <li><a href="/pages/category.html?cat=sports" class="nav-link">Sports</a></li>
+      <li><a href="/pages/category.html?cat=technology" class="nav-link">Tech</a></li>
+      <li><a href="/pages/category.html?cat=business" class="nav-link">Business</a></li>
+    </ul></nav>
+    <div class="header-actions">
+      <button class="hamburger" id="hamburger" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<section class="search-hero">
+  <div class="container">
+    <h1>Search SfriTrav</h1>
+    <div class="search-box-wrap">
+      <input type="search" id="searchInput" class="search-input" placeholder="Search health, sports, jobs, travel…" autocomplete="off">
+      <button id="searchBtn" class="search-submit">Search</button>
+    </div>
+    <div class="filter-row" id="filterRow">
+      <button class="filter-chip active" data-cat="all">All</button>
+      <button class="filter-chip" data-cat="health">Health</button>
+      <button class="filter-chip" data-cat="sports">Sports</button>
+      <button class="filter-chip" data-cat="technology">Tech</button>
+      <button class="filter-chip" data-cat="entertainment">Entertainment</button>
+      <button class="filter-chip" data-cat="business">Business</button>
+      <button class="filter-chip" data-cat="travel">Travel</button>
+      <button class="filter-chip" data-cat="food">Food</button>
+      <button class="filter-chip" data-cat="jobs">Jobs</button>
+      <button class="filter-chip" data-cat="india-news">India</button>
+      <button class="filter-chip" data-cat="women-health">Women</button>
+      <button class="filter-chip" data-cat="mental-health">Mental Health</button>
+    </div>
+  </div>
+</section>
+
+<div class="container" style="padding:2rem 0 4rem;">
+  <div id="resultsHeader" style="display:none;margin-bottom:1.25rem;font-size:.85rem;color:var(--ink-muted);"></div>
+  <div class="cards-grid" id="resultsGrid"></div>
+  <div id="initialState">
+    <p style="font-weight:600;margin-bottom:.75rem;">Popular topics:</p>
+    <div style="display:flex;flex-wrap:wrap;gap:.5rem;">
+      <a class="sug" href="#" data-q="morning health habits">Morning Health Habits</a>
+      <a class="sug" href="#" data-q="IPL 2026">IPL 2026</a>
+      <a class="sug" href="#" data-q="budget travel India">Budget Travel India</a>
+      <a class="sug" href="#" data-q="government jobs 2026">Govt Jobs 2026</a>
+      <a class="sug" href="#" data-q="skincare Indian women">Skincare Tips</a>
+      <a class="sug" href="#" data-q="stock market India">Stock Market</a>
+      <a class="sug" href="#" data-q="ashwagandha benefits">Ashwagandha</a>
+      <a class="sug" href="#" data-q="best smartphones India">Best Phones</a>
+      <a class="sug" href="#" data-q="mental health India">Mental Health</a>
+      <a class="sug" href="#" data-q="Indian street food">Street Food</a>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-bottom" style="padding:1.25rem 0;text-align:center;font-size:.78rem;color:rgba(255,255,255,.4);">
+    <div class="container"><p>&copy; <span class="footer-year"></span> SfriTrav.com</p></div>
+  </div>
+</footer>
+
+<style>
+.sug { padding:.35rem .85rem; background:var(--cream); border:1.5px solid var(--border); border-radius:20px; font-size:.82rem; cursor:pointer; transition:all .15s; }
+.sug:hover { background:var(--black); color:#fff; border-color:var(--black); }
+mark { background:#fff3cd; padding:0 2px; border-radius:2px; }
+</style>
+
+<script src="/public/js/app.js" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  let activeCat = 'all';
+  const CATS = {};
+
+  function doSearch(q) {
+    const grid = document.getElementById('resultsGrid');
+    const header = document.getElementById('resultsHeader');
+    const init = document.getElementById('initialState');
+    if (!q.trim()) { grid.innerHTML=''; header.style.display='none'; init.style.display=''; return; }
+    init.style.display = 'none'; header.style.display = 'block';
+
+    const all = window.SfriTrav?.allArticles() || [];
+    const cats = window.SfriTrav?.CATEGORIES || {};
+    const getImg = window.SfriTrav?.getImg || (() => '');
+    const ql = q.toLowerCase();
+    const results = all.filter(a => {
+      if (activeCat !== 'all' && a.category !== activeCat) return false;
+      return (a.title + ' ' + a.excerpt + ' ' + (a.tags||[]).join(' ')).toLowerCase().includes(ql);
+    }).sort((a,b) => a.title.toLowerCase().includes(ql) ? -1 : 1);
+
+    header.textContent = `${results.length} result${results.length !== 1 ? 's' : ''} for "${q}"`;
+    if (!results.length) { grid.innerHTML = '<p class="empty-state">No results found. Try different keywords.</p>'; return; }
+
+    const hi = t => t.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>');
+    grid.innerHTML = results.map((a,i) => {
+      const ci = cats[a.category] || { label: a.category, color: 'news' };
+      return `<article class="card">
+        <a href="/pages/article.html?slug=${a.slug}" class="card-img-wrap">
+          <img class="card-img" src="${getImg(a.category,i)}" alt="${a.title}" loading="lazy">
+        </a>
+        <div class="card-body">
+          <span class="tag ${ci.color}">${ci.label}</span>
+          <h3 class="card-title"><a href="/pages/article.html?slug=${a.slug}">${hi(a.title)}</a></h3>
+          <p class="card-excerpt">${hi(a.excerpt)}</p>
+          <div class="card-meta"><time>${new Date(a.date).toLocaleDateString('en-IN',{month:'short',day:'numeric',year:'numeric'})}</time><span class="dot">·</span><span>${a.readTime}</span></div>
+        </div>
+      </article>`;
+    }).join('');
+  }
+
+  const input = document.getElementById('searchInput');
+  let timer;
+  input.addEventListener('input', e => { clearTimeout(timer); timer = setTimeout(() => doSearch(e.target.value), 250); });
+  document.getElementById('searchBtn').addEventListener('click', () => doSearch(input.value));
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(input.value); });
+
+  document.querySelectorAll('.filter-chip').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      activeCat = this.dataset.cat;
+      doSearch(input.value);
+    });
+  });
+
+  document.querySelectorAll('.sug').forEach(s => s.addEventListener('click', e => { e.preventDefault(); input.value = s.dataset.q; doSearch(s.dataset.q); }));
+
+  const initQ = new URLSearchParams(location.search).get('q') || '';
+  if (initQ) { input.value = initQ; const trySearch = (n=0) => { if (window.SfriTrav?.allArticles) doSearch(initQ); else if (n < 20) setTimeout(() => trySearch(n+1), 150); }; trySearch(); }
+
+  window.addEventListener('scroll', () => document.getElementById('siteHeader').classList.toggle('scrolled', scrollY > 50), { passive:true });
+  document.getElementById('hamburger').addEventListener('click', function() { document.getElementById('mainNav').classList.toggle('open'); });
+  document.querySelectorAll('.footer-year').forEach(e => e.textContent = new Date().getFullYear());
+});
+</script>
+
+<script>
+(function(){
+  const y = new Date().getFullYear();
+  const si = document.getElementById('sugIPL');
+  const sj = document.getElementById('sugJobs');
+  if(si){ si.textContent='IPL '+y; si.dataset.q='IPL '+y; }
+  if(sj){ sj.textContent='Govt Jobs '+y; sj.dataset.q='government jobs india '+y; }
+})();
+</script>
+</body>
+</html>
