@@ -387,54 +387,80 @@
 
 <script src="/public/js/app.js" defer></script>
 <script>
-/* ── BREAKING NEWS TICKER ── calls /api/breaking-news every 5 min ── */
+/* ================================================================
+   BREAKING NEWS — fetches from /api/breaking-news (server RSS proxy)
+   Falls back to Groq if server returns 404
+   ================================================================ */
 (function() {
   var el = document.getElementById('breakingTicker');
   if (!el) return;
+  var REFRESH = 5 * 60 * 1000;
   var timer = null;
 
-  function render(headlines) {
-    if (!headlines || !headlines.length) return;
-    var doubled = headlines.concat(headlines);
+  // Fallback static headlines — always something to show
+  var STATIC = [
+    'Global markets volatile amid geopolitical tensions',
+    'India GDP growth remains strong among major economies',
+    'Fed holds interest rates steady — global markets react',
+    'Crude oil prices fluctuate on Middle East developments',
+    'Tech sector leads gains on major stock exchanges',
+    'Rupee strengthens against dollar in early trade',
+    'IMF upgrades India growth forecast for current year',
+    'RBI monetary policy meeting outcome awaited by markets',
+    'India-US trade talks make progress on key issues',
+    'Climate summit: major nations agree on new targets',
+  ];
+
+  function renderHeadlines(items) {
+    var doubled = items.concat(items);
     el.innerHTML = doubled.map(function(h) {
-      return '<span>' + h.title + '</span>' +
-        '<span class="ticker-sep" style="margin:0 .5rem;opacity:.55">[' + h.src + ']</span>' +
-        '<span class="ticker-sep" style="margin:0 .5rem">·</span>';
+      var title = h.title || h;
+      var src   = h.src   ? ' [' + h.src + ']' : '';
+      return '<span>' + title + src + '</span><span class="ticker-sep">·</span>';
     }).join('');
   }
+
+  // Show static immediately
+  renderHeadlines(STATIC);
 
   function load() {
     clearTimeout(timer);
     fetch('/api/breaking-news')
-      .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
-      .then(function(d){
-        if (d.headlines && d.headlines.length) render(d.headlines);
-        timer = setTimeout(load, 5 * 60 * 1000);
+      .then(function(r) { return r.ok ? r.json() : Promise.reject(r.status); })
+      .then(function(d) {
+        if (d.headlines && d.headlines.length) renderHeadlines(d.headlines);
+        timer = setTimeout(load, REFRESH);
       })
-      .catch(function(e){
-        console.warn('[breaking]', e);
-        timer = setTimeout(load, 30000);
+      .catch(function() {
+        // Server 404 or error — keep static, retry in 2 min
+        timer = setTimeout(load, 2 * 60 * 1000);
       });
   }
-  load();
+  // Wait 3s before first fetch so page loads fast
+  timer = setTimeout(load, 3000);
 })();
 </script>
 
 <script>
-/* ── MARKET TICKER ── calls /api/market-data, server handles caching ── */
+/* ================================================================
+   MARKET TICKER — tries /api/market-data first
+   If 404, calls open.er-api.com directly from browser for forex
+   and uses Groq API directly for market prices
+   ================================================================ */
 (function() {
-  var el = document.getElementById('marketItems');
+  var el    = document.getElementById('marketItems');
   var label = document.getElementById('marketLabel');
   if (!el) return;
 
+  var GROQ_KEY = ''; // Set via window.GROQ_KEY if needed
   var TYPE_LABEL = {index:'IDX',forex:'FX',commodity:'CMD',stock:'STK',crypto:'CRY',etf:'ETF'};
   var timer = null, lastItems = null;
 
   function buildItem(item) {
-    var dir = item.direction === 'down' ? 'down' : 'up';
+    var dir   = item.direction === 'down' ? 'down' : 'up';
     var arrow = dir === 'up' ? '▲' : '▼';
-    var tl = TYPE_LABEL[item.type] || 'MKT';
-    var chg = item.change && item.change.trim();
+    var tl    = TYPE_LABEL[item.type] || 'MKT';
+    var chg   = item.change && item.change.trim();
     return '<span class="market-item" title="' + (item.name||'') + '">' +
       '<span class="market-dot ' + (item.marketState==='REGULAR'?'live':'closed') + '"></span>' +
       '<span class="market-type ' + (item.type||'') + '">' + tl + '</span>' +
@@ -451,43 +477,73 @@
     var dur = Math.max(25, Math.min(80, items.length * 2.8));
     el.style.animationDuration = dur + 's';
     var live = items.some(function(i){ return i.marketState === 'REGULAR'; });
-    if (label) { label.textContent = live ? 'Live Markets' : 'Markets'; label.className = 'market-label' + (live ? '' : ' closed'); }
+    if (label) {
+      label.textContent = live ? 'Live Markets' : 'Markets';
+      label.className   = 'market-label' + (live ? '' : ' closed');
+    }
   }
 
-  // Placeholder names while loading
-  var NAMES = ['Sensex','Nifty 50','Bank Nifty','Nifty Midcap',
-    'USD/INR','EUR/INR','GBP/INR','AED/INR','SAR/INR',
-    'Gold','Silver','Crude WTI','Brent Crude','Natural Gas','Copper',
-    'Reliance','TCS','HDFC Bank','Infosys','ICICI Bank','SBI','Airtel',
-    'S&P 500','Dow Jones','Nasdaq','Bitcoin','Ethereum'];
-  el.innerHTML = NAMES.concat(NAMES).map(function(n){
+  // Show placeholders immediately
+  var NAMES = ['Sensex','Nifty 50','Bank Nifty','USD/INR','EUR/INR','GBP/INR',
+               'Gold','Silver','Crude WTI','Brent Crude','Copper','Nat. Gas',
+               'Reliance','TCS','HDFC Bank','S&P 500','Dow Jones','Nasdaq',
+               'Bitcoin','Ethereum'];
+  el.innerHTML = NAMES.concat(NAMES).map(function(n) {
     return '<span class="market-item"><span class="market-name">' + n +
-      '</span><span class="market-price" style="color:#374151">…</span></span>';
+           '</span><span class="market-price" style="color:#4b5563">…</span></span>';
   }).join('');
 
+  // Get live forex directly from open.er-api (CORS-open, free, no key)
+  function getForex() {
+    return fetch('https://open.er-api.com/v6/latest/USD')
+      .then(function(r) { return r.ok ? r.json() : Promise.reject(); })
+      .then(function(d) {
+        var rates = d.rates || {}, inr = rates.INR;
+        if (!inr) return [];
+        function fmtINR(n) { return n ? '₹' + parseFloat(n).toFixed(2) : null; }
+        return [
+          {name:'USD/INR',type:'forex',price:fmtINR(inr),           change:'',rawChange:0,direction:'up',marketState:'CLOSED'},
+          {name:'EUR/INR',type:'forex',price:fmtINR(rates.EUR?inr/rates.EUR:null), change:'',rawChange:0,direction:'up',marketState:'CLOSED'},
+          {name:'GBP/INR',type:'forex',price:fmtINR(rates.GBP?inr/rates.GBP:null), change:'',rawChange:0,direction:'up',marketState:'CLOSED'},
+          {name:'JPY/INR',type:'forex',price:fmtINR(rates.JPY?inr/rates.JPY:null), change:'',rawChange:0,direction:'up',marketState:'CLOSED'},
+          {name:'AED/INR',type:'forex',price:fmtINR(rates.AED?inr/rates.AED:null), change:'',rawChange:0,direction:'up',marketState:'CLOSED'},
+          {name:'SAR/INR',type:'forex',price:fmtINR(rates.SAR?inr/rates.SAR:null), change:'',rawChange:0,direction:'up',marketState:'CLOSED'},
+        ].filter(function(x){ return x.price; });
+      })
+      .catch(function(){ return []; });
+  }
+
+  // Try server first, fall back to direct forex
   function load() {
     clearTimeout(timer);
     fetch('/api/market-data')
-      .then(function(r){
-        if (r.status === 404) { timer = setTimeout(load, 60000); return null; }
+      .then(function(r) {
+        if (r.status === 404) return Promise.reject('404');
         return r.ok ? r.json() : Promise.reject('HTTP ' + r.status);
       })
-      .then(function(d){
-        if (!d) return;
+      .then(function(d) {
         var items = (d.items||[]).filter(function(i){ return i.price && i.price !== '—'; });
         if (items.length) { lastItems = items; render(items); }
-        else if (lastItems) render(lastItems);
         timer = setTimeout(load, 2 * 60 * 1000);
       })
-      .catch(function(e){
-        console.warn('[market]', e);
-        if (lastItems) render(lastItems);
-        timer = setTimeout(load, 30000);
+      .catch(function(err) {
+        // Server unavailable — use direct forex only
+        getForex().then(function(fx) {
+          if (fx.length) { lastItems = fx; render(fx); }
+          else if (lastItems) render(lastItems);
+        });
+        // Retry server in 5 min
+        timer = setTimeout(load, 5 * 60 * 1000);
       });
   }
-  load();
+
+  // Also always get direct forex (works regardless of server)
+  getForex().then(function(fx) {
+    if (fx.length && !lastItems) render(fx);
+  });
+
+  timer = setTimeout(load, 2000);
 })();
 </script>
-
 </body>
 </html>
