@@ -2,14 +2,7 @@
   "version": 2,
   "name": "sfritrav",
   "regions": ["bom1"],
-  "outputDirectory": ".",
-  "builds": [
-    { "src": "api/*.js", "use": "@vercel/node" }
-  ],
-  "routes": [
-    { "src": "/api/(.*)", "dest": "/api/$1" },
-    { "src": "/sitemap.xml", "dest": "/api/sitemap" },
-    { "src": "/feed.xml",    "dest": "/api/rss-feed" },
-    { "src": "/(.*)",        "dest": "/$1" }
+  "crons": [
+    { "path": "/api/cron-generate", "schedule": "30 0 * * *" }
   ]
 }
