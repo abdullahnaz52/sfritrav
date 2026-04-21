@@ -475,172 +475,78 @@
 
 
 <script>
-/* ===== LIVE MARKET TICKER — browser-side multi-source ===== */
+/* ===== LIVE MARKET TICKER ===== */
 (function () {
   'use strict';
 
   const REFRESH_MS = 60000;
+  const RETRY_MS   = 20000;
   const el    = document.getElementById('marketItems');
   const label = document.getElementById('marketLabel');
   if (!el) return;
 
-  const TYPE_LABELS = { index:'IDX', forex:'FX', commodity:'CMD', stock:'STK', etf:'ETF' };
-
-  function fmt(n, unit) {
-    if (n == null || isNaN(n)) return '—';
-    const v = parseFloat(n);
-    if (unit === '₹' && v >= 1000) return unit + v.toLocaleString('en-IN',{maximumFractionDigits:2});
-    if (v >= 1000) return unit + v.toLocaleString('en-US',{maximumFractionDigits:2});
-    return unit + v.toFixed(2);
-  }
-  function fmtChg(c,p){ if(c==null)return''; const s=c>=0?'+':''; const ps=p>=0?'+':''; return `${s}${parseFloat(c).toFixed(2)} (${ps}${parseFloat(p).toFixed(2)}%)`; }
+  const TYPE_LABELS = { index:'IDX', forex:'FX', commodity:'CMD', crypto:'CRY', stock:'STK', etf:'ETF' };
 
   function buildItem(item) {
-    const dir   = (item.rawChange||0) >= 0 ? 'up' : 'down';
+    const dir   = item.direction === 'down' ? 'down' : 'up';
     const arrow = dir === 'up' ? '▲' : '▼';
-    const tl    = TYPE_LABELS[item.type] || '';
-    const isLive = item.marketState === 'REGULAR';
-    return `<span class="market-item" title="${item.name}">` +
-      `<span class="market-dot ${isLive?'live':'closed'}"></span>` +
-      `<span class="market-type ${item.type}">${tl}</span>` +
-      `<span class="market-name">${item.name}</span>` +
-      `<span class="market-price">${item.price}</span>` +
-      (item.change ? `<span class="market-change ${dir}"><span class="market-arrow">${arrow}</span>${item.change}</span>` : '') +
-      `</span>`;
+    const tl    = TYPE_LABELS[item.type] || 'MKT';
+    const hasChg = item.change && item.change.trim();
+    return '<span class="market-item" title="' + item.name + '">' +
+      '<span class="market-dot ' + (item.marketState === 'REGULAR' ? 'live' : 'closed') + '"></span>' +
+      '<span class="market-type ' + item.type + '">' + tl + '</span>' +
+      '<span class="market-name">' + item.name + '</span>' +
+      '<span class="market-price">' + item.price + '</span>' +
+      (hasChg ? '<span class="market-change ' + dir + '"><span class="market-arrow">' + arrow + '</span>' + item.change + '</span>' : '') +
+      '</span>';
   }
 
   function render(items) {
     if (!items || !items.length) return;
-    const anyLive = items.some(i => i.marketState === 'REGULAR');
+    const html = items.map(buildItem).join('');
+    el.innerHTML = html + html;
+    const dur = Math.max(20, Math.min(70, items.length * 2.5));
+    el.style.animationDuration = dur + 's';
+    const anyLive = items.some(function(i){ return i.marketState === 'REGULAR'; });
     label.textContent = anyLive ? 'Live Markets' : 'Markets';
     label.className   = 'market-label' + (anyLive ? '' : ' closed');
-    const html = items.map(buildItem).join('');
-    el.innerHTML = html + html; // doubled for seamless loop
-    // Adjust speed based on item count
-    const dur = Math.max(18, Math.min(60, items.length * 2));
-    el.style.animationDuration = dur + 's';
   }
 
-  /* ── Source 1: our server proxy (Yahoo Finance) ── */
-  async function fromServer() {
-    const r = await fetch('/api/market-data');
-    if (!r.ok) throw new Error('server ' + r.status);
-    const d = await r.json();
-    if (!d.items || !d.items.length) throw new Error('server empty');
-    // Filter out Loading items
-    const good = d.items.filter(i => i.price && !i.price.includes('Loading'));
-    if (!good.length) throw new Error('all loading');
-    return good;
-  }
+  // Show placeholder names immediately while API loads
+  var NAMES = ['Sensex','Nifty 50','Bank Nifty','USD/INR','EUR/INR','Gold',
+    'Silver','Crude WTI','Brent Crude','Copper','Nat. Gas',
+    'S&P 500','Dow Jones','Nasdaq','Bitcoin','Ethereum'];
+  var placeholder = NAMES.map(function(n){
+    return '<span class="market-item"><span class="market-name">' + n +
+      '</span><span class="market-price" style="color:#4a5568">…</span></span>';
+  }).join('');
+  el.innerHTML = placeholder + placeholder;
 
-  /* ── Source 2: ExchangeRate API (forex, free, no key, no CORS block) ── */
-  async function fromForex() {
-    const r = await fetch('https://open.er-api.com/v6/latest/USD');
-    if (!r.ok) throw new Error('er-api ' + r.status);
-    const d = await r.json();
-    const rates = d.rates || {};
-    const inr = rates.INR;
-    if (!inr) throw new Error('no INR');
-    const pairs = [
-      { sym:'USDINR=X', name:'USD/INR', base:'USD', unit:'₹' },
-      { sym:'EURINR=X', name:'EUR/INR', base:'EUR', unit:'₹' },
-      { sym:'GBPINR=X', name:'GBP/INR', base:'GBP', unit:'₹' },
-      { sym:'JPYINR=X', name:'JPY/INR', base:'JPY', unit:'₹' },
-      { sym:'AEDINR=X', name:'AED/INR', base:'AED', unit:'₹' },
-      { sym:'SARINR=X', name:'SAR/INR', base:'SAR', unit:'₹' },
-    ];
-    return pairs
-      .filter(p => p.base === 'USD' || rates[p.base])
-      .map(p => {
-        const rate = p.base === 'USD' ? inr : (inr / rates[p.base]);
-        return { symbol:p.sym, name:p.name, type:'forex',
-          price: fmt(rate,'₹'), rawPrice:rate,
-          change:'', rawChange:0, rawPct:0,
-          direction:'up', marketState:'CLOSED' };
+  var retryTimer = null;
+  var lastGoodItems = null;
+
+  function fetchMarket() {
+    clearTimeout(retryTimer);
+    fetch('/api/market-data')
+      .then(function(res) {
+        if (res.status === 404) { retryTimer = setTimeout(fetchMarket, 30000); return null; }
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function(data) {
+        if (!data) return;
+        var items = (data.items || []).filter(function(i){ return i.price && i.price !== '—' && i.price !== ''; });
+        if (items.length) { lastGoodItems = items; render(items); }
+        else if (lastGoodItems) render(lastGoodItems);
+        setTimeout(fetchMarket, REFRESH_MS);
+      })
+      .catch(function() {
+        if (lastGoodItems) render(lastGoodItems);
+        retryTimer = setTimeout(fetchMarket, RETRY_MS);
       });
   }
 
-  /* ── Source 3: CoinGecko (crypto prices in INR, free, no key) ── */
-  async function fromCrypto() {
-    const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,tether&vs_currencies=inr,usd');
-    if (!r.ok) throw new Error('coingecko ' + r.status);
-    const d = await r.json();
-    const items = [];
-    if (d.bitcoin)  items.push({ symbol:'BTC', name:'Bitcoin',  type:'commodity', price:fmt(d.bitcoin.inr,'₹'),  rawPrice:d.bitcoin.inr,  change:'',rawChange:0,rawPct:0,direction:'up',marketState:'REGULAR' });
-    if (d.ethereum) items.push({ symbol:'ETH', name:'Ethereum', type:'commodity', price:fmt(d.ethereum.inr,'₹'), rawPrice:d.ethereum.inr, change:'',rawChange:0,rawPct:0,direction:'up',marketState:'REGULAR' });
-    return items;
-  }
-
-  /* ── Static fallback items shown while fetching ── */
-  const STATIC_FALLBACK = [
-    { name:'Sensex',      type:'index',    price:'BSE India',    change:'', rawChange:0, direction:'up', marketState:'CLOSED' },
-    { name:'Nifty 50',    type:'index',    price:'NSE India',    change:'', rawChange:0, direction:'up', marketState:'CLOSED' },
-    { name:'Gold',        type:'commodity',price:'MCX Commodity', change:'', rawChange:0, direction:'up', marketState:'CLOSED' },
-    { name:'Crude Oil',   type:'commodity',price:'MCX Commodity', change:'', rawChange:0, direction:'up', marketState:'CLOSED' },
-    { name:'USD/INR',     type:'forex',    price:'Forex',        change:'', rawChange:0, direction:'up', marketState:'CLOSED' },
-    { name:'Bitcoin',     type:'commodity',price:'Crypto',       change:'', rawChange:0, direction:'up', marketState:'CLOSED' },
-  ];
-
-  let lastItems = null;
-
-  async function refresh() {
-    // Show last data immediately while refreshing
-    if (lastItems) render(lastItems);
-
-    let items = [];
-
-    // Always try forex first (most reliable, truly free with CORS)
-    try {
-      const forexItems = await fromForex();
-      items.push(...forexItems);
-      // Render immediately so user sees something fast
-      if (lastItems) {
-        const merged = [...lastItems];
-        forexItems.forEach(f => {
-          const i = merged.findIndex(x => x.symbol === f.symbol);
-          if (i >= 0) merged[i] = f; else merged.push(f);
-        });
-        render(merged);
-      } else {
-        render(forexItems);
-      }
-    } catch(e) { console.warn('[market] forex:', e.message); }
-
-    // Try server proxy for full data
-    try {
-      const serverItems = await fromServer();
-      // Merge: server data wins for everything except forex (er-api is more reliable)
-      const forexSyms = new Set(['USDINR=X','EURINR=X','GBPINR=X','JPYINR=X','AEDINR=X','SARINR=X']);
-      const forexFromAbove = items.filter(i => forexSyms.has(i.symbol));
-      const nonForex = serverItems.filter(i => !forexSyms.has(i.symbol));
-      items = [...nonForex, ...forexFromAbove];
-    } catch(e) {
-      console.warn('[market] server:', e.message);
-    }
-
-    // Add crypto prices (free, CORS-friendly)
-    try {
-      const crypto = await fromCrypto();
-      crypto.forEach(c => {
-        if (!items.find(i => i.symbol === c.symbol)) items.push(c);
-      });
-    } catch(e) { /* silent */ }
-
-    if (items.length) {
-      // Sort: index, forex, commodity, stock, etf
-      const ord = {index:0,forex:1,commodity:2,etf:3,stock:4};
-      items.sort((a,b) => (ord[a.type]??9) - (ord[b.type]??9));
-      lastItems = items;
-      render(items);
-    } else if (!lastItems) {
-      render(STATIC_FALLBACK);
-    }
-
-    setTimeout(refresh, REFRESH_MS);
-  }
-
-  // Start immediately
-  refresh();
+  fetchMarket();
 
 })();
 </script>
