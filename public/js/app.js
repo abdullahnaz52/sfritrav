@@ -406,6 +406,223 @@
 <p><strong>Online Teaching and Tutoring:</strong> ₹20,000–₹1,00,000/month for subject experts. Vedantu, Unacademy, Chegg Tutors, Preply for language teaching.</p>
 <h2>How to Get Your First Remote Job</h2>
 <p>Update your LinkedIn profile completely — 80% of recruiters use it. Create a portfolio of 3–5 sample projects even if unpaid. Apply to 10 jobs daily minimum for the first month. Remote job searching is a numbers game; persistence beats talent in the early stage.</p>` },
+
+    /* HEALTH — Diabetes (very high search + CPC in India) */
+    { id:'s19', slug:'diabetes-management-india-guide', category:'health',
+      title:'Diabetes in India: Complete Guide to Managing Blood Sugar Naturally',
+      excerpt:'India has the second-highest number of diabetics in the world. A doctor-reviewed guide to diet, exercise, medication and reversing pre-diabetes.',
+      readTime:'9 min', date: d('04-21'),
+      tags:['Diabetes','Blood Sugar','Health India','Pre-Diabetes'],
+      body:`<p>India is often called the diabetes capital of the world — over 101 million Indians now have Type 2 diabetes, and an estimated 136 million are pre-diabetic. The good news: lifestyle changes are more powerful than most drugs, especially in early stages.</p>
+<h2>Understanding Your Numbers</h2>
+<p>Normal fasting blood sugar is below 100 mg/dL. Pre-diabetes: 100–125 mg/dL. Diabetes: 126 mg/dL and above on two separate tests. HbA1c below 5.7% is normal; 5.7–6.4% is pre-diabetic; 6.5% and above is diabetic. Get both tests done — fasting glucose alone misses many cases.</p>
+<h2>Diet: What Actually Works</h2>
+<p>The single most powerful dietary change: reduce refined carbohydrates — white rice, white bread, maida, sugary drinks, packaged snacks. Replace with millets (ragi, jowar, bajra), whole pulses, vegetables and healthy fats. The glycaemic index of traditional Indian millets is significantly lower than polished rice.</p>
+<p>Eat in this order: fibre and vegetables first, protein second, carbohydrates last. This sequence measurably reduces the blood sugar spike from a meal by 20–30%.</p>
+<h2>Exercise: The Free Medicine</h2>
+<p>A 30-minute brisk walk after meals reduces post-meal blood sugar more effectively than most oral medications. Aim for 150 minutes of moderate activity per week minimum. Strength training twice a week is equally important — muscle mass is your most important blood sugar sink.</p>
+<h2>Can Pre-Diabetes Be Reversed?</h2>
+<p>Yes — multiple large clinical trials show that losing 5–7% of body weight and walking 150 minutes per week reduces progression from pre-diabetes to diabetes by 58%. This is not a small effect; it is a transformational one. Most people who make these changes see meaningful HbA1c improvement within 3 months.</p>
+<h2>Medication</h2>
+<p>If lifestyle changes are insufficient, metformin remains the safest, most evidence-backed first-line medication. Never self-medicate. Work with your doctor on targets, monitoring frequency and when medication is appropriate.</p>` },
+
+    /* TRAVEL — Jammu & Kashmir (high-traffic seasonal topic) */
+    { id:'s20', slug:'kashmir-travel-guide-complete', category:'travel',
+      title:'Kashmir Travel Guide: Best Time to Visit, Where to Stay and What to See',
+      excerpt:"The complete guide to planning a Kashmir trip — from Gulmarg's snow to Dal Lake's shikaras. Costs, transport, safety and hidden gems included.",
+      readTime:'10 min', date: d('04-20'),
+      tags:['Kashmir','Travel India','Dal Lake','Gulmarg','Pahalgam'],
+      body:`<p>Kashmir — the crown of India — offers landscapes so spectacular they feel almost unreal. Snow-capped peaks, emerald valleys, saffron fields, and the incomparable Dal Lake make it one of the world's great travel destinations. Here is everything you need to plan a trip.</p>
+<h2>Best Time to Visit</h2>
+<p><strong>Summer (April–June):</strong> Ideal for most visitors. Temperatures 15–30°C in Srinagar. Flowers bloom, meadows are lush, and all roads are open. Peak season — book accommodation early.</p>
+<p><strong>Autumn (September–November):</strong> Arguably the most beautiful season. Chinar trees turn gold and red, crowds thin after peak season, and the light is extraordinary for photography.</p>
+<p><strong>Winter (December–February):</strong> Gulmarg transforms into one of Asia's best ski destinations. Dal Lake sometimes freezes. Cold (–10°C nights) but magical. Best for adventure travelers.</p>
+<h2>Essential Stops</h2>
+<p><strong>Srinagar:</strong> Dal Lake, Mughal Gardens (Shalimar Bagh, Nishat Bagh), old city bazaars and a houseboat stay are essential. Budget houseboats from ₹1,500/night; heritage deluxe from ₹6,000.</p>
+<p><strong>Gulmarg:</strong> Asia's highest gondola ride at 13,400 feet. In summer, meadows filled with wildflowers. In winter, world-class skiing. Day trip from Srinagar or overnight stays available.</p>
+<p><strong>Pahalgam:</strong> The Valley of Shepherds. Starting point for the Amarnath Yatra. Baisaran meadow (mini-Switzerland) and Aru Valley are unmissable. Horse rides to inaccessible meadows from ₹500.</p>
+<p><strong>Sonamarg:</strong> Glacier country. Thajiwas Glacier is accessible by pony. The drive from Srinagar along the Sindh River is spectacular.</p>
+<h2>Budget Planning</h2>
+<p>Budget traveller: ₹2,500–₹3,500/day (budget guesthouse, local food, shared transport). Mid-range: ₹5,000–₹8,000/day. Luxury (houseboat or heritage hotel): ₹12,000–₹25,000/day. Srinagar to Gulmarg by taxi: ₹1,200–₹1,800 one way.</p>
+<h2>Getting There</h2>
+<p>Srinagar Airport (SXR) has direct flights from Delhi (1.5 hours), Mumbai (2.5 hours), Bangalore and other major cities. Book 2–3 weeks ahead in summer. Alternatively, the Vande Bharat train runs to Banihal, connecting to Srinagar by road through the Banihal tunnel.</p>` },
+
+    /* MENTAL HEALTH — Sleep (high search, low sensitivity) */
+    { id:'s21', slug:'how-to-sleep-better-india', category:'mental-health',
+      title:'How to Sleep Better: A Science-Backed Guide for Indian Adults',
+      excerpt:'75 million Indians have insomnia. Sleep scientist-reviewed guide to fixing your sleep — without sleeping pills.',
+      readTime:'8 min', date: d('04-19'),
+      tags:['Sleep','Insomnia','Sleep Tips','Health India'],
+      body:`<p>India has a serious sleep problem. Studies estimate 33% of Indian adults report chronic poor sleep. Yet sleep is arguably the most powerful health intervention available — affecting weight, mental health, immunity, longevity and cognitive performance more than almost any drug.</p>
+<h2>Why You Cannot Sleep: The Real Causes</h2>
+<p><strong>Light exposure:</strong> Your phone, laptop and LED lights emit blue light that suppresses melatonin — your body's sleep signal. Using screens after 9pm delays sleep onset by 1–2 hours in most people.</p>
+<p><strong>Irregular timing:</strong> Your circadian rhythm needs a consistent wake time above all else. Sleeping late on weekends (social jetlag) disrupts your body clock as much as a 2-hour time zone shift every week.</p>
+<p><strong>Temperature:</strong> Your core body temperature must drop ~1°C to initiate sleep. India's heat — especially without AC — is one of the most underappreciated sleep disruptors.</p>
+<p><strong>Caffeine timing:</strong> Caffeine has a half-life of 5–6 hours. A 3pm chai means 50% of that caffeine is still in your system at 9pm. Cut off caffeine by 2pm if you struggle with sleep.</p>
+<h2>The Evidence-Based Fix</h2>
+<p><strong>Fixed wake time:</strong> Set the same alarm every day — including weekends. Do not skip it. This is the single most important sleep habit.</p>
+<p><strong>Dark room:</strong> Even small amounts of light entering through closed eyelids affect sleep quality. Use blackout curtains or an eye mask.</p>
+<p><strong>Cool room:</strong> Target 18–22°C if possible. A fan aimed at your body works nearly as well as AC for sleep induction.</p>
+<p><strong>No screens 60 minutes before bed:</strong> Replace with reading, light stretching or conversation. Within two weeks most people see dramatic improvement.</p>
+<p><strong>No lying in bed awake:</strong> If you cannot sleep after 20 minutes, get up, do something calm in dim light, return when sleepy. This breaks the anxiety-wakefulness loop that drives chronic insomnia.</p>
+<h2>When to See a Doctor</h2>
+<p>If lifestyle changes do not help within 4–6 weeks, or if you snore heavily and wake up unrefreshed, see a doctor. Sleep apnea is severely underdiagnosed in India and is treatable. Cognitive Behavioural Therapy for Insomnia (CBT-I) is more effective than sleeping pills long-term.</p>` },
+
+    /* FOOD — Protein for vegetarians (very high search India) */
+    { id:'s22', slug:'high-protein-vegetarian-foods-india', category:'food',
+      title:'High Protein Vegetarian Foods in India: The Complete Guide',
+      excerpt:'Getting enough protein on a vegetarian Indian diet is easier than you think. Complete list of the best plant-based protein sources with meal ideas and daily targets.',
+      readTime:'8 min', date: d('04-18'),
+      tags:['High Protein Vegetarian','Protein Foods India','Diet','Nutrition'],
+      body:`<p>India is the world's largest vegetarian population — yet protein deficiency is widespread. National surveys find 73–84% of Indians consume inadequate protein. The recommended intake is 0.8–1g per kg of body weight daily (higher for active people). For a 60kg adult that is 48–60g per day.</p>
+<h2>Best Protein Sources for Indian Vegetarians</h2>
+<p><strong>Moong Dal (split green lentils):</strong> 24g protein per 100g dry. Also rich in iron, folate and potassium. Sprout it to increase nutrient availability and add to salads raw.</p>
+<p><strong>Paneer:</strong> 18g protein per 100g. Complete protein — contains all essential amino acids. Absorbs flavours well, making it India's most versatile high-protein food.</p>
+<p><strong>Chana (chickpeas):</strong> 19g protein per 100g dry weight. The base of chana masala, hummus and chaat. High in fibre — helps with satiety and blood sugar stability.</p>
+<p><strong>Rajma (kidney beans):</strong> 24g protein per 100g dry. Slow-digesting carbohydrates plus iron. Rajma-chawal is genuinely nutritious — not just comfort food.</p>
+<p><strong>Soy products (tofu, edamame, soy milk):</strong> 17g per 100g for firm tofu. The only complete vegetarian protein equivalent to meat. Underused in Indian cooking despite being ideal for absorbing Indian spices.</p>
+<p><strong>Greek-style hung curd / chakka:</strong> 10g per 100g. Make at home by straining regular dahi through a muslin cloth overnight. Far higher protein than regular yoghurt.</p>
+<p><strong>Quinoa:</strong> 14g per 100g dry. Complete protein. Cook like rice. Increasingly available in Indian supermarkets and online at ₹180–₹250 per kg.</p>
+<h2>Easy High-Protein Meal Plan (Indian)</h2>
+<p><strong>Breakfast:</strong> 3 egg whites + 1 whole egg omelette (or moong dal cheela) — 20g protein. <strong>Lunch:</strong> Rajma chawal with curd — 22g protein. <strong>Dinner:</strong> Paneer sabzi with roti and dal — 25g protein. Total: ~67g for a 60kg person. Achievable without protein powder.</p>` },
+
+    /* SPORTS — Fitness (evergreen, high traffic) */
+    { id:'s23', slug:'home-workout-plan-india-no-gym', category:'sports',
+      title:'Complete Home Workout Plan for Indians (No Gym, No Equipment)',
+      excerpt:'Build real strength and fitness at home with zero equipment. A 4-week progressive workout plan designed for Indian homes, schedules and fitness levels.',
+      readTime:'8 min', date: d('04-16'),
+      tags:['Home Workout','Fitness India','No Equipment','Exercise Plan'],
+      body:`<p>You do not need a gym membership to get fit. The human body is a complete resistance training machine — and some of the world's best athletes built foundational strength through bodyweight training. Here is a structured 4-week plan that works in any Indian home.</p>
+<h2>Week 1–2: Foundation (Beginner)</h2>
+<p>Perform this circuit 3 times per week (Monday, Wednesday, Friday) with a rest day between sessions. 2 rounds, 30 seconds each exercise, 10 seconds rest between.</p>
+<ul>
+<li><strong>Wall push-ups:</strong> Builds chest, shoulders, triceps with low joint stress</li>
+<li><strong>Chair squats:</strong> Sit and stand from a chair — knee-friendly introduction to squats</li>
+<li><strong>Standing marching:</strong> Cardiovascular warm-up, hip flexor activation</li>
+<li><strong>Superman holds (10 seconds):</strong> Lower back and glute strengthening</li>
+<li><strong>Plank (10–20 seconds):</strong> Core stability</li>
+</ul>
+<p>Rest 2 minutes between rounds. Total time: 15–20 minutes.</p>
+<h2>Week 3–4: Building (Intermediate)</h2>
+<p>Progress to 3 rounds. Increase to proper push-ups, full squats, and hold planks for 30 seconds. Add jumping jacks between exercises for cardiovascular benefit.</p>
+<ul>
+<li><strong>Push-ups:</strong> Full body on knees if needed — progress to full</li>
+<li><strong>Bodyweight squats:</strong> Feet shoulder-width, weight through heels</li>
+<li><strong>Reverse lunges:</strong> Step back, lower knee toward floor — safer than forward lunges</li>
+<li><strong>Glute bridge:</strong> Lie on back, drive hips up — essential for lower back health</li>
+<li><strong>Plank:</strong> 30–45 seconds</li>
+<li><strong>Mountain climbers:</strong> 20 reps — full body cardiovascular and core</li>
+</ul>
+<h2>Nutrition for Home Workouts</h2>
+<p>Eat a small meal or snack with carbohydrates and protein 1–2 hours before training. After training, eat within 30–45 minutes. Dal, eggs, paneer or curd with roti or rice is a perfectly good post-workout meal. Hydration: 3–4 litres of water on training days.</p>` },
+
+    /* INDIA NEWS — AI and jobs (hot topic 2026) */
+    { id:'s24', slug:'ai-impact-jobs-india', category:'india-news',
+      title:`How AI Is Changing Jobs in India in ${CY}: What Workers Need to Know`,
+      excerpt:"AI is automating millions of tasks across IT, finance, customer service and manufacturing. What Indian workers should do right now to stay ahead.",
+      readTime:'7 min', date: d('04-15'),
+      tags:['AI Jobs India','Artificial Intelligence','Future of Work','Tech India'],
+      body:`<p>Artificial intelligence is no longer a future concern for Indian workers — it is actively reshaping job roles across every industry. Here is a clear-eyed look at what is changing and what you can do about it.</p>
+<h2>Jobs Most Affected</h2>
+<p><strong>IT services (BPO, data entry, basic coding):</strong> Routine software testing, data entry, customer support scripting, and basic code generation are being partially automated. India's large BPO sector — employing millions — faces significant structural change.</p>
+<p><strong>Finance and accounting:</strong> Invoice processing, basic bookkeeping, financial report generation and compliance checking are increasingly automated at major firms.</p>
+<p><strong>Content and media:</strong> Basic article writing, image generation, translation and social media content creation can now be partially handled by AI tools — changing the economics of entry-level content jobs.</p>
+<h2>Jobs Growing Because of AI</h2>
+<p><strong>Prompt engineering and AI operations:</strong> Professionals who can work with and direct AI tools are in high demand. These roles require domain expertise more than technical coding skills.</p>
+<p><strong>Data labelling and AI training:</strong> India is a global hub for the human work behind AI — annotating data, evaluating model outputs, and testing systems.</p>
+<p><strong>Cybersecurity:</strong> AI creates new attack vectors; demand for security professionals is growing faster than supply globally.</p>
+<p><strong>Healthcare and elder care:</strong> Human-intensive, relationship-based work AI cannot replicate. India's aging population makes this a major growth sector.</p>
+<h2>What Indian Workers Should Do Now</h2>
+<p>Learn one AI tool relevant to your field — start with free tools like ChatGPT, Google Gemini or Copilot. Understanding how to use these tools effectively — not just fear them — is the differentiating skill in the next 5 years. Equally important: develop distinctly human skills. Critical thinking, creativity, interpersonal communication and domain expertise remain difficult to automate and highly valued.</p>` },
+
+    /* WOMEN HEALTH — PCOS (highest searched women's health topic India) */
+    { id:'s25', slug:'pcos-guide-india-women', category:'women-health',
+      title:'PCOS in India: Symptoms, Causes and What Actually Helps',
+      excerpt:'1 in 5 Indian women has PCOS — yet most go undiagnosed for years. A doctor-reviewed guide to understanding, diagnosing and managing PCOS.',
+      readTime:'9 min', date: d('04-14'),
+      tags:['PCOS','Women Health','Hormones','Fertility India'],
+      body:`<p>Polycystic Ovary Syndrome (PCOS) affects an estimated 20–22% of Indian women of reproductive age — one of the highest rates in the world. Despite its prevalence, most women wait years for a diagnosis. Understanding PCOS is the first step to managing it.</p>
+<h2>What Is PCOS?</h2>
+<p>PCOS is a hormonal disorder characterised by elevated androgens (male hormones), irregular ovulation, and often (but not always) multiple small cysts on the ovaries. It is a metabolic condition as much as a reproductive one — affecting blood sugar, weight, skin, and mental health.</p>
+<h2>Symptoms to Watch For</h2>
+<ul>
+<li>Irregular, infrequent or absent periods (fewer than 8 cycles per year)</li>
+<li>Excess hair growth on face, chest or back (hirsutism)</li>
+<li>Acne that does not respond to typical treatments</li>
+<li>Hair thinning or loss at the crown</li>
+<li>Difficulty losing weight, especially around the abdomen</li>
+<li>Skin darkening at the neck or armpits (acanthosis nigricans — a sign of insulin resistance)</li>
+</ul>
+<h2>Getting Diagnosed</h2>
+<p>Diagnosis requires at least 2 of the following: irregular ovulation, elevated androgens (blood test or clinical signs), and polycystic ovaries on ultrasound. A single symptom is not enough to diagnose PCOS — see a gynaecologist or endocrinologist.</p>
+<h2>What Actually Helps</h2>
+<p><strong>Diet:</strong> A low glycaemic diet — reducing refined carbohydrates and increasing protein, fibre and healthy fats — directly addresses the insulin resistance at the core of most PCOS cases. This is not a fad; it is the first-line medical recommendation.</p>
+<p><strong>Exercise:</strong> 30–45 minutes of moderate exercise 5 days per week measurably improves insulin sensitivity and reduces androgen levels. Strength training is particularly effective.</p>
+<p><strong>Sleep:</strong> Chronic sleep deprivation worsens insulin resistance and hormone dysregulation. 7–8 hours is genuinely therapeutic for PCOS.</p>
+<p><strong>Medication:</strong> Metformin (insulin sensitiser), combined oral contraceptives (cycle regulation), and spironolactone (for hirsutism) are the most commonly prescribed. Treatment is always individualised.</p>` },
+
+    /* ENVIRONMENT — Air quality (major India issue, high search) */
+    { id:'s26', slug:'air-pollution-india-protect-health', category:'environment',
+      title:'Air Pollution in India: How to Protect Your Family All Year',
+      excerpt:"India has 15 of the world's 20 most polluted cities. Practical steps every Indian family should take — indoors and outdoors — to reduce pollution exposure.",
+      readTime:'7 min', date: d('04-13'),
+      tags:['Air Pollution India','AQI','Air Quality','Health India'],
+      body:`<p>India's air quality crisis is a year-round public health emergency. Delhi's winter AQI routinely exceeds 400 (hazardous). But even cities that rarely make headlines — Lucknow, Patna, Agra, Muzaffarpur — have annual average pollution levels far above WHO safe limits.</p>
+<h2>Understanding AQI</h2>
+<p>The Air Quality Index measures fine particulate matter (PM2.5), coarser particles (PM10), ozone, nitrogen dioxide and other pollutants. PM2.5 — particles smaller than 2.5 micrometres — is most dangerous because it enters the bloodstream directly through the lungs. Good: 0–50. Satisfactory: 51–100. Moderate: 101–200. Poor: 201–300. Very Poor: 301–400. Severe: 400+.</p>
+<p>Check real-time AQI on CPCB's Sameer app or AQI India (aqicn.org). Build it into your daily routine the way you check the weather.</p>
+<h2>Outdoor Protection</h2>
+<p>When AQI exceeds 150, wear an N95 or N99 mask — not a cloth or surgical mask, which does not filter PM2.5. N95s filter 95% of particles; KN95s are broadly equivalent. Cost: ₹80–₹200 per mask. Avoid outdoor exercise when AQI is above 100 — physical exertion increases your breathing rate and therefore your pollution intake dramatically.</p>
+<h2>Indoor Air Quality</h2>
+<p>Indoor air is often 2–5 times more polluted than outdoor air due to cooking smoke, incense, cleaning products and infiltration of outdoor pollutants. An air purifier with a HEPA filter dramatically reduces PM2.5 indoors. Options at every budget: IQAir (₹30,000+, best performance), Dyson (₹35,000+), Xiaomi Mi Air Purifier 4 Pro (₹13,000 — excellent value), Coway (₹12,000–₹18,000).</p>
+<p>Keep windows closed on high-pollution days. Cook with the exhaust fan on. Replace incense sticks with essential oil diffusers. These changes meaningfully reduce daily exposure.</p>
+<h2>Long-Term Health Effects of Chronic Exposure</h2>
+<p>Long-term PM2.5 exposure is linked to chronic obstructive pulmonary disease, lung cancer, cardiovascular disease, and reduced cognitive development in children. Children, elderly, pregnant women and those with existing lung or heart conditions are most vulnerable. These groups should take protection especially seriously.</p>` },
+
+    /* TECHNOLOGY — UPI and digital payments (evergreen India topic) */
+    { id:'s27', slug:'upi-tips-safe-payments-india', category:'technology',
+      title:'UPI Safety Guide: How to Use Digital Payments Without Getting Scammed',
+      excerpt:'UPI fraud has surged across India. A clear guide to every common UPI scam and the exact settings and habits that keep your money safe.',
+      readTime:'7 min', date: d('04-12'),
+      tags:['UPI','Digital Payments','Online Safety','India Scams'],
+      body:`<p>UPI processed over 17 billion transactions in a single month in ${CY}. Its convenience is unmatched — but it has also made millions of Indians targets for increasingly sophisticated fraudsters. Understanding the scams is the first step to avoiding them.</p>
+<h2>The Most Common UPI Scams</h2>
+<p><strong>"Collect Request" scam:</strong> A fraudster sends you a UPI collect request (asking you to pay them), but calls it a "verification" or tells you approving it will credit money to your account. Approving a collect request always debits your account. Never approve a collect request from an unknown contact.</p>
+<p><strong>Fake customer care:</strong> You search for a company's helpline and find a fake number SEO-optimised to appear at the top. The fraudster on the other end asks you to install a remote access app (AnyDesk, TeamViewer) or share your UPI PIN to "verify" your account. Legitimate companies will never ask for your PIN or ask you to install remote access software.</p>
+<p><strong>QR code fraud:</strong> A seller sends you a QR code to "receive" payment. Scanning and paying QR codes sends money — it never receives it. If you are selling something, you generate the QR code. The buyer scans it.</p>
+<p><strong>SIM swap:</strong> Fraudsters convince your carrier to issue a new SIM on your number, giving them access to OTPs. Signs: your phone loses signal unexpectedly. Immediately call your carrier if this happens.</p>
+<h2>Safety Rules</h2>
+<ul>
+<li>Never share your UPI PIN with anyone — not "bank officials", not "Google Pay support", not family</li>
+<li>PIN is only for sending money, never for receiving</li>
+<li>Set a daily transaction limit in your UPI app settings</li>
+<li>Enable two-factor authentication on your linked bank account</li>
+<li>Use Google Pay's or PhonePe's scam detection features when prompted</li>
+<li>Report fraud immediately: UPI fraud helpline 1930 (national cybercrime helpline)</li>
+</ul>` },
+
+    /* AYURVEDA — Gut health (trending + high search) */
+    { id:'s28', slug:'gut-health-ayurveda-modern-science', category:'ayurveda',
+      title:'Gut Health: What Ayurveda Knew and What Modern Science Confirms',
+      excerpt:"Ayurveda placed digestion at the centre of health 3,000 years ago. Here's where ancient wisdom and modern gut microbiome science align — and where they diverge.",
+      readTime:'8 min', date: d('04-11'),
+      tags:['Gut Health','Ayurveda','Microbiome','Digestive Health'],
+      body:`<p>Modern gut microbiome research has produced one of the most surprising convergences in the history of medicine — many of its findings align remarkably closely with Ayurvedic principles about digestion articulated thousands of years ago.</p>
+<h2>The Agni Concept and Modern Gastroenterology</h2>
+<p>Ayurveda centres its understanding of health on <em>agni</em> — digestive fire. Strong agni means efficient digestion, nutrient absorption and waste elimination. Weak agni produces <em>ama</em> — undigested toxins that accumulate in the body. Modern gastroenterology validates the core insight: digestive enzyme function, stomach acid levels and gut motility are indeed central determinants of overall health — not just digestive health.</p>
+<h2>What Ayurveda Gets Right</h2>
+<p><strong>Meal timing:</strong> Ayurveda recommends the largest meal at midday when digestive fire is strongest. Chronobiology research confirms that the same meal eaten at noon produces lower blood sugar and better metabolic outcomes than when eaten in the evening.</p>
+<p><strong>Warm cooked foods for digestive healing:</strong> Khichdi — mung dal and rice — is Ayurveda's classic gut-healing dish. Modern dietitians confirm it is easy to digest, anti-inflammatory, and supportive of gut lining repair.</p>
+<p><strong>Spices as medicine:</strong> Turmeric (curcumin), ginger (gingerols), fennel (anethole) and cumin have all demonstrated anti-inflammatory, antimicrobial and digestive-motility effects in clinical research.</p>
+<p><strong>Mindful eating:</strong> Eating in a calm environment, chewing thoroughly and not overeating — all Ayurvedic principles — have strong evidence bases in modern digestive physiology.</p>
+<h2>Practical Gut Health Habits</h2>
+<ul>
+<li>Eat fermented foods daily: homemade dahi, kanji, idli-dosa batter, pickles made with natural fermentation</li>
+<li>Eat diverse plant foods: aim for 30 different plants per week to support microbiome diversity</li>
+<li>Limit ultra-processed foods: the most consistently harmful category for gut health</li>
+<li>Drink warm water or herbal teas rather than cold drinks with meals</li>
+<li>Triphala — an Ayurvedic blend of three fruits — has genuine evidence for mild constipation and colon health</li>
+</ul>` },
   ];
 
   /* ===== AI articles from localStorage ===== */

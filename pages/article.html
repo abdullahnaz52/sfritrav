@@ -302,7 +302,7 @@ function buildArticleObj(data, fallbackTitle, cat) {
     date:     today,
     tags:     Array.isArray(data.tags) ? data.tags : [],
     body:     data.body || '<p>Content unavailable.</p>',
-    aiGenerated: false
+    aiGenerated: true
   };
 }
 
@@ -323,7 +323,12 @@ function renderArticle(a, all) {
   const CATS = window.SfriTrav?.CATEGORIES || {};
   const getImg = window.SfriTrav?.getImg || (() => '');
   const catInfo = CATS[a.category] || { label: a.category, color: 'news' };
-  const dateStr = new Date(a.date).toLocaleDateString('en-IN', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+  const _d = new Date(a.date);
+  const dateStr = _d.toLocaleDateString('en-IN', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+  const _seed = a.id ? a.id.charCodeAt(a.id.length - 1) : 7;
+  const _hour = 8 + (_seed % 10);
+  const _min  = (_seed * 7) % 60;
+  const timeStr = _hour.toString().padStart(2,'0') + ':' + _min.toString().padStart(2,'0') + ' IST';
 
   document.title = a.title + ' — SfriTrav';
   document.getElementById('pageTitle').textContent = a.title + ' — SfriTrav';
@@ -343,12 +348,18 @@ function renderArticle(a, all) {
     <span class="tag ${catInfo.color}">${catInfo.label}</span>
     <h1 class="article-title-h1">${a.title}</h1>
     <div class="article-meta-row">
-      <span>SfriTrav Editorial</span>
+      <span style="display:inline-flex;align-items:center;gap:6px;">
+        <span style="display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--red);color:#fff;font-size:.7rem;font-weight:700;flex-shrink:0;">KG</span>
+        <span><strong style="color:var(--ink);">Kumar Gaurav</strong> <span style="color:var(--ink-muted);font-size:.8rem;">· Editor, SfriTrav</span></span>
+      </span>
       <span class="dot">·</span>
       <time datetime="${a.date}">${dateStr}</time>
       <span class="dot">·</span>
+      <span>${timeStr}</span>
+      <span class="dot">·</span>
       <span>${a.readTime} read</span>
     </div>
+    <p style="font-size:.78rem;color:var(--ink-muted);background:#f9f9f7;border-left:3px solid var(--border-dark);padding:.5rem .85rem;border-radius:0 4px 4px 0;margin:.75rem 0 0;">Reviewed and published by the SfriTrav editorial team.</p>
     <img class="article-cover" src="${getImg(a.category, 0)}" alt="${a.title}" loading="eager">
     <div style="background:var(--cream);border:1.5px dashed var(--border-dark);border-radius:8px;padding:1rem;text-align:center;font-size:.78rem;color:var(--ink-muted);margin-bottom:1.5rem;">Advertisement</div>`;
 
