@@ -405,9 +405,9 @@
 
   // Speed constants (px per second) — tune here
   var SPEEDS = {
-    breaking : { desktop: 90,  mobile: 130 },
-    market   : { desktop: 80,  mobile: 120 },
-    trending : { desktop: 85,  mobile: 125 }
+    breaking : { desktop: 90,  mobile: 55 },
+    market   : { desktop: 80,  mobile: 50 },
+    trending : { desktop: 85,  mobile: 52 }
   };
 
   var scrollers = {}; // keyed by name
@@ -432,7 +432,7 @@
 
     function getSpeed() {
       var isMobile = window.innerWidth <= 768;
-      var s = SPEEDS[name] || { desktop: 85, mobile: 125 };
+      var s = SPEEDS[name] || { desktop: 85, mobile: 52 };
       return isMobile ? s.mobile : s.desktop;
     }
 
