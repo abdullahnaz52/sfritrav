@@ -1,0 +1,25 @@
+User-agent: *
+Allow: /
+Disallow: /api/cron-generate
+Disallow: /api/generate-article
+
+User-agent: Googlebot
+Allow: /
+Disallow: /api/cron-generate
+Disallow: /api/generate-article
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Baiduspider
+Crawl-delay: 10
+
+# Block pure scrapers only
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+Sitemap: https://sfritrav.com/sitemap.xml
+Sitemap: https://sfritrav.com/feed.xml

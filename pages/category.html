@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageTitle">Category — SfriTrav</title>
+  <meta name="description" id="pageDesc" content="Browse articles by category on SfriTrav.">
+  <meta property="og:title" id="ogTitle" content="SfriTrav">
+  <meta property="og:description" id="ogDesc" content="Your daily read.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" id="canonicalLink" href="https://sfritrav.com/pages/category.html">
+  <!-- AdSense — uncomment after approval -->
+  <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
+  <link rel="stylesheet" href="/public/css/style.css">
+  <link rel="icon" href="/images/favicon.ico">
+</head>
+<body>
+
+<header class="site-header" id="siteHeader">
+  <div class="container header-inner">
+    <a href="/" class="logo">SfriTrav<span class="logo-dot">.</span>com</a>
+    <nav class="main-nav" id="mainNav">
+      <ul class="nav-list">
+        <li><a href="/" class="nav-link">Home</a></li>
+        <li><a href="/pages/category.html?cat=india-news" class="nav-link">India</a></li>
+        <li><a href="/pages/category.html?cat=health" class="nav-link">Health</a></li>
+        <li><a href="/pages/category.html?cat=sports" class="nav-link">Sports</a></li>
+        <li><a href="/pages/category.html?cat=entertainment" class="nav-link">Entertainment</a></li>
+        <li><a href="/pages/category.html?cat=technology" class="nav-link">Tech</a></li>
+        <li><a href="/pages/category.html?cat=business" class="nav-link">Business</a></li>
+        <li><a href="/pages/category.html?cat=travel" class="nav-link">Travel</a></li>
+        <li><a href="/pages/category.html?cat=food" class="nav-link">Food</a></li>
+        <li><a href="/pages/category.html?cat=jobs" class="nav-link">Jobs</a></li>
+      </ul>
+    </nav>
+    <div class="header-actions">
+      <a href="/pages/search.html" class="btn-search">🔍</a>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="cat-hero" id="catHero">
+    <div class="container">
+      <nav class="breadcrumb"><a href="/">Home</a><span>›</span><span id="breadcrumbCat">Category</span></nav>
+      <h1 id="catHeading">Articles</h1>
+      <p id="catSubheading" style="color:rgba(255,255,255,.7);font-size:.95rem;margin-top:.4rem;"></p>
+    </div>
+  </div>
+
+  <div class="container" style="padding-top:1.5rem; padding-bottom:3rem;">
+    <div class="sort-row">
+      <span id="resultsCount" style="font-size:.85rem;color:var(--ink-muted);">Loading…</span>
+      <select id="sortSelect" class="sort-select">
+        <option value="newest">Newest First</option>
+        <option value="oldest">Oldest First</option>
+      </select>
+    </div>
+    <div class="cards-grid" id="articlesGrid">
+      <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div></div>
+      <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div></div>
+      <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div></div>
+      <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div></div>
+    </div>
+    <div class="load-more-wrap" id="loadMoreWrap" style="display:none">
+      <button class="btn btn-outline" id="loadMoreBtn">Load More Articles</button>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-bottom" style="padding:1.25rem 0;text-align:center;font-size:.78rem;color:rgba(255,255,255,.4);">
+    <div class="container"><p>&copy; <span class="footer-year"></span> SfriTrav.com | <a href="/" style="color:rgba(255,255,255,.4)">Home</a> · <a href="/privacy-policy.html" style="color:rgba(255,255,255,.4)">Privacy</a> · <a href="/pages/contact.html" style="color:rgba(255,255,255,.4)">Contact</a></p></div>
+  </div>
+</footer>
+
+<button class="back-top" id="backTop">↑</button>
+
+<script src="/public/js/ads.js" defer></script>
+<script src="/public/js/app.js" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const CATS = window.SfriTrav?.CATEGORIES || {};
+  const params = new URLSearchParams(location.search);
+  const cat = params.get('cat') || 'all';
+  const meta = CATS[cat] || { label: 'All Articles', color: 'news', emoji: '📰' };
+
+  const CAT_DESCS = {
+    'health':        'Expert tips on fitness, nutrition, disease prevention and wellness — tailored for Indian lifestyles.',
+    'business':      'Stock market analysis, personal finance, investing tips and economic news for Indian investors.',
+    'technology':    'Smartphone reviews, app guides, AI developments and tech news for Indian consumers.',
+    'travel':        'Budget travel guides, hidden gems and itineraries across India and the world.',
+    'sports':        'Cricket, IPL, football and all Indian sports coverage — live updates, previews and analysis.',
+    'entertainment': 'Bollywood, Hollywood, OTT series, celebrity news and entertainment reviews.',
+    'jobs':          'Government jobs, UPSC, SSC, private sector openings and career advice for India.',
+    'food':          'Indian recipes, restaurant reviews, nutrition guides and food trends.',
+    'fashion':       'Style guides, beauty tips, Indian fashion trends and product recommendations.',
+    'women-health':  "Women's health, skincare, PCOS, fertility and wellness guidance for Indian women.",
+    'men-health':    "Men's health, fitness, grooming and lifestyle tips for Indian men.",
+    'ayurveda':      'Ayurvedic remedies, herbs and holistic wellness rooted in traditional Indian medicine.',
+    'environment':   'Climate change, pollution and sustainability news relevant to India.',
+    'mental-health': 'Mental health awareness, stress management and therapy resources for India.',
+    'kids':          'Parenting tips, child development, education and activities for Indian families.',
+    'politics':      'Indian and global politics, elections, government policy and geopolitical analysis.',
+    'india-news':    'Breaking news, current events and in-depth reporting from across India.',
+    'global-news':   'International news, world affairs, diplomacy and global events.',
+  };
+  document.title = `${meta.label} — Latest Articles — SfriTrav`;
+  document.getElementById('pageTitle').textContent = `${meta.label} — Latest Articles — SfriTrav`;
+  const catDesc = CAT_DESCS[cat] || `Browse the latest ${meta.label} articles on SfriTrav — India's complete daily read.`;
+  document.getElementById('pageDesc').content = catDesc;
+  if (document.getElementById('ogTitle')) document.getElementById('ogTitle').content = `${meta.label} — SfriTrav`;
+  if (document.getElementById('ogDesc'))  document.getElementById('ogDesc').content  = catDesc;
+  document.getElementById('canonicalLink').href = `https://sfritrav.com/pages/category.html?cat=${cat}`;
+  document.getElementById('catHeading').textContent = `${meta.emoji || ''} ${meta.label}`;
+  document.getElementById('breadcrumbCat').textContent = meta.label;
+  const subEl = document.getElementById('catSubheading');
+  if (subEl) subEl.textContent = catDesc;
+
+  let PAGE = 1; const PER = 8;
+  function getArticles() {
+    const all = window.SfriTrav?.allArticles() || [];
+    const filtered = cat === 'all' ? all : all.filter(a => a.category === cat);
+    const sort = document.getElementById('sortSelect').value;
+    return filtered.sort((a,b) => sort === 'oldest'
+      ? new Date(a.date) - new Date(b.date)
+      : new Date(b.date) - new Date(a.date));
+  }
+  function render() {
+    const articles = getArticles();
+    const grid = document.getElementById('articlesGrid');
+    const slice = articles.slice(0, PAGE * PER);
+    document.getElementById('resultsCount').textContent = `${articles.length} article${articles.length !== 1 ? 's' : ''}`;
+    const getImg = window.SfriTrav?.getImg || (() => '');
+    grid.innerHTML = slice.map((a,i) => {
+      const catInfo = CATS[a.category] || { label: a.category, color: 'news' };
+      return `<article class="card">
+        <a href="/pages/article.html?slug=${a.slug}" class="card-img-wrap">
+          <img class="card-img" src="${getImg(a.category, i)}" alt="${a.title}" loading="lazy">
+        </a>
+        <div class="card-body">
+          <span class="tag ${catInfo.color}">${catInfo.label}</span>
+          <h3 class="card-title"><a href="/pages/article.html?slug=${a.slug}">${a.title}</a></h3>
+          <p class="card-excerpt">${a.excerpt}</p>
+          <div class="card-meta"><time>${new Date(a.date).toLocaleDateString('en-IN',{month:'short',day:'numeric',year:'numeric'})}</time><span class="dot">·</span><span>${a.readTime}</span></div>
+        </div>
+      </article>`;
+    }).join('') || '<p class="empty-state">No articles yet — check back soon!</p>';
+    document.getElementById('loadMoreWrap').style.display = slice.length < articles.length ? 'block' : 'none';
+  }
+  document.getElementById('sortSelect').addEventListener('change', () => { PAGE = 1; render(); });
+  document.getElementById('loadMoreBtn').addEventListener('click', () => { PAGE++; render(); });
+  // Wait for app.js
+  const tryRender = (n=0) => { if (window.SfriTrav?.allArticles) render(); else if (n < 20) setTimeout(() => tryRender(n+1), 150); };
+  tryRender();
+  document.querySelectorAll('.footer-year').forEach(e => e.textContent = new Date().getFullYear());
+  window.addEventListener('scroll', () => {
+    document.getElementById('siteHeader').classList.toggle('scrolled', scrollY > 50);
+    document.getElementById('backTop').classList.toggle('visible', scrollY > 400);
+  }, { passive: true });
+  document.getElementById('backTop').addEventListener('click', e => { e.preventDefault(); scrollTo({ top:0, behavior:'smooth' }); });
+  const _ham = document.getElementById('hamburger');
+  const _nav = document.getElementById('mainNav');
+  if (_ham && _nav) {
+    _ham.addEventListener('click', () => {
+      const isOpen = _nav.classList.toggle('open');
+      _ham.classList.toggle('active', isOpen);
+      _ham.setAttribute('aria-expanded', isOpen);
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    });
+    document.addEventListener('click', e => {
+      if (_nav.classList.contains('open') && !_nav.contains(e.target) && !_ham.contains(e.target)) {
+        _nav.classList.remove('open'); _ham.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
+  }
+});
+</script>
+</body>
+</html>

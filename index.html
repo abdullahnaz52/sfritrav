@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SfriTrav — News, Health, Travel, Sports, Entertainment & More</title>
+  <meta name="description" content="SfriTrav is your daily source for news, health tips, travel guides, sports updates, entertainment, business, technology, food, fashion and more from India and around the world.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sfritrav.com/">
+  <meta property="og:title" content="SfriTrav — Your Complete Daily Read">
+  <meta property="og:description" content="News, health, travel, sports, entertainment, business, technology and more.">
+  <meta property="og:image" content="https://sfritrav.com/images/og-cover.jpg">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="/public/css/style.css">
+  <link rel="icon" href="/images/favicon.ico">
+  <script type="application/ld+json">{
+    "@context":"https://schema.org","@type":"WebSite",
+    "name":"SfriTrav","url":"https://sfritrav.com",
+    "potentialAction":{"@type":"SearchAction","target":"https://sfritrav.com/pages/search.html?q={search_term_string}","query-input":"required name=search_term_string"}
+  }</script>
+  <!-- AdSense — uncomment & replace pub-ID after approval -->
+  <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
+</head>
+<body>
+
+<!-- Breaking news ticker -->
+<div class="ticker-bar">
+  <div class="container">
+    <div class="ticker-inner">
+      <span class="ticker-label">Breaking</span>
+      <div class="ticker-track">
+        <div class="ticker-items" id="breakingTicker"><span style="color:rgba(255,255,255,.7)">Loading latest news…</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MARKET TICKER — live rates, right-to-left ===== -->
+<div class="market-bar" id="marketBar">
+  <div class="container">
+    <div class="market-inner">
+      <span class="market-label" id="marketLabel">Markets</span>
+      <div class="market-track">
+        <div class="market-items" id="marketItems">
+          <span class="market-loading">⏳ Fetching live market data…</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Date bar -->
+<div class="date-bar">
+  <div class="container" style="display:flex;justify-content:space-between;align-items:center;width:100%">
+    <span id="todayDate"></span>
+    <div class="date-bar-right">
+      <a href="/feed.xml">RSS Feed</a>
+      <a href="/pages/contact.html">Contact</a>
+      <a href="/pages/about.html">About</a>
+    </div>
+  </div>
+</div>
+
+<!-- Header -->
+<header class="site-header" id="siteHeader">
+  <div class="container header-inner">
+    <a href="/" class="logo" aria-label="SfriTrav Home">
+      SfriTrav<span class="logo-dot">.</span>com
+      <span class="logo-tagline">Your Daily Read</span>
+    </a>
+    <nav class="main-nav" id="mainNav" aria-label="Main navigation">
+      <button class="nav-close-btn" id="navCloseBtn" aria-label="Close menu">
+        <span>Menu</span>
+        <span class="nav-close-icon">✕</span>
+      </button>
+      <ul class="nav-list">
+        <li><a href="/" class="nav-link active">Home</a></li>
+        <li><a href="/pages/category.html?cat=india-news" class="nav-link">India</a></li>
+        <li><a href="/pages/category.html?cat=global-news" class="nav-link">World</a></li>
+        <li><a href="/pages/category.html?cat=health" class="nav-link">Health</a></li>
+        <li><a href="/pages/category.html?cat=sports" class="nav-link">Sports</a></li>
+        <li><a href="/pages/category.html?cat=entertainment" class="nav-link">Entertainment</a></li>
+        <li><a href="/pages/category.html?cat=technology" class="nav-link">Tech</a></li>
+        <li><a href="/pages/category.html?cat=business" class="nav-link">Business</a></li>
+        <li><a href="/pages/category.html?cat=travel" class="nav-link">Travel</a></li>
+        <li><a href="/pages/category.html?cat=food" class="nav-link">Food</a></li>
+        <li><a href="/pages/category.html?cat=fashion" class="nav-link">Fashion</a></li>
+        <li><a href="/pages/category.html?cat=jobs" class="nav-link">Jobs</a></li>
+        <li><a href="/pages/search.html" class="nav-link" id="mobileSearchLink">🔍 Search</a></li>
+      </ul>
+    </nav>
+    <div class="header-actions">
+      <div class="search-wrap-outer" id="headerSearchOuter">
+        <div class="header-search-wrap">
+          <input class="header-search-input" id="headerSearchInput" type="search" placeholder="Search articles…" autocomplete="off" aria-label="Search articles">
+          <button class="header-search-btn" id="headerSearchBtn" aria-label="Search">🔍</button>
+        </div>
+        <div class="search-suggestions" id="searchSuggestions" role="listbox"></div>
+      </div>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+
+    <!-- ===== HERO ===== -->
+    <section class="hero-section">
+      <div class="hero-grid">
+        <div class="hero-main" id="heroMain">
+          <div class="skeleton skeleton-img" style="aspect-ratio:16/9"></div>
+          <div class="hero-main-body">
+            <div class="skeleton skeleton-line medium"></div>
+            <div class="skeleton skeleton-line short" style="margin-top:6px"></div>
+          </div>
+        </div>
+        <div class="hero-stack" id="heroStack">
+          <div class="hero-side-item"><div class="skeleton" style="width:90px;height:68px;flex-shrink:0;border-radius:4px"></div><div style="flex:1;padding:.5rem 0"><div class="skeleton skeleton-line medium"></div><div class="skeleton skeleton-line short" style="margin-top:6px"></div></div></div>
+          <div class="hero-side-item"><div class="skeleton" style="width:90px;height:68px;flex-shrink:0;border-radius:4px"></div><div style="flex:1;padding:.5rem 0"><div class="skeleton skeleton-line medium"></div><div class="skeleton skeleton-line short" style="margin-top:6px"></div></div></div>
+          <div class="hero-side-item"><div class="skeleton" style="width:90px;height:68px;flex-shrink:0;border-radius:4px"></div><div style="flex:1;padding:.5rem 0"><div class="skeleton skeleton-line medium"></div><div class="skeleton skeleton-line short" style="margin-top:6px"></div></div></div>
+          <div class="hero-side-item"><div class="skeleton" style="width:90px;height:68px;flex-shrink:0;border-radius:4px"></div><div style="flex:1;padding:.5rem 0"><div class="skeleton skeleton-line medium"></div><div class="skeleton skeleton-line short" style="margin-top:6px"></div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Google Trends ticker -->
+    <div class="trends-bar">
+      <div class="trends-inner">
+        <span class="trends-label">Trending</span>
+        <div class="trends-track">
+          <div class="trends-items" id="trendingItems"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== LATEST ARTICLES + SIDEBAR ===== -->
+    <section class="content-section">
+      <div class="two-col">
+        <div>
+          <div class="section-header">
+            <h2 class="section-title">Latest <span>Stories</span></h2>
+            <a href="/pages/category.html?cat=all" class="see-all">See All →</a>
+          </div>
+          <div class="cards-grid" id="latestGrid">
+            <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div><div class="skeleton skeleton-line short" style="margin:6px 12px 12px"></div></div>
+            <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div><div class="skeleton skeleton-line short" style="margin:6px 12px 12px"></div></div>
+            <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div><div class="skeleton skeleton-line short" style="margin:6px 12px 12px"></div></div>
+            <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div><div class="skeleton skeleton-line short" style="margin:6px 12px 12px"></div></div>
+          </div>
+        </div>
+
+        <!-- Sidebar -->
+        <aside>
+          <!-- Newsletter -->
+          <div class="sidebar-widget nl-widget">
+            <h3 class="widget-title">Newsletter</h3>
+            <p>Daily news, health tips, and trending stories — straight to your inbox.</p>
+            <form class="nl-form" novalidate>
+              <div class="nl-input-wrap">
+                <input class="nl-input" type="email" name="email" placeholder="your@email.com" required>
+                <button class="nl-btn" type="submit">Subscribe Free →</button>
+                <span class="nl-msg"></span>
+              </div>
+            </form>
+          </div>
+
+          <!-- Trending -->
+          <div class="sidebar-widget">
+            <h3 class="widget-title">Most Read</h3>
+            <div id="trendingList"></div>
+          </div>
+
+          <!-- Categories -->
+          <div class="sidebar-widget">
+            <h3 class="widget-title">Browse Topics</h3>
+            <div class="cat-grid">
+              <a href="/pages/category.html?cat=health" class="cat-pill">💪 Health</a>
+              <a href="/pages/category.html?cat=travel" class="cat-pill">✈️ Travel</a>
+              <a href="/pages/category.html?cat=sports" class="cat-pill">⚽ Sports</a>
+              <a href="/pages/category.html?cat=entertainment" class="cat-pill">🎬 Entertainment</a>
+              <a href="/pages/category.html?cat=technology" class="cat-pill">📱 Tech</a>
+              <a href="/pages/category.html?cat=business" class="cat-pill">📈 Business</a>
+              <a href="/pages/category.html?cat=food" class="cat-pill">🍽️ Food</a>
+              <a href="/pages/category.html?cat=fashion" class="cat-pill">👗 Fashion</a>
+              <a href="/pages/category.html?cat=women-health" class="cat-pill">👩 Women</a>
+              <a href="/pages/category.html?cat=men-health" class="cat-pill">👨 Men</a>
+              <a href="/pages/category.html?cat=mental-health" class="cat-pill">🧠 Mental Health</a>
+              <a href="/pages/category.html?cat=jobs" class="cat-pill">💼 Jobs</a>
+              <a href="/pages/category.html?cat=environment" class="cat-pill">🌿 Environment</a>
+              <a href="/pages/category.html?cat=ayurveda" class="cat-pill">🌱 Ayurveda</a>
+              <a href="/pages/category.html?cat=kids" class="cat-pill">👶 Kids</a>
+              <a href="/pages/category.html?cat=india-news" class="cat-pill">🇮🇳 India News</a>
+              <a href="/pages/category.html?cat=global-news" class="cat-pill">🌍 World News</a>
+              <a href="/pages/category.html?cat=politics" class="cat-pill">🏛️ Politics</a>
+            </div>
+          </div>
+
+          <!-- Ad unit — sidebar rectangle -->
+          <div class="sidebar-widget" data-ad-zone="sidebar">
+            <div class="ad-placeholder"><span class="ad-label">Advertisement</span></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ===== HEALTH SECTION ===== -->
+    <section class="content-section">
+      <div class="section-header">
+        <h2 class="section-title">Health <span>& Lifestyle</span></h2>
+        <a href="/pages/category.html?cat=health" class="see-all">More →</a>
+      </div>
+      <div class="cards-grid cards-grid-3" id="cat-health">
+        <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div></div>
+        <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div></div>
+        <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div></div>
+      </div>
+    </section>
+
+    <!-- ===== SPORTS SECTION ===== -->
+    <section class="content-section">
+      <div class="section-header">
+        <h2 class="section-title"><span>Sports</span></h2>
+        <a href="/pages/category.html?cat=sports" class="see-all">More →</a>
+      </div>
+      <div class="cards-grid cards-grid-3" id="cat-sports">
+        <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div></div>
+        <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div></div>
+        <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div></div>
+      </div>
+    </section>
+
+    <!-- ===== TECH SECTION ===== -->
+    <section class="content-section">
+      <div class="section-header">
+        <h2 class="section-title">Technology <span>& Gadgets</span></h2>
+        <a href="/pages/category.html?cat=technology" class="see-all">More →</a>
+      </div>
+      <div class="cards-grid cards-grid-3" id="cat-technology">
+        <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div></div>
+        <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div></div>
+        <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div></div>
+      </div>
+    </section>
+
+    <!-- Ad unit — leaderboard mid-page -->
+    <div data-ad-zone="mid" style="margin:1rem 0;">
+      <div class="ad-placeholder"><span class="ad-label">Advertisement</span></div>
+    </div>
+
+    <!-- ===== FOOD SECTION ===== -->
+    <section class="content-section">
+      <div class="section-header">
+        <h2 class="section-title">Food <span>& Recipes</span></h2>
+        <a href="/pages/category.html?cat=food" class="see-all">More →</a>
+      </div>
+      <div class="cards-grid cards-grid-3" id="cat-food">
+        <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div></div>
+        <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div></div>
+        <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div></div>
+      </div>
+    </section>
+
+    <!-- ===== WOMEN'S HEALTH ===== -->
+    <section class="content-section">
+      <div class="section-header">
+        <h2 class="section-title">Women's <span>Health & Beauty</span></h2>
+        <a href="/pages/category.html?cat=women-health" class="see-all">More →</a>
+      </div>
+      <div class="cards-grid cards-grid-3" id="cat-women-health">
+        <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div></div>
+        <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div></div>
+        <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div></div>
+      </div>
+    </section>
+
+    <!-- ===== BUSINESS ===== -->
+    <section class="content-section">
+      <div class="section-header">
+        <h2 class="section-title">Business <span>& Finance</span></h2>
+        <a href="/pages/category.html?cat=business" class="see-all">More →</a>
+      </div>
+      <div class="cards-grid cards-grid-3" id="cat-business">
+        <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div></div>
+        <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div></div>
+        <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div></div>
+      </div>
+    </section>
+
+    <!-- ===== ENVIRONMENT ===== -->
+    <section class="content-section">
+      <div class="section-header">
+        <h2 class="section-title"><span>Environment</span> & Climate</h2>
+        <a href="/pages/category.html?cat=environment" class="see-all">More →</a>
+      </div>
+      <div class="cards-grid cards-grid-3" id="cat-environment">
+        <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div></div>
+        <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div></div>
+        <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div></div>
+      </div>
+    </section>
+
+    <!-- ===== JOBS ===== -->
+    <section class="content-section">
+      <div class="section-header">
+        <h2 class="section-title">Jobs <span>in India</span></h2>
+        <a href="/pages/category.html?cat=jobs" class="see-all">More →</a>
+      </div>
+      <div class="cards-grid cards-grid-3" id="cat-jobs">
+        <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div></div>
+        <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div></div>
+        <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div></div>
+      </div>
+    </section>
+
+  </div><!-- /container -->
+</main>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="/" class="logo" style="color:#fff">SfriTrav<span class="logo-dot">.</span>com</a>
+        <p>Your complete daily read — news, health, travel, sports, entertainment, business, food and more. Independent journalism from India.</p>
+        <div class="footer-social">
+          <a href="#" class="social-btn" aria-label="Facebook">📘</a>
+          <a href="#" class="social-btn" aria-label="Instagram">📸</a>
+          <a href="#" class="social-btn" aria-label="YouTube">▶️</a>
+          <a href="#" class="social-btn" aria-label="Twitter">🐦</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Categories</h4>
+        <ul>
+          <li><a href="/pages/category.html?cat=health">Health & Lifestyle</a></li>
+          <li><a href="/pages/category.html?cat=travel">Travel</a></li>
+          <li><a href="/pages/category.html?cat=sports">Sports</a></li>
+          <li><a href="/pages/category.html?cat=entertainment">Entertainment</a></li>
+          <li><a href="/pages/category.html?cat=technology">Technology</a></li>
+          <li><a href="/pages/category.html?cat=business">Business & Finance</a></li>
+          <li><a href="/pages/category.html?cat=food">Food & Recipes</a></li>
+          <li><a href="/pages/category.html?cat=fashion">Fashion & Beauty</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>More Topics</h4>
+        <ul>
+          <li><a href="/pages/category.html?cat=women-health">Women's Health</a></li>
+          <li><a href="/pages/category.html?cat=men-health">Men's Health</a></li>
+          <li><a href="/pages/category.html?cat=mental-health">Mental Health</a></li>
+          <li><a href="/pages/category.html?cat=ayurveda">Ayurveda</a></li>
+          <li><a href="/pages/category.html?cat=kids">Kids & Parenting</a></li>
+          <li><a href="/pages/category.html?cat=jobs">Jobs in India</a></li>
+          <li><a href="/pages/category.html?cat=environment">Environment</a></li>
+          <li><a href="/pages/category.html?cat=india-news">India News</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="/pages/about.html">About Us</a></li>
+          <li><a href="/pages/contact.html">Contact</a></li>
+          <li><a href="/privacy-policy.html">Privacy Policy</a></li>
+          <li><a href="/terms.html">Terms of Service</a></li>
+          <li><a href="/disclaimer.html">Disclaimer</a></li>
+          <li><a href="/sitemap.xml">Sitemap</a></li>
+          <li><a href="/feed.xml">RSS Feed</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; <span class="footer-year"></span> SfriTrav.com — All rights reserved. Made in India 🇮🇳</p>
+      <p><a href="/privacy-policy.html">Privacy</a> · <a href="/terms.html">Terms</a> · <a href="/disclaimer.html">Disclaimer</a></p>
+    </div>
+  </div>
+</footer>
+
+<button class="back-top" id="backTop" aria-label="Back to top">↑</button>
+
+<!-- Cookie banner -->
+<div class="cookie-banner" id="cookieBanner" role="dialog" aria-label="Cookie consent">
+  <p>We use cookies to improve your experience and show relevant ads. <a href="/privacy-policy.html">Privacy Policy</a></p>
+  <div class="cookie-btns">
+    <button class="cookie-accept" id="cookieAccept">Accept All</button>
+    <button class="cookie-decline" id="cookieDecline">Decline</button>
+  </div>
+</div>
+
+<script src="/public/js/ads.js" defer></script>
+<script src="/public/js/app.js" defer></script>
+<script>
+/* ================================================================
+   BREAKING NEWS — clickable items → article page with AI generation
+   ================================================================ */
+(function() {
+  var el = document.getElementById('breakingTicker');
+  if (!el) return;
+  var REFRESH = 5 * 60 * 1000;
+  var timer = null;
+
+  var STATIC = [
+    { title:'Global markets volatile amid geopolitical tensions', cat:'global-news' },
+    { title:'India GDP growth remains strong among major economies', cat:'india-news' },
+    { title:'Fed holds interest rates steady — global markets react', cat:'business' },
+    { title:'Crude oil prices fluctuate on Middle East developments', cat:'business' },
+    { title:'Tech sector leads gains on major stock exchanges', cat:'technology' },
+    { title:'Rupee strengthens against dollar in early trade', cat:'business' },
+    { title:'IMF upgrades India growth forecast for current year', cat:'india-news' },
+    { title:'RBI monetary policy meeting outcome awaited by markets', cat:'business' },
+    { title:'India-US trade talks make progress on key issues', cat:'india-news' },
+    { title:'Climate summit: major nations agree on new targets', cat:'environment' },
+  ];
+
+  function slugify(t) {
+    return t.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').substring(0,80);
+  }
+
+  function articleLink(title, src, cat) {
+    var slug = 'breaking-' + slugify(title);
+    var url = '/pages/article.html?slug=' + encodeURIComponent(slug)
+            + '&title=' + encodeURIComponent(title)
+            + '&cat='   + encodeURIComponent(cat || 'india-news')
+            + '&src='   + encodeURIComponent(src  || '');
+    return url;
+  }
+
+  function renderHeadlines(items) {
+    var doubled = items.concat(items);
+    el.innerHTML = doubled.map(function(h) {
+      var title = h.title || h;
+      var src   = h.src   || '';
+      var cat   = h.category || h.cat   || 'india-news';
+      var label = src ? ' <span style="opacity:.55;font-size:.75em">[' + src + ']</span>' : '';
+      return '<a href="' + articleLink(title, src, cat) + '">' + title + label + '</a>'
+           + '<span class="ticker-sep">·</span>';
+    }).join('');
+  }
+
+  renderHeadlines(STATIC);
+
+  function load() {
+    clearTimeout(timer);
+    fetch('/api/breaking-news')
+      .then(function(r) { return r.ok ? r.json() : Promise.reject(r.status); })
+      .then(function(d) {
+        if (d.headlines && d.headlines.length) renderHeadlines(d.headlines);
+        timer = setTimeout(load, REFRESH);
+      })
+      .catch(function() {
+        timer = setTimeout(load, 2 * 60 * 1000);
+      });
+  }
+  timer = setTimeout(load, 3000);
+})();
+</script>
+
+<script>
+/* ================================================================
+   MARKET TICKER — live data + expand panel on click
+   ================================================================ */
+(function() {
+  var el       = document.getElementById('marketItems');
+  var label    = document.getElementById('marketLabel');
+  var bar      = document.getElementById('marketBar');
+  if (!el || !bar) return;
+
+  var TYPE_LABEL = {index:'IDX',forex:'FX',commodity:'CMD',stock:'STK',crypto:'CRY',fuel:'FUEL',etf:'ETF'};
+  var TYPE_NAME  = {index:'Indices',forex:'Forex',commodity:'Commodities',stock:'Stocks',crypto:'Crypto',fuel:'Fuel Prices'};
+  var timer = null, lastItems = null, expanded = false, fetchedAt = '';
+
+  // Build the expand panel DOM once
+  var panel = document.createElement('div');
+  panel.className = 'market-expand-panel';
+  panel.innerHTML = '<div class="mep-header">'
+    + '<span class="mep-title">📊 Live Market Data</span>'
+    + '<button class="mep-close" id="mepClose">✕ Close</button>'
+    + '</div>'
+    + '<div id="mepBody"></div>'
+    + '<div class="mep-fetched" id="mepFetched"></div>';
+  bar.appendChild(panel);
+
+  document.getElementById('mepClose').addEventListener('click', function(e) {
+    e.stopPropagation();
+    closePanel();
+  });
+
+  function openPanel() {
+    expanded = true;
+    bar.classList.add('expanded');
+    if (lastItems) renderPanel(lastItems);
+  }
+  function closePanel() {
+    expanded = false;
+    bar.classList.remove('expanded');
+  }
+
+  bar.addEventListener('click', function(e) {
+    if (e.target.closest('.mep-close')) return;
+    expanded ? closePanel() : openPanel();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && expanded) closePanel();
+  });
+
+  function buildItem(item) {
+    var dir   = item.direction === 'down' ? 'down' : 'up';
+    var arrow = dir === 'up' ? '▲' : '▼';
+    var tl    = TYPE_LABEL[item.type] || 'MKT';
+    var chg   = item.change && item.change.trim();
+    return '<span class="market-item">'
+      + '<span class="market-dot ' + (item.marketState==='REGULAR'?'live':'closed') + '"></span>'
+      + '<span class="market-type ' + (item.type||'') + '">' + tl + '</span>'
+      + '<span class="market-name">' + (item.name||'') + '</span>'
+      + '<span class="market-price">' + (item.price||'—') + '</span>'
+      + (chg ? '<span class="market-change ' + dir + '"><span class="market-arrow">' + arrow + '</span>' + chg + '</span>' : '')
+      + '</span>';
+  }
+
+  function renderPanel(items) {
+    var groups = {};
+    var order  = ['index','forex','commodity','fuel','stock','crypto'];
+    order.forEach(function(t){ groups[t] = []; });
+    items.forEach(function(i){ if (groups[i.type]) groups[i.type].push(i); else groups['stock'] = (groups['stock']||[]).concat([i]); });
+
+    var html = '';
+    order.forEach(function(type) {
+      var list = groups[type];
+      if (!list || !list.length) return;
+      html += '<div class="mep-section"><div class="mep-section-title">' + (TYPE_NAME[type]||type) + '</div><div class="mep-grid">';
+      list.forEach(function(item) {
+        var dir = item.direction === 'down' ? 'down' : 'up';
+        var arrow = dir === 'up' ? '▲' : '▼';
+        var tl = TYPE_LABEL[item.type] || 'MKT';
+        var chg = item.change && item.change.trim();
+        html += '<div class="mep-item">'
+          + '<div class="mep-item-left">'
+          + '<span class="market-type ' + (item.type||'') + '">' + tl + '</span>'
+          + '<span class="mep-item-name" title="' + (item.name||'') + '">' + (item.name||'') + '</span>'
+          + '</div>'
+          + '<div class="mep-item-right">'
+          + '<span class="mep-item-price">' + (item.price||'—') + '</span>'
+          + (chg ? '<span class="mep-item-chg ' + dir + '">' + arrow + ' ' + chg + '</span>' : '')
+          + '</div>'
+          + '</div>';
+      });
+      html += '</div></div>';
+    });
+    document.getElementById('mepBody').innerHTML = html;
+    if (fetchedAt) document.getElementById('mepFetched').textContent = 'Updated: ' + new Date(fetchedAt).toLocaleTimeString('en-IN');
+  }
+
+  function render(items) {
+    if (!items || !items.length) return;
+    // Speed based on count: ~1.2s per item, min 18s, max 55s
+    var dur = Math.max(18, Math.min(55, items.length * 1.2));
+    var html = items.map(buildItem).join('');
+    el.innerHTML = html + html;
+    el.style.animationDuration = dur + 's';
+    var live = items.some(function(i){ return i.marketState === 'REGULAR'; });
+    if (label) {
+      label.textContent = live ? 'Live Markets ▾' : 'Markets ▾';
+      label.className   = 'market-label' + (live ? '' : ' closed');
+    }
+    if (expanded) renderPanel(items);
+  }
+
+  // Placeholders while loading
+  var PLACEHOLDERS = ['Sensex','Nifty 50','USD/INR','EUR/INR','Gold','Silver','Crude WTI','Brent','Petrol','Copper','Bitcoin','Ethereum','S&P 500','TCS','Reliance'];
+  el.innerHTML = PLACEHOLDERS.concat(PLACEHOLDERS).map(function(n){
+    return '<span class="market-item"><span class="market-name">'+n+'</span><span class="market-price" style="color:#4b5563">…</span></span>';
+  }).join('');
+
+  function getForex() {
+    return fetch('https://open.er-api.com/v6/latest/USD')
+      .then(function(r){ return r.ok ? r.json() : Promise.reject(); })
+      .then(function(d){
+        var rates = d.rates||{}, inr = rates.INR;
+        if (!inr) return [];
+        function fmt(n){ return n ? '₹'+parseFloat(n).toFixed(2) : null; }
+        return [
+          {name:'USD/INR',val:inr},{name:'EUR/INR',val:rates.EUR?inr/rates.EUR:null},
+          {name:'GBP/INR',val:rates.GBP?inr/rates.GBP:null},{name:'JPY/INR',val:rates.JPY?inr/rates.JPY:null},
+          {name:'AED/INR',val:rates.AED?inr/rates.AED:null},{name:'SAR/INR',val:rates.SAR?inr/rates.SAR:null},
+          {name:'SGD/INR',val:rates.SGD?inr/rates.SGD:null},{name:'CNY/INR',val:rates.CNY?inr/rates.CNY:null},
+        ].filter(function(x){return x.val;}).map(function(x){return{name:x.name,type:'forex',price:fmt(x.val),rawPrice:x.val,change:'',rawChange:0,direction:'up',marketState:'CLOSED',source:'er-api'};});
+      })
+      .catch(function(){ return []; });
+  }
+
+  function load() {
+    clearTimeout(timer);
+    fetch('/api/market-data')
+      .then(function(r){ if(r.status===404) return Promise.reject('404'); return r.ok?r.json():Promise.reject('HTTP '+r.status); })
+      .then(function(d){
+        var items = (d.items||[]).filter(function(i){ return i.price&&i.price!=='—'; });
+        if (items.length) { lastItems=items; fetchedAt=d.fetchedAt||''; render(items); }
+        timer = setTimeout(load, 2*60*1000);
+      })
+      .catch(function(){
+        getForex().then(function(fx){
+          if (fx.length){ lastItems=fx; render(fx); }
+          else if (lastItems) render(lastItems);
+        });
+        timer = setTimeout(load, 5*60*1000);
+      });
+  }
+
+  getForex().then(function(fx){ if(fx.length&&!lastItems){ lastItems=fx; render(fx); } });
+  timer = setTimeout(load, 2000);
+})();
+</script>
+
+<script>
+/* ================================================================
+   TRENDING TICKER — click → AI-generated article page
+   ================================================================ */
+(function() {
+  // Trending items are rendered by app.js loadTrending().
+  // We override the href target: instead of search.html, we go to
+  // article.html?title=...&cat=...&gen=1 which triggers AI generation.
+  // We hook into the trending container after it's populated.
+
+  function patchTrendingLinks() {
+    var container = document.getElementById('trendingItems');
+    if (!container) return;
+    var links = container.querySelectorAll('a');
+    links.forEach(function(a) {
+      var q = a.href && a.href.includes('?q=') ? decodeURIComponent(a.href.split('?q=')[1]||'') : (a.textContent||'').replace(/^#/,'').trim();
+      if (!q) return;
+      // Determine category from existing href or data
+      var cat = a.dataset.cat || 'india-news';
+      a.href = '/pages/article.html?title=' + encodeURIComponent(q) + '&cat=' + encodeURIComponent(cat) + '&gen=1';
+      a.removeAttribute('target');
+    });
+  }
+
+  // Observe trendingItems for when app.js populates it
+  var obs = new MutationObserver(function(mutations) {
+    if (document.getElementById('trendingItems').children.length > 0) {
+      patchTrendingLinks();
+    }
+  });
+  var ti = document.getElementById('trendingItems');
+  if (ti) obs.observe(ti, { childList: true });
+
+  // Also patch after a delay in case already populated
+  setTimeout(patchTrendingLinks, 2000);
+  setTimeout(patchTrendingLinks, 5000);
+})();
+</script>
+
+<script>
+/* ================================================================
+   HEADER SEARCH — live autocomplete from article list
+   ================================================================ */
+(function() {
+  var input = document.getElementById('headerSearchInput');
+  var btn   = document.getElementById('headerSearchBtn');
+  var box   = document.getElementById('searchSuggestions');
+  if (!input || !box) return;
+
+  var activeIdx = -1;
+  var currentResults = [];
+
+  function getArticles() {
+    if (window.SfriTrav && window.SfriTrav.allArticles) return window.SfriTrav.allArticles();
+    return [];
+  }
+
+  function catLabel(cat) {
+    var CATS = (window.SfriTrav && window.SfriTrav.CATEGORIES) || {};
+    return CATS[cat] ? CATS[cat].label : cat;
+  }
+
+  function search(q) {
+    if (!q || q.length < 2) { hideSuggestions(); return; }
+    var all = getArticles();
+    var ql  = q.toLowerCase();
+    var results = all.filter(function(a) {
+      return (a.title && a.title.toLowerCase().includes(ql))
+          || (a.excerpt && a.excerpt.toLowerCase().includes(ql))
+          || (a.category && a.category.toLowerCase().includes(ql))
+          || (a.tags && a.tags.some && a.tags.some(function(t){ return t.toLowerCase().includes(ql); }));
+    }).slice(0, 7);
+    currentResults = results;
+    showSuggestions(results, q);
+  }
+
+  function highlight(text, q) {
+    if (!q) return text;
+    var re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi');
+    return text.replace(re, '<mark style="background:#fee2e2;color:inherit;border-radius:2px">$1</mark>');
+  }
+
+  function showSuggestions(results, q) {
+    activeIdx = -1;
+    if (!results.length) {
+      box.innerHTML = '<div class="search-suggestion-item" style="color:var(--ink-muted);cursor:default">No results for "' + q + '" — <a href="/pages/search.html?q='+encodeURIComponent(q)+'" style="color:var(--red)">Full Search</a></div>';
+      box.classList.add('visible');
+      return;
+    }
+    box.innerHTML = results.map(function(a, i) {
+      return '<div class="search-suggestion-item" data-idx="' + i + '" role="option">'
+        + '<span class="search-suggestion-icon">📄</span>'
+        + '<span class="search-suggestion-title">' + highlight(a.title, q) + '</span>'
+        + '<span class="search-suggestion-cat">' + catLabel(a.category) + '</span>'
+        + '</div>';
+    }).join('') + '<div class="search-suggestion-item" style="border-top:2px solid var(--border)">'
+      + '<span class="search-suggestion-icon">🔍</span>'
+      + '<a href="/pages/search.html?q='+encodeURIComponent(q)+'" style="color:var(--red);font-size:.8rem">See all results for "' + q + '"</a>'
+      + '</div>';
+    box.classList.add('visible');
+
+    box.querySelectorAll('[data-idx]').forEach(function(item) {
+      item.addEventListener('mousedown', function(e) {
+        e.preventDefault();
+        var idx = parseInt(item.dataset.idx);
+        var a   = currentResults[idx];
+        if (a) window.location.href = '/pages/article.html?slug=' + encodeURIComponent(a.slug);
+      });
+    });
+  }
+
+  function hideSuggestions() {
+    box.classList.remove('visible');
+    activeIdx = -1;
+  }
+
+  function navigate(dir) {
+    var items = box.querySelectorAll('[data-idx]');
+    if (!items.length) return;
+    items.forEach(function(i){ i.classList.remove('active'); });
+    activeIdx = Math.max(0, Math.min(items.length - 1, activeIdx + dir));
+    items[activeIdx] && items[activeIdx].classList.add('active');
+  }
+
+  input.addEventListener('input', function() { search(input.value.trim()); });
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowDown')  { e.preventDefault(); navigate(1); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); navigate(-1); }
+    else if (e.key === 'Enter') {
+      e.preventDefault();
+      var active = box.querySelector('.active[data-idx]');
+      if (active) { var idx = parseInt(active.dataset.idx); var a = currentResults[idx]; if(a) window.location.href='/pages/article.html?slug='+encodeURIComponent(a.slug); }
+      else if (input.value.trim()) window.location.href = '/pages/search.html?q=' + encodeURIComponent(input.value.trim());
+    }
+    else if (e.key === 'Escape') { hideSuggestions(); input.blur(); }
+  });
+  input.addEventListener('focus', function() { if (input.value.trim().length >= 2) search(input.value.trim()); });
+
+  btn.addEventListener('click', function() {
+    var q = input.value.trim();
+    if (q) window.location.href = '/pages/search.html?q=' + encodeURIComponent(q);
+    else input.focus();
+  });
+
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('#headerSearchOuter')) hideSuggestions();
+  });
+
+  // Delay search init until SfriTrav is ready
+  var initTimer = setInterval(function(){
+    if (window.SfriTrav && window.SfriTrav.allArticles) {
+      clearInterval(initTimer);
+      if (input.value.trim().length >= 2) search(input.value.trim());
+    }
+  }, 300);
+})();
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  if (window.SfriAds) SfriAds.injectHomepageAds();
+});
+</script>
+</body>
+</html>
