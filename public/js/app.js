@@ -449,21 +449,22 @@
       if (!res.ok) throw new Error();
       const data = await res.json();
       if (data.trending && data.trending.length) {
-        // Only re-render if content actually changed
         const sig = data.trending.map(t => t.title.substring(0,20)).join('|');
         if (sig === _lastTrendingSig) return;
         _lastTrendingSig = sig;
 
-        const items = [...data.trending, ...data.trending]; // doubled for seamless loop
+        const items = [...data.trending, ...data.trending]; // doubled for loop
         const newHTML = items.map(t =>
-          `<a href="/pages/article.html?title=${encodeURIComponent(t.title)}&cat=${encodeURIComponent(t.category||'india-news')}&gen=1" data-cat="${t.category||'india-news'}"><span class="trend-hash">#</span>${t.title}</a><span class="ticker-sep">·</span>`
+          `<a href="/pages/article.html?title=${encodeURIComponent(t.title)}&cat=${encodeURIComponent(t.category||'india-news')}&gen=1" data-cat="${t.category||'india-news'}"><span class="trend-hash">#</span>${t.title}</a><span class="ticker-sep"> · </span>`
         ).join('');
 
-        // Clean animation restart — no flicker
-        el.style.animation = 'none';
-        el.innerHTML = newHTML;
-        void el.offsetWidth;
-        el.style.animation = '';
+        // Use RAF scroller if ready, else fallback to innerHTML
+        const sc = window._sfriScrollers && window._sfriScrollers.trending;
+        if (sc) {
+          sc.update(newHTML, sig);
+        } else {
+          el.innerHTML = newHTML;
+        }
       }
     } catch { /* keep defaults */ }
   }

@@ -73,17 +73,17 @@ input, textarea, select { font-family: inherit; }
 .ticker-inner { display:flex;align-items:center; }
 .ticker-label { font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:var(--white);color:var(--red);padding:.18rem .6rem;border-radius:2px;white-space:nowrap;flex-shrink:0;margin-right:1rem; }
 .ticker-track { overflow:hidden;flex:1; }
-.ticker-items { display:flex;gap:2.5rem;white-space:nowrap;animation:ticker-scroll 10s linear infinite;font-size:.81rem;font-weight:500; }
-.ticker-items:hover { animation-play-state:paused; }
+.ticker-items { display:flex;gap:2.5rem;white-space:nowrap;font-size:.81rem;font-weight:500;will-change:transform; }
+.ticker-items:hover { } /* pause handled in JS */
 .ticker-sep { color:rgba(255,255,255,.5);flex-shrink:0; }
-@keyframes ticker-scroll { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+/* ticker-scroll keyframe removed — JS RAF scroller used instead */
 
 /* ===== TRENDS BAR — speed 22s ===== */
 .trends-bar { background:var(--black);color:var(--white);padding:.65rem 0;overflow:hidden; }
 .trends-inner { display:flex;align-items:center; }
 .trends-label { font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:var(--red);color:var(--white);padding:.22rem .65rem;border-radius:2px;white-space:nowrap;flex-shrink:0;margin-right:1rem; }
 .trends-track { overflow:hidden;flex:1; }
-.trends-items { display:flex;gap:2rem;white-space:nowrap;animation:ticker-scroll 11s linear infinite;font-size:.81rem; }
+.trends-items { display:flex;gap:2rem;white-space:nowrap;font-size:.81rem;will-change:transform; }
 .trends-items a { color:rgba(255,255,255,.82);transition:color .15s; }
 .trends-items a:hover { color:var(--red); }
 .trend-hash { color:var(--red);font-weight:700;margin-right:2px; }
@@ -119,10 +119,7 @@ input, textarea, select { font-family: inherit; }
 /* Mobile nav */
 /* ticker speeds set directly on elements below */
 @media(max-width:900px){
-  /* Faster tickers on mobile — directly override animation-duration */
-  .ticker-items  { animation-duration: 6s !important; }
-  .trends-items  { animation-duration: 6s !important; }
-  .market-items  { animation-duration: 8s !important; }
+  /* Speeds handled by JS RAF scroller (mobile-aware) */
   /* Hamburger: pushed to far right with margin-left:auto, search hidden */
   .hamburger { display:flex; }
   .btn-search { display:none !important; }
@@ -378,16 +375,13 @@ input, textarea, select { font-family: inherit; }
 .market-track { overflow: hidden; flex: 1; }
 
 /* RIGHT-TO-LEFT animation — opposite of breaking ticker */
-@keyframes market-scroll {
-  0%   { transform: translateX(-50%); }
-  100% { transform: translateX(0); }
-}
+/* market-scroll keyframe removed — JS RAF scroller used instead */
 .market-items {
   display: flex; gap: 0; white-space: nowrap;
-  animation: market-scroll 16s linear infinite;
+  will-change: transform;
   font-family: var(--font-mono); font-size: .75rem;
 }
-.market-items:hover { animation-play-state: paused; }
+.market-items:hover { } /* pause handled in JS */
 
 .market-item {
   display: inline-flex; align-items: center; gap: .28rem;
@@ -419,17 +413,21 @@ input, textarea, select { font-family: inherit; }
 }
 @keyframes market-blink { 0%,100%{opacity:.4} 50%{opacity:1} }
 
-/* Market type badges */
-.market-type {
-  font-size: .55rem; padding: .08rem .25rem; border-radius: 2px;
+/* Market type badges — hidden in ticker, shown in panel only */
+.market-type { display:none; }
+.mep-item .market-type {
+  display:inline-block;
+  font-size: .55rem; padding: .08rem .28rem; border-radius: 2px;
   text-transform: uppercase; letter-spacing: .04em; font-weight: 700;
-  flex-shrink: 0; max-width: 34px; overflow:hidden; text-overflow:ellipsis;
+  flex-shrink: 0;
 }
-.market-type.index     { background: rgba(59,130,246,.2);  color: #60a5fa; }
-.market-type.forex     { background: rgba(234,179, 8,.2);  color: #fbbf24; }
-.market-type.commodity { background: rgba(249,115, 22,.2); color: #fb923c; }
-.market-type.stock     { background: rgba(168,85,247,.2);  color: #c084fc; }
-.market-type.etf       { background: rgba(34,197, 94,.2);  color: #4ade80; }
+.mep-item .market-type.index     { background: rgba(59,130,246,.2);  color: #60a5fa; }
+.mep-item .market-type.forex     { background: rgba(234,179, 8,.2);  color: #fbbf24; }
+.mep-item .market-type.commodity { background: rgba(249,115, 22,.2); color: #fb923c; }
+.mep-item .market-type.stock     { background: rgba(168,85,247,.2);  color: #c084fc; }
+.mep-item .market-type.etf       { background: rgba(34,197, 94,.2);  color: #4ade80; }
+.mep-item .market-type.fuel      { background: rgba(239,68,68,.2);   color: #f87171; }
+.mep-item .market-type.crypto    { background: rgba(251,191,36,.18); color: #fbbf24; }
 
 /* Market status dot */
 .market-dot {
@@ -566,9 +564,7 @@ input, textarea, select { font-family: inherit; }
   text-align:right; margin-top:.6rem;
 }
 
-/* ===== FUEL TYPE BADGE ===== */
-.market-type.fuel   { background:rgba(239,68,68,.2);  color:#f87171; }
-.market-type.crypto { background:rgba(251,191,36,.18); color:#fbbf24; }
+/* fuel/crypto handled above in mep-item context */
 
 /* ===== INLINE SEARCH BOX ===== */
 .header-search-wrap {

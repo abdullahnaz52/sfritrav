@@ -396,170 +396,289 @@
 <script src="/public/js/app.js" defer></script>
 <script>
 /* ================================================================
-   BREAKING NEWS — clickable items → article page with AI generation
+   SEAMLESS RAF SCROLLER — used by all 3 marquees
+   No CSS animation. No innerHTML-mid-run. No restart.
+   Pure requestAnimationFrame with dual-clone technique.
    ================================================================ */
 (function() {
-  var el = document.getElementById('breakingTicker');
-  if (!el) return;
-  var REFRESH = 5 * 60 * 1000;
-  var timer = null;
+  'use strict';
 
-  var STATIC = [
-    { title:'Global markets volatile amid geopolitical tensions', cat:'global-news' },
-    { title:'India GDP growth remains strong among major economies', cat:'india-news' },
-    { title:'Fed holds interest rates steady — global markets react', cat:'business' },
-    { title:'Crude oil prices fluctuate on Middle East developments', cat:'business' },
-    { title:'Tech sector leads gains on major stock exchanges', cat:'technology' },
-    { title:'Rupee strengthens against dollar in early trade', cat:'business' },
-    { title:'IMF upgrades India growth forecast for current year', cat:'india-news' },
-    { title:'RBI monetary policy meeting outcome awaited by markets', cat:'business' },
-    { title:'India-US trade talks make progress on key issues', cat:'india-news' },
-    { title:'Climate summit: major nations agree on new targets', cat:'environment' },
-  ];
+  // Speed constants (px per second) — tune here
+  var SPEEDS = {
+    breaking : { desktop: 90,  mobile: 130 },
+    market   : { desktop: 80,  mobile: 120 },
+    trending : { desktop: 85,  mobile: 125 }
+  };
 
-  function slugify(t) {
-    return t.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').substring(0,80);
+  var scrollers = {}; // keyed by name
+
+  /**
+   * Create a seamless scroller for an element.
+   * @param {string} name      — key in SPEEDS
+   * @param {Element} track    — the element to translate
+   * @param {boolean} rtl      — true = right-to-left (market), false = left-to-right
+   */
+  function createScroller(name, track, rtl) {
+    var state = {
+      name      : name,
+      track     : track,
+      rtl       : rtl,
+      pos       : 0,        // current offset in px
+      halfW     : 0,        // half the total scrollWidth (= one copy width)
+      paused    : false,
+      raf       : null,
+      lastTime  : null
+    };
+
+    function getSpeed() {
+      var isMobile = window.innerWidth <= 768;
+      var s = SPEEDS[name] || { desktop: 85, mobile: 125 };
+      return isMobile ? s.mobile : s.desktop;
+    }
+
+    function measure() {
+      // Content is doubled (copy A + copy B). halfW = width of one copy.
+      state.halfW = track.scrollWidth / 2;
+    }
+
+    function step(ts) {
+      if (!state.lastTime) state.lastTime = ts;
+      var dt = Math.min(ts - state.lastTime, 50); // cap at 50ms to handle tab-wake
+      state.lastTime = ts;
+
+      if (!state.paused && state.halfW > 0) {
+        var px = getSpeed() * (dt / 1000);
+        if (state.rtl) {
+          // RTL: pos goes negative, reset when |pos| >= halfW
+          state.pos -= px;
+          if (state.pos <= -state.halfW) state.pos += state.halfW;
+        } else {
+          // LTR: pos goes negative (scrolls left), reset when |pos| >= halfW
+          state.pos -= px;
+          if (state.pos <= -state.halfW) state.pos += state.halfW;
+        }
+        track.style.transform = 'translateX(' + state.pos + 'px)';
+      }
+
+      state.raf = requestAnimationFrame(step);
+    }
+
+    // Pause on hover/touch
+    track.addEventListener('mouseenter', function() { state.paused = true; });
+    track.addEventListener('mouseleave', function() { state.paused = false; state.lastTime = null; });
+    track.addEventListener('touchstart',  function() { state.paused = true;  }, { passive: true });
+    track.addEventListener('touchend',    function() { state.paused = false; state.lastTime = null; }, { passive: true });
+
+    // Re-measure on resize
+    window.addEventListener('resize', function() {
+      measure();
+      state.lastTime = null;
+    }, { passive: true });
+
+    state.start = function() {
+      measure();
+      if (state.halfW === 0) {
+        // Content not ready — retry
+        setTimeout(state.start, 100);
+        return;
+      }
+      // Start from beginning
+      state.pos = 0;
+      state.lastTime = null;
+      if (state.raf) cancelAnimationFrame(state.raf);
+      state.raf = requestAnimationFrame(step);
+    };
+
+    /**
+     * Update content without restarting animation.
+     * Swaps innerHTML only if content changed, then seamlessly continues.
+     */
+    state.update = function(newHTML, sig) {
+      if (state._sig === sig) return; // identical content — skip
+      state._sig = sig;
+
+      // Measure current position as fraction of halfW
+      var frac = state.halfW > 0 ? (state.pos % state.halfW) / state.halfW : 0;
+
+      // Update DOM
+      track.innerHTML = newHTML;
+
+      // Re-measure new width
+      var newHalfW = track.scrollWidth / 2;
+      if (newHalfW > 0) {
+        // Restore position as same fraction of new width — no visual jump
+        state.pos = frac * newHalfW;
+        state.halfW = newHalfW;
+      } else {
+        state.halfW = 0;
+        setTimeout(function() {
+          state.halfW = track.scrollWidth / 2;
+        }, 50);
+      }
+    };
+
+    scrollers[name] = state;
+    return state;
   }
 
-  function articleLink(title, src, cat) {
-    var slug = 'breaking-' + slugify(title);
-    var url = '/pages/article.html?slug=' + encodeURIComponent(slug)
-            + '&title=' + encodeURIComponent(title)
-            + '&cat='   + encodeURIComponent(cat || 'india-news')
-            + '&src='   + encodeURIComponent(src  || '');
-    return url;
-  }
+  // ── INIT all 3 scrollers on DOMContentLoaded ──────────────────
+  document.addEventListener('DOMContentLoaded', function() {
+    var bEl = document.getElementById('breakingTicker');
+    var mEl = document.getElementById('marketItems');
+    var tEl = document.getElementById('trendingItems');
 
-  var _lastBreakingSig = '';
+    if (bEl) createScroller('breaking', bEl, false).start();
+    if (mEl) createScroller('market',   mEl, false).start();
+    if (tEl) createScroller('trending', tEl, false).start();
 
-  function renderHeadlines(items) {
-    // Build signature — only re-render DOM if content actually changed
-    var sig = items.map(function(h){ return (h.title||h).substring(0,30); }).join('|');
-    if (sig === _lastBreakingSig) return;
-    _lastBreakingSig = sig;
-
-    var doubled = items.concat(items);
-    var newHTML = doubled.map(function(h) {
-      var title = h.title || h;
-      var src   = h.src   || '';
-      var cat   = h.category || h.cat   || 'india-news';
-      var label = src ? ' <span style="opacity:.55;font-size:.75em">[' + src + ']</span>' : '';
-      return '<a href="' + articleLink(title, src, cat) + '">' + title + label + '</a>'
-           + '<span class="ticker-sep">·</span>';
-    }).join('');
-
-    // Restart animation cleanly without flicker
-    el.style.animation = 'none';
-    el.innerHTML = newHTML;
-    // Force reflow then restart
-    void el.offsetWidth;
-    el.style.animation = '';
-  }
-
-  renderHeadlines(STATIC);
-
-  function load() {
-    clearTimeout(timer);
-    fetch('/api/breaking-news')
-      .then(function(r) { return r.ok ? r.json() : Promise.reject(r.status); })
-      .then(function(d) {
-        if (d.headlines && d.headlines.length) renderHeadlines(d.headlines);
-        timer = setTimeout(load, REFRESH);
-      })
-      .catch(function() {
-        timer = setTimeout(load, 2 * 60 * 1000);
-      });
-  }
-  timer = setTimeout(load, 3000);
+    window._sfriScrollers = scrollers;
+  });
 })();
 </script>
 
 <script>
 /* ================================================================
-   MARKET TICKER — live data + expand panel on click
+   BREAKING NEWS — fetches RSS, updates scroller without restart
    ================================================================ */
 (function() {
-  var el       = document.getElementById('marketItems');
-  var label    = document.getElementById('marketLabel');
+  var REFRESH = 5 * 60 * 1000;
+  var timer   = null;
+
+  var STATIC = [
+    { title:'Global markets volatile amid geopolitical tensions', category:'global-news' },
+    { title:'India GDP growth remains strong among major economies', category:'india-news' },
+    { title:'Fed holds interest rates steady — global markets react', category:'business' },
+    { title:'Crude oil prices fluctuate on Middle East developments', category:'business' },
+    { title:'Tech sector leads gains on major stock exchanges', category:'technology' },
+    { title:'Rupee strengthens against dollar in early trade', category:'business' },
+    { title:'IMF upgrades India growth forecast for current year', category:'india-news' },
+    { title:'RBI monetary policy meeting outcome awaited by markets', category:'business' },
+    { title:'India-US trade talks make progress on key issues', category:'india-news' },
+    { title:'Climate summit: major nations agree on new targets', category:'environment' },
+  ];
+
+  function slugify(t) {
+    return t.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').substring(0,80);
+  }
+  function articleLink(title, src, cat) {
+    return '/pages/article.html?slug=' + encodeURIComponent('breaking-' + slugify(title))
+         + '&title=' + encodeURIComponent(title)
+         + '&cat='   + encodeURIComponent(cat || 'india-news')
+         + '&src='   + encodeURIComponent(src  || '');
+  }
+
+  function buildHTML(items) {
+    var doubled = items.concat(items);
+    return doubled.map(function(h) {
+      var title = h.title || h;
+      var src   = h.src || '';
+      var cat   = h.category || h.cat || 'india-news';
+      var lbl   = src ? ' <span style="opacity:.5;font-size:.75em">[' + src + ']</span>' : '';
+      return '<a href="' + articleLink(title, src, cat) + '">' + title + lbl + '</a>'
+           + '<span class="ticker-sep"> · </span>';
+    }).join('');
+  }
+
+  function update(items) {
+    var sig = items.map(function(h){ return (h.title||h).substring(0,25); }).join('|');
+    var html = buildHTML(items);
+    // If scroller ready, update live; else just set innerHTML
+    if (window._sfriScrollers && window._sfriScrollers.breaking) {
+      window._sfriScrollers.breaking.update(html, sig);
+    } else {
+      var el = document.getElementById('breakingTicker');
+      if (el) el.innerHTML = html;
+    }
+  }
+
+  // Set static immediately
+  update(STATIC);
+
+  function load() {
+    clearTimeout(timer);
+    fetch('/api/breaking-news')
+      .then(function(r){ return r.ok ? r.json() : Promise.reject(); })
+      .then(function(d){
+        if (d.headlines && d.headlines.length) update(d.headlines);
+        timer = setTimeout(load, REFRESH);
+      })
+      .catch(function(){ timer = setTimeout(load, 2 * 60 * 1000); });
+  }
+  setTimeout(load, 3000);
+})();
+</script>
+
+<script>
+/* ================================================================
+   MARKET TICKER — live data, updates scroller without restart
+   ================================================================ */
+(function() {
   var bar      = document.getElementById('marketBar');
-  if (!el || !bar) return;
+  var label    = document.getElementById('marketLabel');
+  var timer    = null;
+  var lastItems = null, fetchedAt = '', expanded = false;
 
-  var TYPE_LABEL = {index:'IDX',forex:'FX',commodity:'CMD',stock:'STK',crypto:'CRY',fuel:'FUEL',etf:'ETF'};
-  var TYPE_NAME  = {index:'Indices',forex:'Forex',commodity:'Commodities',stock:'Stocks',crypto:'Crypto',fuel:'Fuel Prices'};
-  var timer = null, lastItems = null, expanded = false, fetchedAt = '';
-
-  // Build the expand panel DOM once
+  // ── EXPAND PANEL ────────────────────────────────────────────────
   var panel = document.createElement('div');
   panel.className = 'market-expand-panel';
-  panel.innerHTML = '<div class="mep-header">'
-    + '<span class="mep-title">📊 Live Market Data</span>'
-    + '<button class="mep-close" id="mepClose">✕ Close Panel</button>'
-    + '</div>'
-    + '<div id="mepBody"></div>'
-    + '<div class="mep-fetched" id="mepFetched"></div>'
-    + '<div style="height:1.5rem"></div>';
-  bar.appendChild(panel);
-
-  document.getElementById('mepClose').addEventListener('click', function(e) {
-    e.stopPropagation();
-    closePanel();
-  });
+  panel.innerHTML =
+    '<div class="mep-header">'
+  + '<span class="mep-title">📊 Live Market Data</span>'
+  + '<button class="mep-close" id="mepClose">✕ Close Panel</button>'
+  + '</div>'
+  + '<div id="mepBody"></div>'
+  + '<div class="mep-fetched" id="mepFetched"></div>'
+  + '<div style="height:2rem"></div>';
+  if (bar) bar.appendChild(panel);
 
   function openPanel() {
     expanded = true;
-    bar.classList.add('expanded');
-    document.body.style.overflow = 'hidden'; // lock body scroll on mobile
+    if (bar) bar.classList.add('expanded');
+    document.body.style.overflow = 'hidden';
     if (lastItems) renderPanel(lastItems);
   }
   function closePanel() {
     expanded = false;
-    bar.classList.remove('expanded');
+    if (bar) bar.classList.remove('expanded');
     document.body.style.overflow = '';
   }
 
-  // Click on bar label or track area to open (but not on close button)
-  bar.addEventListener('click', function(e) {
-    if (e.target.closest('.mep-close')) return;
-    if (e.target.closest('.market-expand-panel') && !e.target.closest('.mep-close')) return;
-    expanded ? closePanel() : openPanel();
+  document.addEventListener('click', function(e) {
+    if (!bar) return;
+    var inPanel = e.target.closest('.market-expand-panel');
+    var isClose = e.target.closest('#mepClose');
+    var inBar   = e.target.closest('#marketBar');
+
+    if (isClose) { closePanel(); return; }
+    if (inPanel) return; // clicks inside panel (but not close) do nothing
+    if (inBar)   { expanded ? closePanel() : openPanel(); }
   });
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape' && expanded) closePanel();
   });
 
-  function buildItem(item) {
-    var dir   = item.direction === 'down' ? 'down' : 'up';
-    var arrow = dir === 'up' ? '▲' : '▼';
-    var tl    = TYPE_LABEL[item.type] || 'MKT';
-    var chg   = item.change && item.change.trim();
-    return '<span class="market-item">'
-      + '<span class="market-dot ' + (item.marketState==='REGULAR'?'live':'closed') + '"></span>'
-      + '<span class="market-type ' + (item.type||'') + '">' + tl + '</span>'
-      + '<span class="market-name">' + (item.name||'') + '</span>'
-      + '<span class="market-price">' + (item.price||'—') + '</span>'
-      + (chg ? '<span class="market-change ' + dir + '"><span class="market-arrow">' + arrow + '</span>' + chg + '</span>' : '')
-      + '</span>';
-  }
+  var TYPE_NAME = {index:'Indices',forex:'Forex',commodity:'Commodities',stock:'Stocks',crypto:'Crypto',fuel:'Fuel Prices'};
+  var ORDER     = ['index','forex','commodity','fuel','stock','crypto'];
 
   function renderPanel(items) {
     var groups = {};
-    var order  = ['index','forex','commodity','fuel','stock','crypto'];
-    order.forEach(function(t){ groups[t] = []; });
-    items.forEach(function(i){ if (groups[i.type]) groups[i.type].push(i); else groups['stock'] = (groups['stock']||[]).concat([i]); });
-
+    ORDER.forEach(function(t){ groups[t] = []; });
+    items.forEach(function(i){
+      if (groups[i.type]) groups[i.type].push(i);
+      else if (groups.stock) groups.stock.push(i);
+    });
     var html = '';
-    order.forEach(function(type) {
+    ORDER.forEach(function(type) {
       var list = groups[type];
       if (!list || !list.length) return;
       html += '<div class="mep-section"><div class="mep-section-title">' + (TYPE_NAME[type]||type) + '</div><div class="mep-grid">';
       list.forEach(function(item) {
-        var dir = item.direction === 'down' ? 'down' : 'up';
+        var dir   = item.direction === 'down' ? 'down' : 'up';
         var arrow = dir === 'up' ? '▲' : '▼';
-        var tl = TYPE_LABEL[item.type] || 'MKT';
-        var chg = item.change && item.change.trim();
+        var chg   = item.change && item.change.trim();
         html += '<div class="mep-item">'
           + '<div class="mep-item-left">'
-          + '<span class="market-type ' + (item.type||'') + '">' + tl + '</span>'
+          + '<span class="market-type ' + (item.type||'') + '">' + (item.type||'').toUpperCase().substring(0,4) + '</span>'
           + '<span class="mep-item-name" title="' + (item.name||'') + '">' + (item.name||'') + '</span>'
           + '</div>'
           + '<div class="mep-item-right">'
@@ -570,19 +689,28 @@
       });
       html += '</div></div>';
     });
-    document.getElementById('mepBody').innerHTML = html;
-    if (fetchedAt) document.getElementById('mepFetched').textContent = 'Updated: ' + new Date(fetchedAt).toLocaleTimeString('en-IN');
+    var body = document.getElementById('mepBody');
+    if (body) body.innerHTML = html;
+    var ft = document.getElementById('mepFetched');
+    if (ft && fetchedAt) ft.textContent = 'Updated: ' + new Date(fetchedAt).toLocaleTimeString('en-IN');
   }
 
-  var _lastMarketSig = '';
+  // ── TICKER HTML builder — name + price + change only, no type tag ──
+  function buildItem(item) {
+    var dir   = item.direction === 'down' ? 'down' : 'up';
+    var arrow = dir === 'up' ? '▲' : '▼';
+    var chg   = item.change && item.change.trim();
+    return '<span class="market-item">'
+      + '<span class="market-name">' + (item.name||'') + '</span>'
+      + '<span class="market-price">' + (item.price||'—') + '</span>'
+      + (chg ? '<span class="market-change ' + dir + '">' + arrow + ' ' + chg + '</span>' : '')
+      + '</span>';
+  }
 
-  function render(items) {
+  // ── UPDATE SCROLLER ────────────────────────────────────────────
+  function update(items) {
     if (!items || !items.length) return;
-
-    // Only re-render if data actually changed — prevents animation restart
-    var sig = items.map(function(i){ return i.name+i.price; }).join('|');
-    var contentChanged = (sig !== _lastMarketSig);
-    _lastMarketSig = sig;
+    lastItems = items;
 
     var live = items.some(function(i){ return i.marketState === 'REGULAR'; });
     if (label) {
@@ -590,33 +718,30 @@
       label.className   = 'market-label' + (live ? '' : ' closed');
     }
 
-    if (contentChanged) {
-      // Calculate speed: faster on more items, mobile gets CSS override via !important
-      // Use px/s speed model: ~80px/s = good readability
-      // We set a fixed fast duration and let CSS mobile override take over
-      var isMobile = window.innerWidth <= 768;
-      var dur = isMobile
-        ? Math.max(6, Math.min(12, items.length * 0.3))
-        : Math.max(14, Math.min(30, items.length * 0.7));
+    var sig  = items.map(function(i){ return i.name + i.price; }).join('|');
+    var html = items.map(buildItem).join('') + items.map(buildItem).join(''); // doubled
 
-      var newHTML = items.map(buildItem).join('');
-      // Cleanly restart animation
-      el.style.animation = 'none';
-      el.innerHTML = newHTML + newHTML;
-      void el.offsetWidth; // force reflow
-      el.style.animation = '';
-      el.style.animationDuration = dur + 's';
+    var sc = window._sfriScrollers && window._sfriScrollers.market;
+    if (sc) {
+      sc.update(html, sig);
+    } else {
+      var el = document.getElementById('marketItems');
+      if (el) el.innerHTML = html;
     }
 
     if (expanded) renderPanel(items);
   }
 
-  // Placeholders while loading
-  var PLACEHOLDERS = ['Sensex','Nifty 50','USD/INR','EUR/INR','Gold','Silver','Crude WTI','Brent','Petrol','Copper','Bitcoin','Ethereum','S&P 500','TCS','Reliance'];
-  el.innerHTML = PLACEHOLDERS.concat(PLACEHOLDERS).map(function(n){
-    return '<span class="market-item"><span class="market-name">'+n+'</span><span class="market-price" style="color:#4b5563">…</span></span>';
-  }).join('');
+  // ── PLACEHOLDER ────────────────────────────────────────────────
+  var PH = ['Sensex','Nifty 50','USD/INR','Gold','Silver','Crude WTI','Bitcoin','S&P 500','TCS','Petrol'];
+  (function() {
+    var el = document.getElementById('marketItems');
+    if (el) el.innerHTML = PH.concat(PH).map(function(n){
+      return '<span class="market-item"><span class="market-name">'+n+'</span><span class="market-price" style="color:#4b5563">…</span></span>';
+    }).join('');
+  })();
 
+  // ── LIVE FOREX DIRECT ─────────────────────────────────────────
   function getForex() {
     return fetch('https://open.er-api.com/v6/latest/USD')
       .then(function(r){ return r.ok ? r.json() : Promise.reject(); })
@@ -629,79 +754,66 @@
           {name:'GBP/INR',val:rates.GBP?inr/rates.GBP:null},{name:'JPY/INR',val:rates.JPY?inr/rates.JPY:null},
           {name:'AED/INR',val:rates.AED?inr/rates.AED:null},{name:'SAR/INR',val:rates.SAR?inr/rates.SAR:null},
           {name:'SGD/INR',val:rates.SGD?inr/rates.SGD:null},{name:'CNY/INR',val:rates.CNY?inr/rates.CNY:null},
-        ].filter(function(x){return x.val;}).map(function(x){return{name:x.name,type:'forex',price:fmt(x.val),rawPrice:x.val,change:'',rawChange:0,direction:'up',marketState:'CLOSED',source:'er-api'};});
-      })
-      .catch(function(){ return []; });
+        ].filter(function(x){return x.val;}).map(function(x){
+          return {name:x.name,type:'forex',price:fmt(x.val),rawPrice:x.val,change:'',direction:'up',marketState:'CLOSED'};
+        });
+      }).catch(function(){ return []; });
   }
 
+  // ── LOAD ──────────────────────────────────────────────────────
   function load() {
     clearTimeout(timer);
     fetch('/api/market-data')
-      .then(function(r){ if(r.status===404) return Promise.reject('404'); return r.ok?r.json():Promise.reject('HTTP '+r.status); })
+      .then(function(r){ if(r.status===404) return Promise.reject(); return r.ok?r.json():Promise.reject(); })
       .then(function(d){
-        var items = (d.items||[]).filter(function(i){ return i.price&&i.price!=='—'; });
-        if (items.length) { lastItems=items; fetchedAt=d.fetchedAt||''; render(items); }
+        var items = (d.items||[]).filter(function(i){ return i.price && i.price!=='—'; });
+        if (items.length) { fetchedAt = d.fetchedAt||''; update(items); }
         timer = setTimeout(load, 2*60*1000);
       })
       .catch(function(){
-        getForex().then(function(fx){
-          if (fx.length){ lastItems=fx; render(fx); }
-          else if (lastItems) render(lastItems);
-        });
+        getForex().then(function(fx){ if(fx.length) update(fx); });
         timer = setTimeout(load, 5*60*1000);
       });
   }
 
-  getForex().then(function(fx){ if(fx.length&&!lastItems){ lastItems=fx; render(fx); } });
-  timer = setTimeout(load, 2000);
+  getForex().then(function(fx){ if(fx.length) update(fx); });
+  setTimeout(load, 2000);
 })();
 </script>
 
 <script>
 /* ================================================================
-   TRENDING TICKER — click → AI-generated article page
+   TRENDING TICKER — updates scroller without restart
    ================================================================ */
 (function() {
-  // Trending items are rendered by app.js loadTrending().
-  // We override the href target: instead of search.html, we go to
-  // article.html?title=...&cat=...&gen=1 which triggers AI generation.
-  // We hook into the trending container after it's populated.
-
-  function patchTrendingLinks() {
-    var container = document.getElementById('trendingItems');
-    if (!container) return;
-    var links = container.querySelectorAll('a');
-    links.forEach(function(a) {
-      var q = a.href && a.href.includes('?q=') ? decodeURIComponent(a.href.split('?q=')[1]||'') : (a.textContent||'').replace(/^#/,'').trim();
-      if (!q) return;
-      // Determine category from existing href or data
+  function patchLinks() {
+    var el = document.getElementById('trendingItems');
+    if (!el) return;
+    el.querySelectorAll('a').forEach(function(a) {
+      var txt = (a.textContent||'').replace(/^#/,'').trim();
+      if (!txt || a.dataset.patched) return;
+      a.dataset.patched = '1';
       var cat = a.dataset.cat || 'india-news';
-      a.href = '/pages/article.html?title=' + encodeURIComponent(q) + '&cat=' + encodeURIComponent(cat) + '&gen=1';
-      a.removeAttribute('target');
+      if (!a.href.includes('/pages/article.html')) {
+        a.href = '/pages/article.html?title=' + encodeURIComponent(txt) + '&cat=' + encodeURIComponent(cat) + '&gen=1';
+      }
     });
   }
 
-  // Observe trendingItems for when app.js populates it
-  var obs = new MutationObserver(function(mutations) {
-    var ti2 = document.getElementById('trendingItems');
-    if (ti2 && ti2.children.length > 0) {
-      patchTrendingLinks();
-      // Cleanly restart animation after content change
-      ti2.style.animation = 'none';
-      void ti2.offsetWidth;
-      ti2.style.animation = '';
-    }
-  });
+  // Watch for app.js populating trendingItems
   var ti = document.getElementById('trendingItems');
-  if (ti) obs.observe(ti, { childList: true });
-
-  setTimeout(patchTrendingLinks, 1500);
+  if (ti) {
+    new MutationObserver(function() {
+      if (ti.children.length > 0) patchLinks();
+    }).observe(ti, { childList: true });
+  }
+  setTimeout(patchLinks, 1500);
 })();
 </script>
 
 <script>
 /* ================================================================
-   HEADER SEARCH — live autocomplete from article list
+   HEADER SEARCH — live autocomplete
    ================================================================ */
 (function() {
   var input = document.getElementById('headerSearchInput');
@@ -709,118 +821,81 @@
   var box   = document.getElementById('searchSuggestions');
   if (!input || !box) return;
 
-  var activeIdx = -1;
-  var currentResults = [];
+  var activeIdx = -1, currentResults = [];
 
   function getArticles() {
-    if (window.SfriTrav && window.SfriTrav.allArticles) return window.SfriTrav.allArticles();
-    return [];
+    return (window.SfriTrav && window.SfriTrav.allArticles) ? window.SfriTrav.allArticles() : [];
   }
-
   function catLabel(cat) {
-    var CATS = (window.SfriTrav && window.SfriTrav.CATEGORIES) || {};
-    return CATS[cat] ? CATS[cat].label : cat;
+    var C = (window.SfriTrav && window.SfriTrav.CATEGORIES) || {};
+    return C[cat] ? C[cat].label : cat;
   }
-
-  function search(q) {
-    if (!q || q.length < 2) { hideSuggestions(); return; }
-    var all = getArticles();
-    var ql  = q.toLowerCase();
-    var results = all.filter(function(a) {
-      return (a.title && a.title.toLowerCase().includes(ql))
-          || (a.excerpt && a.excerpt.toLowerCase().includes(ql))
-          || (a.category && a.category.toLowerCase().includes(ql))
-          || (a.tags && a.tags.some && a.tags.some(function(t){ return t.toLowerCase().includes(ql); }));
-    }).slice(0, 7);
-    currentResults = results;
-    showSuggestions(results, q);
-  }
-
-  function highlight(text, q) {
+  function hl(text, q) {
     if (!q) return text;
-    var re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi');
-    return text.replace(re, '<mark style="background:#fee2e2;color:inherit;border-radius:2px">$1</mark>');
+    return text.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'),
+      '<mark style="background:#fee2e2;color:inherit;border-radius:2px">$1</mark>');
   }
-
-  function showSuggestions(results, q) {
+  function hide() { box.classList.remove('visible'); activeIdx = -1; }
+  function show(results, q) {
     activeIdx = -1;
     if (!results.length) {
-      box.innerHTML = '<div class="search-suggestion-item" style="color:var(--ink-muted);cursor:default">No results for "' + q + '" — <a href="/pages/search.html?q='+encodeURIComponent(q)+'" style="color:var(--red)">Full Search</a></div>';
-      box.classList.add('visible');
-      return;
+      box.innerHTML = '<div class="search-suggestion-item" style="color:var(--ink-muted);cursor:default">No results — <a href="/pages/search.html?q='+encodeURIComponent(q)+'" style="color:var(--red)">Full search</a></div>';
+      box.classList.add('visible'); return;
     }
-    box.innerHTML = results.map(function(a, i) {
-      return '<div class="search-suggestion-item" data-idx="' + i + '" role="option">'
-        + '<span class="search-suggestion-icon">📄</span>'
-        + '<span class="search-suggestion-title">' + highlight(a.title, q) + '</span>'
-        + '<span class="search-suggestion-cat">' + catLabel(a.category) + '</span>'
-        + '</div>';
+    box.innerHTML = results.map(function(a,i){
+      return '<div class="search-suggestion-item" data-idx="'+i+'" role="option">'
+        +'<span class="search-suggestion-icon">📄</span>'
+        +'<span class="search-suggestion-title">'+hl(a.title,q)+'</span>'
+        +'<span class="search-suggestion-cat">'+catLabel(a.category)+'</span></div>';
     }).join('') + '<div class="search-suggestion-item" style="border-top:2px solid var(--border)">'
-      + '<span class="search-suggestion-icon">🔍</span>'
-      + '<a href="/pages/search.html?q='+encodeURIComponent(q)+'" style="color:var(--red);font-size:.8rem">See all results for "' + q + '"</a>'
-      + '</div>';
+      +'<span class="search-suggestion-icon">🔍</span>'
+      +'<a href="/pages/search.html?q='+encodeURIComponent(q)+'" style="color:var(--red);font-size:.8rem">All results for "'+q+'"</a></div>';
     box.classList.add('visible');
-
-    box.querySelectorAll('[data-idx]').forEach(function(item) {
-      item.addEventListener('mousedown', function(e) {
+    box.querySelectorAll('[data-idx]').forEach(function(it){
+      it.addEventListener('mousedown', function(e){
         e.preventDefault();
-        var idx = parseInt(item.dataset.idx);
-        var a   = currentResults[idx];
-        if (a) window.location.href = '/pages/article.html?slug=' + encodeURIComponent(a.slug);
+        var a = currentResults[parseInt(it.dataset.idx)];
+        if (a) location.href = '/pages/article.html?slug=' + encodeURIComponent(a.slug);
       });
     });
   }
-
-  function hideSuggestions() {
-    box.classList.remove('visible');
-    activeIdx = -1;
+  function search(q) {
+    if (!q || q.length < 2) { hide(); return; }
+    var ql = q.toLowerCase();
+    currentResults = getArticles().filter(function(a){
+      return (a.title&&a.title.toLowerCase().includes(ql))
+          || (a.excerpt&&a.excerpt.toLowerCase().includes(ql))
+          || (a.tags&&a.tags.some&&a.tags.some(function(t){return t.toLowerCase().includes(ql);}));
+    }).slice(0,7);
+    show(currentResults, q);
   }
-
-  function navigate(dir) {
-    var items = box.querySelectorAll('[data-idx]');
-    if (!items.length) return;
-    items.forEach(function(i){ i.classList.remove('active'); });
-    activeIdx = Math.max(0, Math.min(items.length - 1, activeIdx + dir));
-    items[activeIdx] && items[activeIdx].classList.add('active');
+  function nav(dir) {
+    var its = box.querySelectorAll('[data-idx]');
+    if (!its.length) return;
+    its.forEach(function(i){ i.classList.remove('active'); });
+    activeIdx = Math.max(0, Math.min(its.length-1, activeIdx+dir));
+    its[activeIdx] && its[activeIdx].classList.add('active');
   }
-
-  input.addEventListener('input', function() { search(input.value.trim()); });
-  input.addEventListener('keydown', function(e) {
-    if (e.key === 'ArrowDown')  { e.preventDefault(); navigate(1); }
-    else if (e.key === 'ArrowUp') { e.preventDefault(); navigate(-1); }
-    else if (e.key === 'Enter') {
-      e.preventDefault();
-      var active = box.querySelector('.active[data-idx]');
-      if (active) { var idx = parseInt(active.dataset.idx); var a = currentResults[idx]; if(a) window.location.href='/pages/article.html?slug='+encodeURIComponent(a.slug); }
-      else if (input.value.trim()) window.location.href = '/pages/search.html?q=' + encodeURIComponent(input.value.trim());
+  input.addEventListener('input',  function(){ search(input.value.trim()); });
+  input.addEventListener('keydown', function(e){
+    if      (e.key==='ArrowDown')  { e.preventDefault(); nav(1); }
+    else if (e.key==='ArrowUp')    { e.preventDefault(); nav(-1); }
+    else if (e.key==='Enter')      { e.preventDefault();
+      var ac = box.querySelector('.active[data-idx]');
+      if (ac) { var a = currentResults[parseInt(ac.dataset.idx)]; if(a) location.href='/pages/article.html?slug='+encodeURIComponent(a.slug); }
+      else if (input.value.trim()) location.href='/pages/search.html?q='+encodeURIComponent(input.value.trim());
     }
-    else if (e.key === 'Escape') { hideSuggestions(); input.blur(); }
+    else if (e.key==='Escape')     { hide(); input.blur(); }
   });
-  input.addEventListener('focus', function() { if (input.value.trim().length >= 2) search(input.value.trim()); });
-
-  btn.addEventListener('click', function() {
-    var q = input.value.trim();
-    if (q) window.location.href = '/pages/search.html?q=' + encodeURIComponent(q);
-    else input.focus();
+  input.addEventListener('focus', function(){ if(input.value.trim().length>=2) search(input.value.trim()); });
+  btn.addEventListener('click', function(){
+    var q=input.value.trim(); if(q) location.href='/pages/search.html?q='+encodeURIComponent(q); else input.focus();
   });
-
-  document.addEventListener('click', function(e) {
-    if (!e.target.closest('#headerSearchOuter')) hideSuggestions();
-  });
-
-  // Delay search init until SfriTrav is ready
-  var initTimer = setInterval(function(){
-    if (window.SfriTrav && window.SfriTrav.allArticles) {
-      clearInterval(initTimer);
-      if (input.value.trim().length >= 2) search(input.value.trim());
-    }
+  document.addEventListener('click', function(e){ if(!e.target.closest('#headerSearchOuter')) hide(); });
+  var _t = setInterval(function(){
+    if (window.SfriTrav && window.SfriTrav.allArticles) { clearInterval(_t); if(input.value.trim().length>=2) search(input.value.trim()); }
   }, 300);
 })();
-</script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  if (window.SfriAds) SfriAds.injectHomepageAds();
-});
 </script>
 </body>
 </html>
