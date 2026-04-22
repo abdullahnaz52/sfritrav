@@ -440,6 +440,7 @@
   }
 
   /* ===== LOAD TRENDING TOPICS ===== */
+  let _lastTrendingSig = '';
   async function loadTrending() {
     const el = document.getElementById('trendingItems');
     if (!el) return;
@@ -448,10 +449,21 @@
       if (!res.ok) throw new Error();
       const data = await res.json();
       if (data.trending && data.trending.length) {
+        // Only re-render if content actually changed
+        const sig = data.trending.map(t => t.title.substring(0,20)).join('|');
+        if (sig === _lastTrendingSig) return;
+        _lastTrendingSig = sig;
+
         const items = [...data.trending, ...data.trending]; // doubled for seamless loop
-        el.innerHTML = items.map(t =>
+        const newHTML = items.map(t =>
           `<a href="/pages/article.html?title=${encodeURIComponent(t.title)}&cat=${encodeURIComponent(t.category||'india-news')}&gen=1" data-cat="${t.category||'india-news'}"><span class="trend-hash">#</span>${t.title}</a><span class="ticker-sep">·</span>`
         ).join('');
+
+        // Clean animation restart — no flicker
+        el.style.animation = 'none';
+        el.innerHTML = newHTML;
+        void el.offsetWidth;
+        el.style.animation = '';
       }
     } catch { /* keep defaults */ }
   }

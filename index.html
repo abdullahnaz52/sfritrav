@@ -430,9 +430,16 @@
     return url;
   }
 
+  var _lastBreakingSig = '';
+
   function renderHeadlines(items) {
+    // Build signature — only re-render DOM if content actually changed
+    var sig = items.map(function(h){ return (h.title||h).substring(0,30); }).join('|');
+    if (sig === _lastBreakingSig) return;
+    _lastBreakingSig = sig;
+
     var doubled = items.concat(items);
-    el.innerHTML = doubled.map(function(h) {
+    var newHTML = doubled.map(function(h) {
       var title = h.title || h;
       var src   = h.src   || '';
       var cat   = h.category || h.cat   || 'india-news';
@@ -440,6 +447,13 @@
       return '<a href="' + articleLink(title, src, cat) + '">' + title + label + '</a>'
            + '<span class="ticker-sep">·</span>';
     }).join('');
+
+    // Restart animation cleanly without flicker
+    el.style.animation = 'none';
+    el.innerHTML = newHTML;
+    // Force reflow then restart
+    void el.offsetWidth;
+    el.style.animation = '';
   }
 
   renderHeadlines(STATIC);
@@ -479,10 +493,11 @@
   panel.className = 'market-expand-panel';
   panel.innerHTML = '<div class="mep-header">'
     + '<span class="mep-title">📊 Live Market Data</span>'
-    + '<button class="mep-close" id="mepClose">✕ Close</button>'
+    + '<button class="mep-close" id="mepClose">✕ Close Panel</button>'
     + '</div>'
     + '<div id="mepBody"></div>'
-    + '<div class="mep-fetched" id="mepFetched"></div>';
+    + '<div class="mep-fetched" id="mepFetched"></div>'
+    + '<div style="height:1.5rem"></div>';
   bar.appendChild(panel);
 
   document.getElementById('mepClose').addEventListener('click', function(e) {
@@ -493,15 +508,19 @@
   function openPanel() {
     expanded = true;
     bar.classList.add('expanded');
+    document.body.style.overflow = 'hidden'; // lock body scroll on mobile
     if (lastItems) renderPanel(lastItems);
   }
   function closePanel() {
     expanded = false;
     bar.classList.remove('expanded');
+    document.body.style.overflow = '';
   }
 
+  // Click on bar label or track area to open (but not on close button)
   bar.addEventListener('click', function(e) {
     if (e.target.closest('.mep-close')) return;
+    if (e.target.closest('.market-expand-panel') && !e.target.closest('.mep-close')) return;
     expanded ? closePanel() : openPanel();
   });
   document.addEventListener('keydown', function(e) {
@@ -555,18 +574,40 @@
     if (fetchedAt) document.getElementById('mepFetched').textContent = 'Updated: ' + new Date(fetchedAt).toLocaleTimeString('en-IN');
   }
 
+  var _lastMarketSig = '';
+
   function render(items) {
     if (!items || !items.length) return;
-    // Speed based on count: ~1.2s per item, min 18s, max 55s
-    var dur = Math.max(18, Math.min(55, items.length * 1.2));
-    var html = items.map(buildItem).join('');
-    el.innerHTML = html + html;
-    el.style.animationDuration = dur + 's';
+
+    // Only re-render if data actually changed — prevents animation restart
+    var sig = items.map(function(i){ return i.name+i.price; }).join('|');
+    var contentChanged = (sig !== _lastMarketSig);
+    _lastMarketSig = sig;
+
     var live = items.some(function(i){ return i.marketState === 'REGULAR'; });
     if (label) {
       label.textContent = live ? 'Live Markets ▾' : 'Markets ▾';
       label.className   = 'market-label' + (live ? '' : ' closed');
     }
+
+    if (contentChanged) {
+      // Calculate speed: faster on more items, mobile gets CSS override via !important
+      // Use px/s speed model: ~80px/s = good readability
+      // We set a fixed fast duration and let CSS mobile override take over
+      var isMobile = window.innerWidth <= 768;
+      var dur = isMobile
+        ? Math.max(6, Math.min(12, items.length * 0.3))
+        : Math.max(14, Math.min(30, items.length * 0.7));
+
+      var newHTML = items.map(buildItem).join('');
+      // Cleanly restart animation
+      el.style.animation = 'none';
+      el.innerHTML = newHTML + newHTML;
+      void el.offsetWidth; // force reflow
+      el.style.animation = '';
+      el.style.animationDuration = dur + 's';
+    }
+
     if (expanded) renderPanel(items);
   }
 
@@ -642,16 +683,19 @@
 
   // Observe trendingItems for when app.js populates it
   var obs = new MutationObserver(function(mutations) {
-    if (document.getElementById('trendingItems').children.length > 0) {
+    var ti2 = document.getElementById('trendingItems');
+    if (ti2 && ti2.children.length > 0) {
       patchTrendingLinks();
+      // Cleanly restart animation after content change
+      ti2.style.animation = 'none';
+      void ti2.offsetWidth;
+      ti2.style.animation = '';
     }
   });
   var ti = document.getElementById('trendingItems');
   if (ti) obs.observe(ti, { childList: true });
 
-  // Also patch after a delay in case already populated
-  setTimeout(patchTrendingLinks, 2000);
-  setTimeout(patchTrendingLinks, 5000);
+  setTimeout(patchTrendingLinks, 1500);
 })();
 </script>
 
