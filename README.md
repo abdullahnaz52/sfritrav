@@ -1,8 +1,7 @@
 # SfriTrav.com — Production Blog Website
 
-**Kashmir Travel · Hajj & Umrah · Perfumes · Lifestyle · India Travel**
+**News, Blogs, Posts, Current Affairs and Much More**
 
-> Auto-generates 3 AI articles daily from trending topics. Fully optimized: SEO, security, caching, AdSense-ready.
 
 ---
 
