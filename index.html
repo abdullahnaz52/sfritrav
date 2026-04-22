@@ -741,7 +741,7 @@
     }).join('');
   })();
 
-  // ── LIVE FOREX DIRECT ─────────────────────────────────────────
+  // ── CLIENT-SIDE FALLBACK: Forex ───────────────────────────────
   function getForex() {
     return fetch('https://open.er-api.com/v6/latest/USD')
       .then(function(r){ return r.ok ? r.json() : Promise.reject(); })
@@ -754,29 +754,82 @@
           {name:'GBP/INR',val:rates.GBP?inr/rates.GBP:null},{name:'JPY/INR',val:rates.JPY?inr/rates.JPY:null},
           {name:'AED/INR',val:rates.AED?inr/rates.AED:null},{name:'SAR/INR',val:rates.SAR?inr/rates.SAR:null},
           {name:'SGD/INR',val:rates.SGD?inr/rates.SGD:null},{name:'CNY/INR',val:rates.CNY?inr/rates.CNY:null},
+          {name:'CAD/INR',val:rates.CAD?inr/rates.CAD:null},{name:'AUD/INR',val:rates.AUD?inr/rates.AUD:null},
         ].filter(function(x){return x.val;}).map(function(x){
           return {name:x.name,type:'forex',price:fmt(x.val),rawPrice:x.val,change:'',direction:'up',marketState:'CLOSED'};
         });
       }).catch(function(){ return []; });
   }
 
-  // ── LOAD ──────────────────────────────────────────────────────
+  // ── CLIENT-SIDE FALLBACK: Crypto via CoinGecko ────────────────
+  function getCrypto() {
+    var ids = 'bitcoin,ethereum,binancecoin,solana,ripple,dogecoin';
+    return fetch('https://api.coingecko.com/api/v3/simple/price?ids='+ids+'&vs_currencies=usd&include_24hr_change=true')
+      .then(function(r){ return r.ok ? r.json() : Promise.reject(); })
+      .then(function(d){
+        var map = {bitcoin:'Bitcoin',ethereum:'Ethereum',binancecoin:'BNB',solana:'Solana',ripple:'XRP',dogecoin:'Dogecoin'};
+        return Object.keys(map).map(function(id){
+          var coin = d[id]; if(!coin) return null;
+          var p = coin.usd||0, chg = coin.usd_24h_change||0;
+          var s = chg>=0?'+':'';
+          var fmt = p>=1000 ? '$'+p.toLocaleString('en-US',{maximumFractionDigits:2}) : p>=1 ? '$'+p.toFixed(2) : '$'+p.toFixed(4);
+          return {name:map[id],type:'crypto',price:fmt,rawPrice:p,change:s+chg.toFixed(2)+'%',direction:chg>=0?'up':'down',marketState:'REGULAR'};
+        }).filter(Boolean);
+      }).catch(function(){ return []; });
+  }
+
+  // ── CLIENT-SIDE FALLBACK: Metals via metals.live ──────────────
+  function getMetals(inrRate) {
+    var inr = inrRate || 84;
+    return fetch('https://metals.live/api/spot')
+      .then(function(r){ return r.ok ? r.json() : Promise.reject(); })
+      .then(function(d){
+        var lookup = {};
+        if (Array.isArray(d)) d.forEach(function(m){ if(m.metal&&m.price) lookup[m.metal.toUpperCase()]=parseFloat(m.price); });
+        else if (d && typeof d==='object') Object.keys(d).forEach(function(k){ lookup[k.toUpperCase()]=parseFloat(d[k]); });
+        var items = [];
+        var goldUsd = lookup['XAU']||lookup['GOLD'], silverUsd = lookup['XAG']||lookup['SILVER'];
+        if (goldUsd)   items.push({name:'Gold (oz)',  type:'commodity',price:'₹'+Math.round(goldUsd*inr).toLocaleString('en-IN'),  rawPrice:goldUsd*inr,  change:'',direction:'up',marketState:'CLOSED'});
+        if (silverUsd) items.push({name:'Silver (oz)',type:'commodity',price:'₹'+Math.round(silverUsd*inr).toLocaleString('en-IN'),rawPrice:silverUsd*inr,change:'',direction:'up',marketState:'CLOSED'});
+        return items;
+      }).catch(function(){ return []; });
+  }
+
+  // ── LOAD — tries /api/market-data first, falls back to direct ─
   function load() {
     clearTimeout(timer);
     fetch('/api/market-data')
-      .then(function(r){ if(r.status===404) return Promise.reject(); return r.ok?r.json():Promise.reject(); })
+      .then(function(r){ if(r.status===404) return Promise.reject('404'); return r.ok?r.json():Promise.reject(r.status); })
       .then(function(d){
         var items = (d.items||[]).filter(function(i){ return i.price && i.price!=='—'; });
         if (items.length) { fetchedAt = d.fetchedAt||''; update(items); }
         timer = setTimeout(load, 2*60*1000);
       })
       .catch(function(){
-        getForex().then(function(fx){ if(fx.length) update(fx); });
+        // API not available — fetch directly from free public APIs
+        getForex().then(function(fx){
+          var inrRate = 84;
+          var usdInr = fx.find(function(f){ return f.name==='USD/INR'; });
+          if (usdInr) inrRate = usdInr.rawPrice;
+          Promise.all([getCrypto(), getMetals(inrRate)]).then(function(results){
+            var crypto = results[0], metals = results[1];
+            var ORDER = {forex:0,commodity:1,fuel:2,crypto:3};
+            var all = [].concat(forex||[], metals, crypto).sort(function(a,b){
+              return (ORDER[a.type]||9)-(ORDER[b.type]||9);
+            });
+            if (all.length) update(all);
+            else if (fx.length) update(fx);
+          });
+          // also show forex immediately while crypto loads
+          if (fx.length) update(fx);
+        });
         timer = setTimeout(load, 5*60*1000);
       });
   }
 
-  getForex().then(function(fx){ if(fx.length) update(fx); });
+  // ── INIT: show forex immediately, then load full data ─────────
+  var forex = [];
+  getForex().then(function(fx){ forex = fx; if(fx.length) update(fx); });
   setTimeout(load, 2000);
 })();
 </script>
