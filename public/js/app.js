@@ -625,11 +625,23 @@
 </ul>` },
   ];
 
-  /* ===== AI articles from localStorage ===== */
-  function getAIArticles() {
-    try { return JSON.parse(localStorage.getItem('sfritrav_articles') || '[]'); } catch { return []; }
+  /* ===== ARTICLES FROM VERCEL KV (server-side, all visitors see them) ===== */
+  let _kvArticles = null;
+
+  async function getKVArticles() {
+    if (_kvArticles) return _kvArticles;
+    try {
+      const r = await fetch('/api/articles');
+      if (!r.ok) return [];
+      const d = await r.json();
+      _kvArticles = Array.isArray(d.articles) ? d.articles : [];
+      return _kvArticles;
+    } catch { return []; }
   }
-  function allArticles() { return [...getAIArticles(), ...SEED]; }
+
+  function allArticles() {
+    return [...(_kvArticles || []), ...SEED];
+  }
 
   /* ===== GLOBALS ===== */
   window.SfriTrav = { allArticles, CATEGORIES, getImg, SEED };
@@ -756,12 +768,11 @@
     });
   }
 
-  /* ===== DAILY AI GENERATION ===== */
+  /* ===== DAILY AI GENERATION (client-side trigger as backup) ===== */
   async function checkDailyGeneration() {
     const today = new Date().toISOString().split('T')[0];
     if (localStorage.getItem('sfritrav_last_gen') === today) return;
     const cats = Object.keys(CATEGORIES).sort(() => Math.random() - 0.5).slice(0, 2);
-    const stored = getAIArticles();
     for (const cat of cats) {
       try {
         const res = await fetch('/api/generate-article', {
@@ -772,17 +783,12 @@
         if (!res.ok) continue;
         const article = await res.json();
         if (article && article.title) {
-          stored.unshift({
-            ...article,
-            category: cat,
-            date: today,
-            id: 'ai_' + Date.now() + '_' + cat,
-            aiGenerated: false  // suppress badge
-          });
+          // Article is already saved to KV inside generate-article.js
+          // Invalidate local cache so next allArticles() re-fetches
+          _kvArticles = null;
         }
       } catch { /* silent */ }
     }
-    try { localStorage.setItem('sfritrav_articles', JSON.stringify(stored.slice(0, 30))); } catch {}
     localStorage.setItem('sfritrav_last_gen', today);
   }
 
@@ -896,8 +902,14 @@
   document.addEventListener('DOMContentLoaded', () => {
     initCommonUI();
     if (document.getElementById('heroMain')) {
+      // 1. Render immediately with seed articles (fast)
       renderHomepage();
       loadTrending();
+      // 2. Fetch KV articles from server, re-render with full content
+      getKVArticles().then(kvArts => {
+        if (kvArts && kvArts.length > 0) renderHomepage();
+      });
+      // 3. Run daily generation in background (Vercel cron is the primary trigger)
       checkDailyGeneration();
     }
   });

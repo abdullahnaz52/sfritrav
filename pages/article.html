@@ -168,19 +168,26 @@ document.addEventListener('DOMContentLoaded', function() {
     // Mode 2/3 — AI-generate article for this title
     generateArticleFromTitle(title, cat);
   } else {
-    // Mode 1 — look up slug from article list
+    // Mode 1 — look up slug: check seed first, then KV, then generate
     const tryLoad = (n=0) => {
       const all = window.SfriTrav?.allArticles();
       if (!all && n < 25) { setTimeout(() => tryLoad(n+1), 150); return; }
       if (!all) { generateArticleFromTitle(title || slug, cat); return; }
       const article = all.find(a => a.slug === slug);
-      if (!article) {
-        // Slug not in seed — if we have a title param, generate; else 404
-        if (title) { generateArticleFromTitle(title, cat); }
-        else { document.getElementById('articleHero').innerHTML = '<h1 style="margin-top:2rem">Article not found</h1><p><a href="/">← Back to Home</a></p>'; }
-        return;
-      }
-      renderArticle(article, all);
+      if (article) { renderArticle(article, all); return; }
+      // Not in seed — try KV API directly
+      fetch('/api/articles')
+        .then(r => r.ok ? r.json() : Promise.reject())
+        .then(d => {
+          const kvArt = (d.articles||[]).find(a => a.slug === slug);
+          if (kvArt) { renderArticle(kvArt, [...(d.articles||[]), ...all]); }
+          else if (title) { generateArticleFromTitle(title, cat); }
+          else { document.getElementById('articleHero').innerHTML = '<h1 style="margin-top:2rem">Article not found</h1><p><a href="/">← Back to Home</a></p>'; }
+        })
+        .catch(() => {
+          if (title) { generateArticleFromTitle(title, cat); }
+          else { document.getElementById('articleHero').innerHTML = '<h1 style="margin-top:2rem">Article not found</h1><p><a href="/">← Back to Home</a></p>'; }
+        });
     };
     tryLoad();
   }

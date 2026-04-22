@@ -110,13 +110,32 @@ Return ONLY this JSON (no code fences, no extra text):
       article = JSON.parse(clean);
     } catch { console.error('JSON parse fail:', content.substring(0,200)); return res.status(200).json(mockArticle(topic, category)); }
 
-    article.title   = (article.title   || topic).substring(0, 200);
-    article.excerpt = (article.excerpt || '').substring(0, 200);
-    article.slug    = (article.slug    || slugify(article.title)).substring(0, 100);
-    article.tags    = (article.tags    || []).slice(0, 8).map(t => String(t).substring(0, 50));
+    article.title    = (article.title   || topic).substring(0, 200);
+    article.excerpt  = (article.excerpt || '').substring(0, 200);
+    article.slug     = (article.slug    || slugify(article.title)).substring(0, 100);
+    article.tags     = (article.tags    || []).slice(0, 8).map(t => String(t).substring(0, 50));
     article.readTime = article.readTime || '6 min';
-    article.body    = (article.body    || '').replace(/<script[^>]*>[\s\S]*?<\/script>/gi,'').replace(/on\w+="[^"]*"/g,'');
+    article.body     = (article.body    || '').replace(/<script[^>]*>[\s\S]*?<\/script>/gi,'').replace(/on\w+="[^"]*"/g,'');
     article.category = category;
+    article.date     = new Date().toISOString().split('T')[0];
+    article.id       = 'kv_' + Date.now();
+
+    // ── Save to Vercel KV so all visitors see it ──────────────────
+    try {
+      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://sfritrav.com';
+      await fetch(`${siteUrl}/api/articles`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-article-secret': process.env.ARTICLE_GEN_SECRET || ''
+        },
+        body: JSON.stringify(article),
+        signal: AbortSignal.timeout(8000)
+      });
+    } catch (kvErr) {
+      console.warn('[generate] KV save skipped:', kvErr.message);
+      // Non-fatal — article still returned to caller
+    }
 
     res.setHeader('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=7200');
     return res.status(200).json(article);
