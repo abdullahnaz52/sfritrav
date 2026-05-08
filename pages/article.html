@@ -183,17 +183,14 @@
 
   if (article) {
     renderArticle(article, all);
-    // Enrich with Wikipedia + RSS in background
-    enrichArticle(article);
   } else {
-    // Not in SEED — try KV API, then Claude API generation
+    // Not in SEED — try KV API
     fetch('/api/articles')
       .then(function (r) { return r.ok ? r.json() : { articles: [] }; })
       .then(function (d) {
         var kvArt = (d.articles || []).find(function (a) { return a.slug === slug; });
         if (kvArt) {
           renderArticle(kvArt, d.articles.concat(all));
-          enrichArticle(kvArt);
         } else {
           // Generate fresh article via Wikipedia + RSS (no API cost)
           generateWithWikipedia(slug, cat);
@@ -202,24 +199,6 @@
       .catch(function () { generateWithWikipedia(slug, cat); });
   }
 
-  // ── Enrich existing article body via /api/generate-article (Groq/Llama — free) ──
-  function enrichArticle(art) {
-    // Only enrich if body is short
-    if ((art.body || '').length > 2500) return;
-    fetch('/api/generate-article', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ topic: art.title, category: art.category || cat })
-    })
-      .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (data) {
-        if (data && data.body && data.body.length > 300) {
-          document.getElementById('articleBody').innerHTML = sanitizeHTML(data.body);
-          try { sessionStorage.setItem('sfri_art_' + art.slug, JSON.stringify(data)); } catch(e) {}
-        }
-      })
-      .catch(function () {}); // Silent fail — seed content already showing
-  }
 
   // ── Generate brand new article via /api/generate-article (Groq/Llama — free) ──
   function generateWithWikipedia(slug, cat) {
@@ -238,15 +217,6 @@
       + '<div class="skeleton" style="height:1rem;margin-bottom:.75rem;border-radius:4px;width:90%"></div>'
       + '<p style="margin-top:1.5rem;font-size:.85rem">Generating article…</p>'
       + '</div>';
-
-    // Check session cache first
-    try {
-      var cached = sessionStorage.getItem('sfri_art_' + slug);
-      if (cached) {
-        var obj = JSON.parse(cached);
-        renderArticle(obj, all); return;
-      }
-    } catch(e) {}
 
     // Convert slug to readable title for the prompt
     var titleFromSlug = slug.replace(/-/g, ' ').replace(/\b\w/g, function(c){ return c.toUpperCase(); });
@@ -270,7 +240,6 @@
           tags:     data.tags     || [cat],
           body:     data.body
         };
-        try { sessionStorage.setItem('sfri_art_' + slug, JSON.stringify(artObj)); } catch(e) {}
         renderArticle(artObj, all);
       })
       .catch(function () { showNotFound(); });
@@ -322,11 +291,7 @@
       + '</div>'
       + '<img class="article-cover" src="' + getImg(a.category, 0) + '" alt="' + a.title.replace(/"/g, '&quot;') + '" loading="eager" style="width:100%;border-radius:8px;margin-bottom:1.5rem;max-height:420px;object-fit:cover">';
 
-    // Check session cache for enriched body
-    var cachedBody = null;
-    try { cachedBody = sessionStorage.getItem('sfri_art_' + a.slug); } catch(e) {}
-
-    var bodyHTML = cachedBody || a.body || '<p>Loading full article…</p>';
+    var bodyHTML = a.body || '<p>Loading full article…</p>';
     document.getElementById('articleBody').innerHTML = sanitizeHTML(bodyHTML);
 
     // Tags
