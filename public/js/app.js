@@ -809,7 +809,7 @@
 
         const items = [...data.trending, ...data.trending]; // doubled for loop
         const newHTML = items.map(t =>
-          `<a href="/pages/article?title=${encodeURIComponent(t.title)}&cat=${encodeURIComponent(t.category||'india-news')}&gen=1" data-cat="${t.category||'india-news'}"><span class="trend-hash">#</span>${t.title}</a><span class="ticker-sep"> · </span>`
+          `<a href="https://www.google.com/search?q=${encodeURIComponent(t.title)}&tbm=nws" target="_blank" rel="noopener nofollow" data-cat="${t.category||'india-news'}"><span class="trend-hash">#</span>${t.title}</a><span class="ticker-sep"> · </span>`
         ).join('');
 
         // Use RAF scroller if ready, else fallback to innerHTML

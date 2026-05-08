@@ -168,8 +168,8 @@ function _sfriArticleInit() {
   const gen    = params.get('gen');
 
   if (title && !slug) {
-    // Mode 2/3 — AI-generate article for this title
-    generateArticleFromTitle(title, cat);
+    // Redirect to Google News for real-time coverage instead of generating thin AI content
+    window.location.replace('https://www.google.com/search?q=' + encodeURIComponent(title) + '&tbm=nws');
   } else {
     // Mode 1 — look up slug: check seed first, then KV, then generate
     // app.js runs synchronously so SfriTrav.allArticles() is available immediately
@@ -183,19 +183,27 @@ function _sfriArticleInit() {
         .then(d => {
           const kvArt = (d.articles||[]).find(a => a.slug === slug);
           if (kvArt) { renderArticle(kvArt, [...(d.articles||[]), ...all]); }
-          else if (title) { generateArticleFromTitle(title, cat); }
-          else { document.getElementById('articleHero').innerHTML = '<h1 style="margin-top:2rem">Article not found</h1><p><a href="/">← Back to Home</a></p>'; }
+          else { showNotFound(); }
         })
-        .catch(() => {
-          if (title) { generateArticleFromTitle(title, cat); }
-          else { document.getElementById('articleHero').innerHTML = '<h1 style="margin-top:2rem">Article not found</h1><p><a href="/">← Back to Home</a></p>'; }
-        });
+        .catch(() => { showNotFound(); });
     };
     tryLoad();
   }
 }
 
-/* ---- AI GENERATION ---- */
+/* ---- NOT FOUND ---- */
+function showNotFound() {
+  document.getElementById('articleHero').innerHTML =
+    '<div style="padding:3rem 0;text-align:center">'
+    + '<div style="font-size:3rem;margin-bottom:1rem">📭</div>'
+    + '<h1 style="font-family:var(--font-display);font-size:1.6rem;margin-bottom:.75rem">Article not found</h1>'
+    + '<p style="color:var(--ink-muted);margin-bottom:1.5rem">This article may have been removed or the link may be incorrect.</p>'
+    + '<a href="/" style="background:var(--red);color:#fff;padding:.6rem 1.5rem;border-radius:6px;font-weight:600;font-size:.9rem">← Back to Home</a>'
+    + '</div>';
+  document.getElementById('articleBody').innerHTML = '';
+}
+
+/* ---- AI GENERATION (used by cron-written articles only) ---- */
 async function generateArticleFromTitle(title, cat) {
   if (!title) { document.getElementById('articleHero').innerHTML = '<h1 style="margin-top:2rem">Article not found</h1><p><a href="/">← Back to Home</a></p>'; return; }
 

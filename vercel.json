@@ -11,9 +11,18 @@
     { "path": "/api/cron-generate", "schedule": "30 0 * * *" }
   ],
   "rewrites": [
-    { "source": "/sitemap.xml",  "destination": "/api/sitemap" },
-    { "source": "/feed.xml",     "destination": "/api/rss-feed" },
-    { "source": "/education",    "destination": "/pages/education" }
+    { "source": "/sitemap.xml",           "destination": "/api/sitemap" },
+    { "source": "/feed.xml",              "destination": "/api/rss-feed" },
+    { "source": "/education",             "destination": "/pages/education.html" },
+    { "source": "/pages/education",       "destination": "/pages/education.html" },
+    { "source": "/pages/article",         "destination": "/pages/article.html" },
+    { "source": "/pages/category",        "destination": "/pages/category.html" },
+    { "source": "/pages/search",          "destination": "/pages/search.html" },
+    { "source": "/pages/about",           "destination": "/pages/about.html" },
+    { "source": "/pages/contact",         "destination": "/pages/contact.html" },
+    { "source": "/privacy-policy",        "destination": "/privacy-policy.html" },
+    { "source": "/terms",                 "destination": "/terms.html" },
+    { "source": "/disclaimer",            "destination": "/disclaimer.html" }
   ],
   "headers": [
     {
