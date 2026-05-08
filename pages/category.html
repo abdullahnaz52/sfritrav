@@ -80,7 +80,7 @@
 <button class="back-top" id="backTop">↑</button>
 
 <script src="/public/js/ads.js" defer></script>
-<script src="/public/js/app.js" defer></script>
+<script src="/public/js/app.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const CATS = window.SfriTrav?.CATEGORIES || {};
@@ -153,9 +153,31 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   document.getElementById('sortSelect').addEventListener('change', () => { PAGE = 1; render(); });
   document.getElementById('loadMoreBtn').addEventListener('click', () => { PAGE++; render(); });
-  // Wait for app.js
-  const tryRender = (n=0) => { if (window.SfriTrav?.allArticles) render(); else if (n < 20) setTimeout(() => tryRender(n+1), 150); };
-  tryRender();
+
+  // Render immediately with SEED, then fetch KV articles and re-render
+  function init() {
+    if (!window.SfriTrav?.allArticles) {
+      setTimeout(init, 50);
+      return;
+    }
+    // First pass — seed articles render immediately
+    render();
+    // Second pass — fetch live KV articles then re-render
+    fetch('/api/articles')
+      .then(r => r.ok ? r.json() : { articles: [] })
+      .then(data => {
+        if (data.articles && data.articles.length) {
+          // Inject into SfriTrav so allArticles() sees them
+          window._sfriKV = data.articles;
+          const orig = window.SfriTrav.allArticles;
+          window.SfriTrav.allArticles = () => [...(window._sfriKV || []), ...(window.SfriTrav.SEED || [])];
+          PAGE = 1;
+          render();
+        }
+      })
+      .catch(() => {}); // KV unavailable — seed articles already showing, that's fine
+  }
+  init();
   document.querySelectorAll('.footer-year').forEach(e => e.textContent = new Date().getFullYear());
   window.addEventListener('scroll', () => {
     document.getElementById('siteHeader').classList.toggle('scrolled', scrollY > 50);

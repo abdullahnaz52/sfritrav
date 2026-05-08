@@ -768,7 +768,7 @@
     return [...(_kvArticles || []), ...SEED];
   }
 
-  /* ===== GLOBALS ===== */
+  /* ===== GLOBALS — set immediately so category/article pages can use them ===== */
   window.SfriTrav = { allArticles, CATEGORIES, getImg, SEED };
 
   /* ===== HELPERS ===== */
