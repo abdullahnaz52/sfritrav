@@ -7,13 +7,14 @@ export default async function handler(req, res) {
 
   // Static pages
   const staticPages = [
-    { loc:'/',                        priority:'1.0', changefreq:'hourly'  },
-    { loc:'/pages/search.html',       priority:'0.6', changefreq:'daily'   },
-    { loc:'/pages/about.html',        priority:'0.5', changefreq:'monthly' },
-    { loc:'/pages/contact.html',      priority:'0.4', changefreq:'monthly' },
-    { loc:'/privacy-policy.html',     priority:'0.3', changefreq:'yearly'  },
-    { loc:'/terms.html',              priority:'0.3', changefreq:'yearly'  },
-    { loc:'/disclaimer.html',         priority:'0.3', changefreq:'yearly'  },
+    { loc:'/',                           priority:'1.0', changefreq:'hourly'  },
+    { loc:'/pages/education.html',       priority:'0.95',changefreq:'hourly'  },
+    { loc:'/pages/search.html',          priority:'0.6', changefreq:'daily'   },
+    { loc:'/pages/about.html',           priority:'0.5', changefreq:'monthly' },
+    { loc:'/pages/contact.html',         priority:'0.4', changefreq:'monthly' },
+    { loc:'/privacy-policy.html',        priority:'0.3', changefreq:'yearly'  },
+    { loc:'/terms.html',                 priority:'0.3', changefreq:'yearly'  },
+    { loc:'/disclaimer.html',            priority:'0.3', changefreq:'yearly'  },
   ];
 
   // Category pages
@@ -21,11 +22,11 @@ export default async function handler(req, res) {
     'india-news','global-news','health','sports','entertainment',
     'technology','business','travel','food','fashion',
     'women-health','men-health','mental-health','jobs','ayurveda',
-    'kids','environment','politics'
+    'kids','environment','politics','education'
   ];
   const catPages = cats.map(c => ({
     loc: `/pages/category.html?cat=${c}`,
-    priority: ['india-news','health','business','technology','sports'].includes(c) ? '0.9' : '0.8',
+    priority: ['india-news','health','business','technology','sports','education'].includes(c) ? '0.9' : '0.8',
     changefreq: 'daily'
   }));
 

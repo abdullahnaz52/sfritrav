@@ -16,6 +16,8 @@
     { "source": "/pages/search",         "destination": "/pages/search.html" },
     { "source": "/pages/article",        "destination": "/pages/article.html" },
     { "source": "/pages/category",       "destination": "/pages/category.html" },
+    { "source": "/pages/education",      "destination": "/pages/education.html" },
+    { "source": "/education",            "destination": "/pages/education.html" },
     { "source": "/privacy-policy",       "destination": "/privacy-policy.html" },
     { "source": "/terms",                "destination": "/terms.html" },
     { "source": "/disclaimer",           "destination": "/disclaimer.html" }

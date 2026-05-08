@@ -9,7 +9,7 @@ window.SfriAds = (function() {
 
   // ── CONFIG ─────────────────────────────────────────────────────
   const CFG = {
-    adsenseClient : 'ca-pub-XXXXXXXXXXXXXXXX', // ← replace after approval
+    adsenseClient : 'ca-pub-7815915531609481', // ← replace after approval
     adsenseEnabled: false,                      // ← set true after AdSense approval
     affiliateTag  : 'sfritrav-21',             // ← your Amazon Associates tag
     flipkartAffId : 'sfritrav',                // ← your Flipkart affiliate ID

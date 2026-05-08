@@ -39,6 +39,7 @@
     'kids':          { label: 'Kids & Parenting',      color: 'kids',          emoji: '👶' },
     'global-news':   { label: 'Global News',           color: 'news',          emoji: '🌍' },
     'india-news':    { label: 'India News',            color: 'news',          emoji: '🇮🇳' },
+    'education':     { label: 'Education & Exams',     color: 'education',     emoji: '📚' },
   };
 
   /* ===== IMAGES (per category) ===== */
@@ -61,6 +62,7 @@
     'kids':          ['https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=700&q=75','https://images.unsplash.com/photo-1471286174890-9c112ffca5b4?w=700&q=75'],
     'global-news':   ['https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=700&q=75','https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=700&q=75'],
     'india-news':    ['https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=700&q=75','https://images.unsplash.com/photo-1532664189809-02133fee698d?w=700&q=75'],
+    'education':     ['https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=700&q=75','https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=700&q=75','https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=700&q=75'],
   };
   function getImg(cat, idx = 0) {
     const imgs = IMGS[cat] || IMGS['global-news'];
@@ -623,6 +625,129 @@
 <li>Drink warm water or herbal teas rather than cold drinks with meals</li>
 <li>Triphala — an Ayurvedic blend of three fruits — has genuine evidence for mild constipation and colon health</li>
 </ul>` },
+
+    /* EDUCATION — UPSC Strategy (very high search volume India) */
+    { id:'edu01', slug:'upsc-cse-2026-complete-strategy', category:'education', featured:false,
+      title:`UPSC CSE ${CY} Complete Preparation Strategy — Prelims to Mains`,
+      excerpt:`A structured, month-by-month preparation roadmap for UPSC Civil Services ${CY} covering Prelims, Mains and Interview — with free resources, books and time management tips.`,
+      readTime:'10 min', date: d('04-20'),
+      tags:['UPSC','IAS','Civil Services','Exam Strategy','Government Exam'],
+      body:`<p>UPSC Civil Services is India's most prestigious and competitive examination. Roughly 1 million candidates apply each year for approximately 1,000 final selections. The examination has three stages: Preliminary (objective), Mains (written), and Personality Test (Interview).</p>
+<h2>Stage 1: Prelims — GS Paper I &amp; CSAT</h2>
+<p>Prelims consists of two papers — General Studies I (100 questions, 200 marks) and CSAT (80 questions, 200 marks, qualifying at 33%). GS Paper I covers History, Geography, Polity, Economy, Environment, Science &amp; Technology and Current Affairs.</p>
+<h3>Key Books for Prelims GS</h3>
+<ul>
+<li><strong>History:</strong> NCERT Class 6–12 (Old), Spectrum Modern History by Rajiv Ahir</li>
+<li><strong>Geography:</strong> NCERT Physical Geography, G C Leong, Certificate Physical &amp; Human Geography</li>
+<li><strong>Polity:</strong> Indian Polity by M Laxmikant (most important single book)</li>
+<li><strong>Economy:</strong> NCERT Class 11–12, Economic Survey, Budget highlights</li>
+<li><strong>Environment:</strong> Shankar IAS Environment, official government publications</li>
+<li><strong>Current Affairs:</strong> The Hindu / Indian Express daily + Vision IAS Monthly Magazine</li>
+</ul>
+<h2>Stage 2: Mains — 9 Papers</h2>
+<p>Mains has 9 papers: 2 qualifying (Essay, and one language paper), plus 7 merit papers — General Studies I, II, III, IV (Ethics), and 2 Optional subject papers. The essay paper (250 marks) is increasingly important.</p>
+<h2>Stage 3: Personality Test (Interview)</h2>
+<p>275 marks. Tests intellectual curiosity, balanced judgment, leadership, communication and awareness of current affairs. Mock interview practice with experienced panellists is essential.</p>
+<h2>Realistic Time Plan</h2>
+<p>For a fresh graduate starting now: 12–15 months minimum. 8–10 hours daily study. NCERT foundation (2 months) → Standard references (4 months) → Current affairs integration (ongoing) → Mock tests (final 3 months).</p>` },
+
+    /* EDUCATION — JKPSC KAS Guide */
+    { id:'edu02', slug:'jkpsc-kas-2026-complete-guide', category:'education', featured:false,
+      title:`JKPSC KAS ${CY} — Syllabus Breakdown, Books and Study Schedule`,
+      excerpt:`Complete guide for JKPSC Kashmir Administrative Service exam — syllabus, paper pattern, recommended books, J&K specific topics and a realistic preparation timeline.`,
+      readTime:'9 min', date: d('04-18'),
+      tags:['JKPSC','KAS','J&K PSC','Kashmir','State PSC'],
+      body:`<p>The Jammu &amp; Kashmir Public Service Commission (JKPSC) conducts the KAS (Kashmir Administrative Service) Combined Competitive Examination for appointment to J&amp;K Civil Services. It is the state-level equivalent of UPSC and follows a similar three-stage pattern.</p>
+<h2>Exam Pattern</h2>
+<p>The JKPSC KAS exam has three stages: Preliminary Exam (Objective), Mains (Descriptive), and Viva-voce. The Preliminary has two papers — General Studies (200 marks) and Mental Ability/Reasoning. Mains has six papers including Essay, General Studies I/II/III, and one Optional subject.</p>
+<h2>J&K Specific Topics (High Weightage)</h2>
+<ul>
+<li>History and Culture of J&amp;K — Dogra Period, Kashmir under Mughals, Sheikh Abdullah era</li>
+<li>Geography of J&amp;K — Chenab, Jhelum, Indus basins; glaciers, Pir Panjal range</li>
+<li>J&amp;K Economy — Horticulture, tourism, handicrafts (Pashmina, Kashmiri carpets, Khatamband)</li>
+<li>J&amp;K Administration — Article 370 abrogation (2019), UT status, Delimitation Commission</li>
+<li>J&amp;K Current Affairs — LG Administration, new district formation, development projects</li>
+</ul>
+<h2>Key Resources</h2>
+<ul>
+<li>J&amp;K at a Glance (official J&amp;K government publication)</li>
+<li>JKPSC previous years' question papers (available at jkpsc.nic.in)</li>
+<li>Kashmir Life Magazine for J&amp;K current affairs</li>
+<li>Standard UPSC books for GS (M Laxmikant, Spectrum, NCERT)</li>
+</ul>
+<p>Official portal: <strong>jkpsc.nic.in</strong> — always check here for notification, admit card download and result links.</p>` },
+
+    /* EDUCATION — SSB Interview Guide */
+    { id:'edu03', slug:'ssb-interview-complete-guide', category:'education', featured:false,
+      title:`SSB Interview Complete Guide ${CY} — 5-Day Process, PPDT, GTO, Psychology & Conference`,
+      excerpt:`A practical, stage-by-stage guide for the Services Selection Board interview for NDA, CDS, AFCAT and TES entries — what assessors look for, and how to genuinely prepare.`,
+      readTime:'11 min', date: d('04-22'),
+      tags:['SSB','NDA','CDS','Defence','Military','AFCAT'],
+      body:`<p>The Services Selection Board (SSB) is a 5-day assessment process used by the Indian Armed Forces to select officers. It is not an exam you can "crack" with coaching — it is a personality assessment. The assessors are looking for Officer Like Qualities (OLQs).</p>
+<h2>The 15 OLQs Assessed</h2>
+<p>Effective Intelligence, Reasoning Ability, Organising Ability, Power of Expression, Social Adaptability, Cooperation, Sense of Responsibility, Initiative, Self-Confidence, Speed of Decision, Ability to Influence the Group, Liveliness, Determination, Courage, and Stamina.</p>
+<h2>Day 1 — Screening (PPDT + OIR)</h2>
+<p>Officers Intelligence Rating (OIR): two verbal/non-verbal reasoning tests. Picture Perception and Discussion Test (PPDT): write a story about a hazy picture, then discuss it in a group. ~50% of candidates are screened out here. Focus on: writing a clear narrative, participating constructively in the group discussion without being aggressive.</p>
+<h2>Day 2 &amp; 3 — Psychology Tests</h2>
+<ul>
+<li><strong>TAT (Thematic Apperception Test):</strong> 12 pictures, write a story for each in 4 minutes. Stories should show a positive, resourceful protagonist who faces challenges and succeeds through personal initiative.</li>
+<li><strong>WAT (Word Association Test):</strong> 60 words, 15 seconds each. Your first spontaneous response reflects your actual attitudes — be genuine and positive.</li>
+<li><strong>SRT (Situation Reaction Test):</strong> 60 situations, 30 minutes. Respond as you naturally would — assessors look for practical, social, confident responses.</li>
+<li><strong>SD (Self Description):</strong> What your parents, teachers, friends and you think about yourself. Be consistent with your interview answers.</li>
+</ul>
+<h2>Day 3 &amp; 4 — GTO (Group Testing Officer)</h2>
+<p>Group Discussion, Group Planning Exercise, Progressive Group Task, Half Group Task, Individual Obstacles, Final Group Task, and Lecturette. The GTO observes how you function in a group — not who talks most, but who adds value.</p>
+<h2>Day 4 — Personal Interview</h2>
+<p>60–90 minute interview. Know your PIQ (Personal Information Questionnaire) thoroughly. Be honest about your background, motivations, and awareness of current affairs. The interviewer is checking consistency and authenticity.</p>
+<h2>Day 5 — Conference &amp; Result</h2>
+<p>All three assessors (Psychologist, GTO, Interviewing Officer) confer. Recommended candidates are announced. Medical follows for recommended candidates.</p>` },
+
+    /* EDUCATION — IBPS PO */
+    { id:'edu04', slug:'ibps-po-2026-preparation-plan', category:'education', featured:false,
+      title:`IBPS PO ${CY} — Section-wise Preparation Plan with Free Resources`,
+      excerpt:`Complete preparation guide for IBPS PO Cycle XIV — Prelims and Mains pattern, section-wise strategy for Reasoning, Quantitative Aptitude, English and Banking Awareness.`,
+      readTime:'7 min', date: d('04-16'),
+      tags:['IBPS PO','Banking Exam','Bank PO','Quantitative Aptitude','Reasoning'],
+      body:`<p>IBPS PO (Probationary Officer) is one of India's most sought-after banking positions, offering job security, good pay and career progression across multiple public sector banks. IBPS releases a new cycle every year, typically with notifications in August and Prelims in October.</p>
+<h2>Exam Pattern</h2>
+<p><strong>Prelims:</strong> 3 sections — English Language (30Q, 30 marks, 20 min), Quantitative Aptitude (35Q, 35 marks, 20 min), Reasoning Ability (35Q, 35 marks, 20 min). Total: 100 marks, 60 minutes. There is sectional timing and sectional cut-offs.</p>
+<p><strong>Mains:</strong> 4 objective sections + 1 descriptive paper. Data Analysis &amp; Interpretation, Reasoning &amp; Computer Aptitude, General/Economy/Banking Awareness, English Language — plus a Letter/Essay writing paper (25 marks, 30 minutes).</p>
+<h2>Reasoning Ability</h2>
+<p>Focus on: Puzzles &amp; Seating Arrangement (highest weightage, 3–4 sets), Syllogisms, Blood Relations, Coding-Decoding, Inequalities, Data Sufficiency. Practice at least 2 full sets of puzzles daily. Time management is critical.</p>
+<h2>Quantitative Aptitude</h2>
+<p>Data Interpretation (3–4 sets — Tables, Bar Charts, Pie Charts), Arithmetic (Time &amp; Work, Pipes, Profit &amp; Loss, SI/CI, Ratios, Ages), Number Series, Quadratic Equations. Build DI speed — it is the highest scorer.</p>
+<h2>Free Resources</h2>
+<ul>
+<li>Oliveboard Free Mock Tests — ibps.in also releases official practice papers</li>
+<li>Gradeup (now Gradestack) and Testbook for free section tests</li>
+<li>IBPS official website for previous year cut-offs and notification</li>
+</ul>` },
+
+    /* EDUCATION — NEET UG High-Yield */
+    { id:'edu05', slug:'neet-ug-2026-biology-high-yield', category:'education', featured:false,
+      title:`NEET UG ${CY} Biology High-Yield Topics — Last 10 Years Analysis`,
+      excerpt:`Data-backed analysis of NEET UG Biology — which chapters consistently fetch maximum marks, how to prioritise Botany vs Zoology, and the best revision strategy for ${CY}.`,
+      readTime:'8 min', date: d('04-10'),
+      tags:['NEET','Medical Entrance','Biology','Botany','Zoology','MBBS'],
+      body:`<p>Biology contributes 360 of 720 marks in NEET UG — making it the single most important subject. A score above 300 in Biology is essential for government MBBS seats. Analysis of the last 10 years of NEET papers reveals consistent patterns in chapter-wise weightage.</p>
+<h2>Highest Weightage Botany Chapters</h2>
+<ul>
+<li><strong>Plant Kingdom</strong> (4–5 questions every year) — Classification, alternation of generations, reproductive structures</li>
+<li><strong>Reproductive Biology of Flowering Plants</strong> (4–5 questions) — Double fertilisation, endosperm, embryo sac structure</li>
+<li><strong>Molecular Basis of Inheritance</strong> (5–6 questions) — DNA replication, transcription, translation, genetic code</li>
+<li><strong>Ecosystem</strong> (3–4 questions) — Energy flow, biogeochemical cycles, ecological pyramids</li>
+<li><strong>Biological Classification</strong> (3 questions) — Five-kingdom classification, viruses, viroids, lichens</li>
+</ul>
+<h2>Highest Weightage Zoology Chapters</h2>
+<ul>
+<li><strong>Human Physiology</strong> (10–12 questions) — Digestion, circulation, breathing, excretion, neural control, locomotion. Highest single topic group in NEET.</li>
+<li><strong>Genetics and Evolution</strong> (5–6 questions) — Mendelian genetics, chromosomal disorders, Hardy-Weinberg, Darwin</li>
+<li><strong>Human Reproduction</strong> (4–5 questions) — Gametogenesis, fertilisation, implantation, contraception</li>
+<li><strong>Animal Kingdom</strong> (3–4 questions) — Phylum-wise characteristics, examples</li>
+</ul>
+<h2>Revision Strategy</h2>
+<p>NCERT Biology (Class 11 and 12) is the single most important resource — almost all NEET Biology questions are directly or indirectly from NCERT. Read the text, not just diagrams. Make notes on every bold term. Do at least 3 full revisions of NCERT before the exam.</p>` },
+
   ];
 
   /* ===== ARTICLES FROM VERCEL KV (server-side, all visitors see them) ===== */
@@ -758,7 +883,7 @@
 
     // Per-category sections on homepage
     ['health','sports','technology','food','women-health','business','environment','jobs',
-     'politics','entertainment','global-news','men-health','fashion','mental-health','ayurveda','kids'
+     'politics','entertainment','global-news','men-health','fashion','mental-health','ayurveda','kids','education'
     ].forEach(cat => {
       const el = document.getElementById(`cat-${cat}`);
       if (!el) return;

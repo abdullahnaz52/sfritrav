@@ -6,6 +6,7 @@
   <title>SfriTrav — News, Health, Travel, Sports, Entertainment & More</title>
   <meta name="description" content="SfriTrav is your daily source for news, health tips, travel guides, sports updates, entertainment, business, technology, food, fashion and more from India and around the world.">
   <meta name="robots" content="index, follow">
+  <meta name="google-site-verification" content="4b66f8fe7cd9625f">
   <link rel="canonical" href="https://sfritrav.com/">
   <meta property="og:title" content="SfriTrav — Your Complete Daily Read">
   <meta property="og:description" content="News, health, travel, sports, entertainment, business, technology and more.">
@@ -21,18 +22,19 @@
     "name":"SfriTrav","url":"https://sfritrav.com",
     "potentialAction":{"@type":"SearchAction","target":"https://sfritrav.com/pages/search.html?q={search_term_string}","query-input":"required name=search_term_string"}
   }</script>
-  <!-- AdSense — uncomment & replace pub-ID after approval -->
-  <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
+  <!-- Google AdSense -->
+  <meta name="google-adsense-account" content="ca-pub-7815915531609481">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7815915531609481" crossorigin="anonymous"></script>
 </head>
 <body>
 
-<!-- Breaking news ticker -->
-<div class="ticker-bar">
+<!-- Google Trends ticker (Breaking News in Real Time) -->
+<div class="trends-bar">
   <div class="container">
-    <div class="ticker-inner">
-      <span class="ticker-label">Breaking</span>
-      <div class="ticker-track">
-        <div class="ticker-items" id="breakingTicker"><span style="color:rgba(255,255,255,.7)">Loading latest news…</span></div>
+    <div class="trends-inner">
+      <span class="trends-label">Trending</span>
+      <div class="trends-track">
+        <div class="trends-items" id="trendingItems"></div>
       </div>
     </div>
   </div>
@@ -79,6 +81,7 @@
       <ul class="nav-list">
         <li><a href="/" class="nav-link active">Home</a></li>
         <li><a href="/pages/category.html?cat=india-news" class="nav-link">India</a></li>
+        <li><a href="/pages/education.html" class="nav-link">📚 Education</a></li>
         <li><a href="/pages/category.html?cat=global-news" class="nav-link">World</a></li>
         <li><a href="/pages/category.html?cat=health" class="nav-link">Health</a></li>
         <li><a href="/pages/category.html?cat=sports" class="nav-link">Sports</a></li>
@@ -129,15 +132,6 @@
       </div>
     </section>
 
-    <!-- Google Trends ticker -->
-    <div class="trends-bar">
-      <div class="trends-inner">
-        <span class="trends-label">Trending</span>
-        <div class="trends-track">
-          <div class="trends-items" id="trendingItems"></div>
-        </div>
-      </div>
-    </div>
 
     <!-- ===== LATEST ARTICLES + SIDEBAR ===== -->
     <section class="content-section">
@@ -196,6 +190,7 @@
               <a href="/pages/category.html?cat=ayurveda" class="cat-pill">🌱 Ayurveda</a>
               <a href="/pages/category.html?cat=kids" class="cat-pill">👶 Kids</a>
               <a href="/pages/category.html?cat=india-news" class="cat-pill">🇮🇳 India News</a>
+              <a href="/pages/education.html" class="cat-pill" style="background:var(--cat-education);color:#fff;font-weight:700">📚 Education & Exams</a>
               <a href="/pages/category.html?cat=global-news" class="cat-pill">🌍 World News</a>
               <a href="/pages/category.html?cat=politics" class="cat-pill">🏛️ Politics</a>
             </div>
@@ -318,6 +313,31 @@
       </div>
     </section>
 
+    <!-- ===== EDUCATION & EXAMS ===== -->
+    <section class="content-section" style="border-left:4px solid var(--cat-education);padding-left:1.2rem">
+      <div class="section-header">
+        <h2 class="section-title">📚 Education <span>&amp; Exams</span></h2>
+        <a href="/pages/education.html" class="see-all" style="color:var(--cat-education)">Exam Hub →</a>
+      </div>
+      <!-- Quick portal strip -->
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.2rem">
+        <a href="https://upsc.gov.in" target="_blank" rel="noopener" style="font-size:.72rem;font-weight:700;background:#1a3a6b;color:#fff;padding:.25rem .7rem;border-radius:12px;white-space:nowrap">🏛️ UPSC</a>
+        <a href="https://ssc.gov.in" target="_blank" rel="noopener" style="font-size:.72rem;font-weight:700;background:#1a3a6b;color:#fff;padding:.25rem .7rem;border-radius:12px;white-space:nowrap">📋 SSC</a>
+        <a href="https://ibps.in" target="_blank" rel="noopener" style="font-size:.72rem;font-weight:700;background:#1a3a6b;color:#fff;padding:.25rem .7rem;border-radius:12px;white-space:nowrap">🏦 IBPS</a>
+        <a href="https://nta.ac.in" target="_blank" rel="noopener" style="font-size:.72rem;font-weight:700;background:#1a3a6b;color:#fff;padding:.25rem .7rem;border-radius:12px;white-space:nowrap">🧬 NEET/JEE</a>
+        <a href="https://jkpsc.nic.in" target="_blank" rel="noopener" style="font-size:.72rem;font-weight:700;background:#1a3a6b;color:#fff;padding:.25rem .7rem;border-radius:12px;white-space:nowrap">🏔️ JKPSC</a>
+        <a href="https://jkssb.nic.in" target="_blank" rel="noopener" style="font-size:.72rem;font-weight:700;background:#1a3a6b;color:#fff;padding:.25rem .7rem;border-radius:12px;white-space:nowrap">📝 JKSSB</a>
+        <a href="https://results.nic.in" target="_blank" rel="noopener" style="font-size:.72rem;font-weight:700;background:#1a3a6b;color:#fff;padding:.25rem .7rem;border-radius:12px;white-space:nowrap">🏆 Results</a>
+        <a href="https://scholarships.gov.in" target="_blank" rel="noopener" style="font-size:.72rem;font-weight:700;background:#1a3a6b;color:#fff;padding:.25rem .7rem;border-radius:12px;white-space:nowrap">🎓 Scholarships</a>
+        <a href="/pages/education.html" style="font-size:.72rem;font-weight:700;background:#e2e8f0;color:#1a3a6b;padding:.25rem .7rem;border-radius:12px;white-space:nowrap">All Portals →</a>
+      </div>
+      <div class="cards-grid cards-grid-3" id="cat-education">
+        <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div></div>
+        <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div></div>
+        <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-line medium" style="margin:12px"></div></div>
+      </div>
+    </section>
+
   </div><!-- /container -->
 </main>
 
@@ -351,12 +371,13 @@
       <div class="footer-col">
         <h4>More Topics</h4>
         <ul>
+          <li><a href="/pages/education.html">📚 Education & Exams</a></li>
+          <li><a href="/pages/category.html?cat=jobs">Jobs in India</a></li>
           <li><a href="/pages/category.html?cat=women-health">Women's Health</a></li>
           <li><a href="/pages/category.html?cat=men-health">Men's Health</a></li>
           <li><a href="/pages/category.html?cat=mental-health">Mental Health</a></li>
           <li><a href="/pages/category.html?cat=ayurveda">Ayurveda</a></li>
           <li><a href="/pages/category.html?cat=kids">Kids & Parenting</a></li>
-          <li><a href="/pages/category.html?cat=jobs">Jobs in India</a></li>
           <li><a href="/pages/category.html?cat=environment">Environment</a></li>
           <li><a href="/pages/category.html?cat=india-news">India News</a></li>
         </ul>

@@ -25,7 +25,7 @@ input, textarea, select { font-family: inherit; }
   --cat-business: #1a4fbd; --cat-women: #c4507a; --cat-men: #2a5fbd;
   --cat-food: #c47a1a; --cat-environment: #1a7a3e; --cat-fashion: #9b2fa3;
   --cat-mental: #5a3ab2; --cat-jobs: #c42a20; --cat-ayurveda: #5a7a1a;
-  --cat-kids: #e07b1a; --cat-news: #0d0d0d;
+  --cat-kids: #e07b1a; --cat-news: #0d0d0d; --cat-education: #1a3a6b;
   --font-display: 'Playfair Display', Georgia, serif;
   --font-body: 'DM Sans', sans-serif;
   --font-mono: 'DM Mono', monospace;
@@ -60,6 +60,7 @@ input, textarea, select { font-family: inherit; }
 .tag.ayurveda { background: var(--cat-ayurveda); }
 .tag.kids { background: var(--cat-kids); }
 .tag.news { background: var(--cat-news); }
+.tag.education { background: var(--cat-education); }
 
 /* ===== BUTTONS ===== */
 .btn { display:inline-flex;align-items:center;gap:.4rem;padding:.65rem 1.4rem;border-radius:var(--radius-sm);font-weight:600;font-size:.9rem;transition:all .18s;cursor:pointer; }

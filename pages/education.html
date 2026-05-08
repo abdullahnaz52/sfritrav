@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Education & Exams India — Results, Admit Cards, Forms | SfriTrav</title>
+  <meta name="description" content="Latest exam notifications, results, admit cards, application forms for UPSC, SSC, IBPS, NTA, JKPSC, State PSC, NEET, JEE, NDA, SSB and all India government exams. State-wise board results, scholarship portals, tenders and circulars.">
+  <meta name="keywords" content="UPSC 2026, SSC CGL, IBPS PO, NEET result, JEE admit card, JKPSC, NDA, SSB, state PSC, board results, exam notification India, sarkari result, government jobs">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Education & Exams India — SfriTrav">
+  <meta property="og:description" content="Real-time exam results, admit cards, notifications and portal links for every government exam in India.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://sfritrav.com/images/og-education.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://sfritrav.com/pages/education.html">
+  <meta name="google-adsense-account" content="ca-pub-7815915531609481">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7815915531609481" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="/public/css/style.css">
+  <link rel="icon" href="/images/favicon.ico">
+  <script type="application/ld+json">{
+    "@context":"https://schema.org","@type":"WebPage",
+    "name":"Education & Exams India","url":"https://sfritrav.com/pages/education.html",
+    "description":"Latest exam notifications, results, admit cards and portal links for all India government exams",
+    "isPartOf":{"@type":"WebSite","name":"SfriTrav","url":"https://sfritrav.com"}
+  }</script>
+  <style>
+    /* ── Education Page Specific Styles ── */
+    .edu-hero {
+      background: linear-gradient(135deg, #1a3a6b 0%, #0d2147 50%, #14164a 100%);
+      color: #fff;
+      padding: 2.5rem 0 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .edu-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .edu-hero-inner { position: relative; z-index: 1; }
+    .edu-hero h1 { font-family: var(--font-display); font-size: clamp(1.6rem,3vw,2.4rem); font-weight: 900; margin-bottom: .5rem; }
+    .edu-hero p { color: rgba(255,255,255,.75); font-size: .92rem; max-width: 680px; }
+    .edu-hero-meta { display: flex; gap: 1.5rem; margin-top: 1rem; flex-wrap: wrap; }
+    .edu-hero-stat { display: flex; flex-direction: column; }
+    .edu-hero-stat strong { font-size: 1.3rem; font-weight: 800; color: #fbbf24; }
+    .edu-hero-stat span { font-size: .72rem; color: rgba(255,255,255,.6); text-transform: uppercase; letter-spacing: .06em; }
+
+    /* Live ticker for exams */
+    .edu-ticker { background: #fbbf24; color: #1a1a1a; padding: .4rem 0; overflow: hidden; }
+    .edu-ticker-inner { display: flex; align-items: center; gap: 1rem; }
+    .edu-ticker-label { font-size: .68rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; background: #1a3a6b; color: #fff; padding: .2rem .65rem; border-radius: 2px; white-space: nowrap; flex-shrink: 0; }
+    .edu-ticker-track { overflow: hidden; flex: 1; }
+    .edu-ticker-items { display: flex; gap: 2rem; white-space: nowrap; font-size: .8rem; font-weight: 600; will-change: transform; }
+    .edu-ticker-items a { color: #1a3a6b; transition: color .15s; }
+    .edu-ticker-items a:hover { color: #c42a20; }
+    .edu-tick-sep { color: #1a3a6b; opacity: .4; flex-shrink: 0; }
+
+    /* Search */
+    .edu-search-bar { background: #fff; border: 2px solid var(--border); border-radius: var(--radius); padding: .6rem 1rem; display: flex; align-items: center; gap: .5rem; max-width: 500px; margin: 1.2rem 0 0; }
+    .edu-search-bar input { flex: 1; border: none; outline: none; font-size: .88rem; background: transparent; color: var(--ink); }
+    .edu-search-bar button { background: #1a3a6b; color: #fff; border-radius: var(--radius-sm); padding: .35rem .8rem; font-size: .8rem; font-weight: 600; }
+    .edu-search-bar button:hover { background: #0d2147; }
+
+    /* Filter tabs */
+    .edu-tabs { display: flex; gap: .5rem; flex-wrap: wrap; padding: 1rem 0; border-bottom: 2px solid var(--border); margin-bottom: 1.5rem; }
+    .edu-tab { font-size: .78rem; font-weight: 600; padding: .35rem .85rem; border-radius: 20px; border: 1.5px solid var(--border); color: var(--ink-light); cursor: pointer; transition: all .15s; background: #fff; white-space: nowrap; }
+    .edu-tab:hover { border-color: #1a3a6b; color: #1a3a6b; }
+    .edu-tab.active { background: #1a3a6b; color: #fff; border-color: #1a3a6b; }
+
+    /* Main layout */
+    .edu-layout { display: grid; grid-template-columns: 1fr 320px; gap: 2rem; align-items: start; }
+    @media(max-width: 900px) { .edu-layout { grid-template-columns: 1fr; } }
+
+    /* Section headings */
+    .edu-section { margin-bottom: 2.5rem; }
+    .edu-section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; padding-bottom: .6rem; border-bottom: 2px solid var(--border); }
+    .edu-section-title { font-family: var(--font-display); font-size: 1.1rem; font-weight: 800; display: flex; align-items: center; gap: .5rem; }
+    .edu-section-title .badge { font-size: .65rem; font-weight: 700; padding: .15rem .5rem; border-radius: 10px; text-transform: uppercase; letter-spacing: .06em; }
+    .badge-live { background: #fee2e2; color: #c42a20; }
+    .badge-new  { background: #dcfce7; color: #166534; }
+    .edu-see-all { font-size: .78rem; font-weight: 600; color: #1a3a6b; }
+    .edu-see-all:hover { text-decoration: underline; }
+
+    /* News cards */
+    .edu-news-list { display: flex; flex-direction: column; gap: .75rem; }
+    .edu-news-item { display: flex; gap: .75rem; padding: .85rem; background: #fff; border: 1px solid var(--border); border-radius: var(--radius); transition: box-shadow .15s, border-color .15s; }
+    .edu-news-item:hover { box-shadow: var(--shadow); border-color: #1a3a6b; }
+    .edu-news-type { flex-shrink: 0; width: 52px; height: 52px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
+    .nt-exam     { background: #dbeafe; }
+    .nt-result   { background: #dcfce7; }
+    .nt-admit    { background: #fef9c3; }
+    .nt-general  { background: #f3f4f6; }
+    .nt-bank     { background: #e0e7ff; }
+    .nt-medical  { background: #ffe4e6; }
+    .nt-defence  { background: #fef3c7; }
+    .edu-news-body { flex: 1; min-width: 0; }
+    .edu-news-title { font-size: .88rem; font-weight: 600; line-height: 1.4; color: var(--ink); margin-bottom: .25rem; }
+    .edu-news-title a { color: inherit; }
+    .edu-news-title a:hover { color: #1a3a6b; }
+    .edu-news-meta { font-size: .72rem; color: var(--ink-muted); display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; }
+    .edu-news-src { font-weight: 600; color: #1a3a6b; }
+    .edu-news-tag { background: #f1f5f9; color: #475569; padding: .1rem .4rem; border-radius: 3px; font-size: .68rem; text-transform: uppercase; font-weight: 700; letter-spacing: .04em; }
+    .edu-tag-exam     { background: #dbeafe; color: #1e40af; }
+    .edu-tag-result   { background: #dcfce7; color: #166534; }
+    .edu-tag-admit    { background: #fef9c3; color: #854d0e; }
+    .edu-tag-bank     { background: #e0e7ff; color: #3730a3; }
+    .edu-tag-medical  { background: #ffe4e6; color: #9f1239; }
+    .edu-tag-defence  { background: #fef3c7; color: #92400e; }
+    .edu-tag-psc      { background: #f3e8ff; color: #6b21a8; }
+    .edu-tag-scholarship { background: #ecfdf5; color: #065f46; }
+    .edu-tag-tender   { background: #fff7ed; color: #9a3412; }
+    .edu-tag-notice   { background: #f8fafc; color: #334155; }
+    .edu-tag-academic { background: #fdf4ff; color: #701a75; }
+
+    /* Portal grid */
+    .portal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: .85rem; }
+    .portal-card { background: #fff; border: 1.5px solid var(--border); border-radius: var(--radius); padding: .9rem 1rem; transition: all .15s; display: flex; flex-direction: column; gap: .3rem; }
+    .portal-card:hover { border-color: #1a3a6b; box-shadow: 0 4px 16px rgba(26,58,107,.1); transform: translateY(-1px); }
+    .portal-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: .5rem; }
+    .portal-name { font-size: .88rem; font-weight: 700; color: var(--ink); line-height: 1.3; }
+    .portal-state { font-size: .65rem; font-weight: 700; background: #e0e7ff; color: #3730a3; padding: .1rem .4rem; border-radius: 3px; white-space: nowrap; flex-shrink: 0; }
+    .portal-desc { font-size: .78rem; color: var(--ink-light); line-height: 1.5; }
+    .portal-link { font-size: .75rem; font-weight: 600; color: #1a3a6b; margin-top: .3rem; display: inline-flex; align-items: center; gap: .25rem; }
+    .portal-link:hover { text-decoration: underline; }
+    .portal-link::after { content: '↗'; font-size: .72rem; }
+
+    /* State filter */
+    .state-filter { display: flex; gap: .4rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .state-btn { font-size: .72rem; font-weight: 600; padding: .25rem .65rem; border-radius: 12px; border: 1.5px solid var(--border); background: #fff; color: var(--ink-light); cursor: pointer; transition: all .15s; }
+    .state-btn:hover { border-color: #1a3a6b; color: #1a3a6b; }
+    .state-btn.active { background: #1a3a6b; color: #fff; border-color: #1a3a6b; }
+
+    /* Competitive exam cards */
+    .exam-hub-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: .85rem; }
+    .exam-hub-card { background: #fff; border: 1.5px solid var(--border); border-radius: var(--radius); padding: 1rem; text-align: center; transition: all .15s; cursor: pointer; }
+    .exam-hub-card:hover { border-color: #1a3a6b; box-shadow: 0 4px 20px rgba(26,58,107,.1); transform: translateY(-2px); }
+    .exam-hub-icon { font-size: 2rem; margin-bottom: .5rem; }
+    .exam-hub-name { font-size: .9rem; font-weight: 700; color: var(--ink); margin-bottom: .2rem; }
+    .exam-hub-date { font-size: .72rem; color: var(--ink-muted); }
+    .exam-hub-status { font-size: .68rem; font-weight: 700; padding: .15rem .5rem; border-radius: 10px; display: inline-block; margin-top: .35rem; text-transform: uppercase; letter-spacing: .04em; }
+    .status-open    { background: #dcfce7; color: #166534; }
+    .status-soon    { background: #fef9c3; color: #854d0e; }
+    .status-result  { background: #ffe4e6; color: #9f1239; }
+    .status-ongoing { background: #dbeafe; color: #1e40af; }
+
+    /* Blog / prep guide cards */
+    .prep-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.2rem; }
+    .prep-card { background: #fff; border: 1.5px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: all .15s; }
+    .prep-card:hover { box-shadow: var(--shadow-hover); border-color: #1a3a6b; }
+    .prep-card-img { width: 100%; height: 140px; object-fit: cover; background: #e0e7ff; display: flex; align-items: center; justify-content: center; font-size: 3rem; }
+    .prep-card-body { padding: .9rem 1rem 1rem; }
+    .prep-card-tag { font-size: .68rem; font-weight: 700; padding: .15rem .5rem; border-radius: 3px; text-transform: uppercase; letter-spacing: .05em; margin-bottom: .5rem; display: inline-block; }
+    .prep-card-title { font-size: .92rem; font-weight: 700; line-height: 1.4; color: var(--ink); margin-bottom: .4rem; }
+    .prep-card-title a { color: inherit; }
+    .prep-card-title a:hover { color: #1a3a6b; }
+    .prep-card-meta { font-size: .72rem; color: var(--ink-muted); }
+
+    /* Sidebar widgets */
+    .edu-sidebar { display: flex; flex-direction: column; gap: 1.5rem; }
+    .edu-widget { background: #fff; border: 1.5px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .edu-widget-head { background: #1a3a6b; color: #fff; padding: .65rem 1rem; font-size: .82rem; font-weight: 700; letter-spacing: .03em; display: flex; align-items: center; gap: .4rem; }
+    .edu-widget-body { padding: .85rem 1rem; }
+
+    /* Quick links */
+    .quick-links { display: flex; flex-direction: column; gap: .45rem; }
+    .quick-link-item { display: flex; align-items: center; gap: .5rem; font-size: .82rem; padding: .5rem .6rem; border-radius: var(--radius-sm); border: 1px solid var(--border); transition: all .15s; background: #fafaf8; }
+    .quick-link-item:hover { background: #eff6ff; border-color: #1a3a6b; color: #1a3a6b; }
+    .quick-link-icon { font-size: 1rem; flex-shrink: 0; }
+    .quick-link-text { flex: 1; font-weight: 500; line-height: 1.3; }
+    .quick-link-arrow { color: var(--ink-muted); font-size: .75rem; }
+
+    /* Upcoming exams countdown */
+    .upcoming-list { display: flex; flex-direction: column; gap: .55rem; }
+    .upcoming-item { display: flex; gap: .65rem; align-items: flex-start; }
+    .upcoming-date { flex-shrink: 0; background: #1a3a6b; color: #fff; border-radius: var(--radius-sm); padding: .3rem .5rem; text-align: center; min-width: 44px; }
+    .upcoming-date .ud-day  { font-size: 1.1rem; font-weight: 800; line-height: 1; }
+    .upcoming-date .ud-mon  { font-size: .6rem; text-transform: uppercase; letter-spacing: .05em; opacity: .8; }
+    .upcoming-info { flex: 1; }
+    .upcoming-name { font-size: .82rem; font-weight: 600; color: var(--ink); line-height: 1.3; }
+    .upcoming-type { font-size: .7rem; color: var(--ink-muted); margin-top: .1rem; }
+
+    /* Loading skeleton */
+    .edu-skeleton-list { display: flex; flex-direction: column; gap: .75rem; }
+    .edu-skeleton-item { height: 80px; border-radius: var(--radius); background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%); background-size: 400% 100%; animation: shimmer 1.4s infinite; }
+    @keyframes shimmer { 0% { background-position: 100% 50%; } 100% { background-position: -100% 50%; } }
+
+    /* Alert banner */
+    .edu-alert { background: #fef9c3; border: 1.5px solid #fbbf24; border-radius: var(--radius); padding: .75rem 1rem; font-size: .82rem; display: flex; gap: .6rem; align-items: flex-start; margin-bottom: 1.5rem; }
+    .edu-alert strong { display: block; margin-bottom: .2rem; color: #854d0e; }
+    .edu-alert a { color: #1a3a6b; font-weight: 600; text-decoration: underline; }
+
+    /* Search results */
+    .search-results { display: none; }
+    .search-results.visible { display: block; }
+    .search-result-item { padding: .7rem .85rem; background: #fff; border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: .5rem; cursor: pointer; }
+    .search-result-item:hover { background: #eff6ff; border-color: #1a3a6b; }
+    .sri-name { font-size: .88rem; font-weight: 600; color: var(--ink); }
+    .sri-desc { font-size: .76rem; color: var(--ink-muted); margin-top: .15rem; }
+
+    /* Responsive */
+    @media(max-width: 600px) {
+      .portal-grid { grid-template-columns: 1fr; }
+      .exam-hub-grid { grid-template-columns: repeat(2, 1fr); }
+      .prep-grid { grid-template-columns: 1fr; }
+      .edu-hero-meta { gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header" id="siteHeader">
+  <div class="container header-inner">
+    <a href="/" class="logo">SfriTrav<span class="logo-dot">.</span>com</a>
+    <nav class="main-nav" id="mainNav">
+      <button class="nav-close-btn" id="navCloseBtn" aria-label="Close menu">
+        <span class="nav-close-icon">✕</span>
+      </button>
+      <ul class="nav-list">
+        <li><a href="/" class="nav-link">Home</a></li>
+        <li><a href="/pages/category.html?cat=india-news" class="nav-link">India</a></li>
+        <li><a href="/pages/education.html" class="nav-link active">Education</a></li>
+        <li><a href="/pages/category.html?cat=health" class="nav-link">Health</a></li>
+        <li><a href="/pages/category.html?cat=sports" class="nav-link">Sports</a></li>
+        <li><a href="/pages/category.html?cat=technology" class="nav-link">Tech</a></li>
+        <li><a href="/pages/category.html?cat=business" class="nav-link">Business</a></li>
+        <li><a href="/pages/category.html?cat=jobs" class="nav-link">Jobs</a></li>
+        <li><a href="/pages/search.html" class="nav-link" id="mobileSearchLink">🔍 Search</a></li>
+      </ul>
+    </nav>
+    <div class="header-actions">
+      <a href="/pages/search.html" class="btn-search" aria-label="Search">🔍</a>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="edu-hero">
+  <div class="container edu-hero-inner">
+    <nav class="breadcrumb" style="margin-bottom:.75rem"><a href="/" style="color:rgba(255,255,255,.6)">Home</a><span style="color:rgba(255,255,255,.4)">›</span><span>Education & Exams</span></nav>
+    <h1>📚 Education & Academics India</h1>
+    <p>Real-time exam notifications, results, admit cards, application forms and preparation guides for every government exam in India — Central &amp; State.</p>
+    <div class="edu-hero-meta">
+      <div class="edu-hero-stat"><strong>500+</strong><span>Exam Portals</span></div>
+      <div class="edu-hero-stat"><strong>36</strong><span>States Covered</span></div>
+      <div class="edu-hero-stat"><strong>Live</strong><span>Results &amp; Admit Cards</span></div>
+      <div class="edu-hero-stat"><strong>UPSC · NDA · SSB · PSC</strong><span>All major exams</span></div>
+    </div>
+    <!-- Search -->
+    <div class="edu-search-bar" id="eduSearchBar">
+      <span>🔍</span>
+      <input type="text" id="eduSearchInput" placeholder="Search exam, result, admit card, portal…" autocomplete="off">
+      <button onclick="performEduSearch()">Search</button>
+    </div>
+    <div class="search-results" id="searchResults"></div>
+  </div>
+</div>
+
+<!-- LIVE NEWS TICKER -->
+<div class="edu-ticker" id="eduTickerBar">
+  <div class="container">
+    <div class="edu-ticker-inner">
+      <span class="edu-ticker-label">⚡ Latest</span>
+      <div class="edu-ticker-track">
+        <div class="edu-ticker-items" id="eduTickerItems">
+          <span>Loading latest education updates…</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<main>
+  <div class="container" style="padding-top:2rem;padding-bottom:3rem">
+
+    <!-- Alert banner -->
+    <div class="edu-alert">
+      <span style="font-size:1.2rem">ℹ️</span>
+      <div>
+        <strong>Always verify from official portals before applying</strong>
+        All links below point to official government / authorised portals. Check notification dates carefully — SfriTrav aggregates information for discovery only.
+        <a href="#national-portals">Go to official portals →</a>
+      </div>
+    </div>
+
+    <!-- Filter tabs -->
+    <div class="edu-tabs" id="eduTabs">
+      <button class="edu-tab active" data-filter="all">All Updates</button>
+      <button class="edu-tab" data-filter="exam">📋 Exams</button>
+      <button class="edu-tab" data-filter="result">🏆 Results</button>
+      <button class="edu-tab" data-filter="admit">🎫 Admit Cards</button>
+      <button class="edu-tab" data-filter="bank">🏦 Banking</button>
+      <button class="edu-tab" data-filter="medical">🏥 Medical</button>
+      <button class="edu-tab" data-filter="defence">⚔️ Defence</button>
+      <button class="edu-tab" data-filter="psc">🏛️ State PSC</button>
+      <button class="edu-tab" data-filter="scholarship">🎓 Scholarships</button>
+      <button class="edu-tab" data-filter="tender">📄 Tenders</button>
+    </div>
+
+    <div class="edu-layout">
+      <!-- MAIN COLUMN -->
+      <div>
+
+        <!-- LIVE NEWS FEED -->
+        <section class="edu-section">
+          <div class="edu-section-head">
+            <div class="edu-section-title">
+              🔴 Live Education News
+              <span class="badge badge-live">Live</span>
+            </div>
+            <span style="font-size:.75rem;color:var(--ink-muted)" id="eduLastUpdated">Fetching…</span>
+          </div>
+          <div id="eduNewsFeed">
+            <div class="edu-skeleton-list">
+              <div class="edu-skeleton-item"></div>
+              <div class="edu-skeleton-item"></div>
+              <div class="edu-skeleton-item"></div>
+              <div class="edu-skeleton-item"></div>
+              <div class="edu-skeleton-item"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- COMPETITIVE EXAM HUB -->
+        <section class="edu-section">
+          <div class="edu-section-head">
+            <div class="edu-section-title">🎯 Competitive Exam Hub</div>
+          </div>
+          <div class="exam-hub-grid" id="examHubGrid">
+            <!-- Populated by JS -->
+          </div>
+        </section>
+
+        <!-- AD UNIT -->
+        <div style="margin:1.5rem 0;text-align:center" data-ad-zone="mid">
+          <div class="ad-placeholder"><span class="ad-label">Advertisement</span></div>
+        </div>
+
+        <!-- NATIONAL PORTALS -->
+        <section class="edu-section" id="national-portals">
+          <div class="edu-section-head">
+            <div class="edu-section-title">🇮🇳 National Exam Portals</div>
+          </div>
+          <div class="portal-grid" id="nationalPortals"></div>
+        </section>
+
+        <!-- STATE PSC / BOARDS -->
+        <section class="edu-section" id="state-portals">
+          <div class="edu-section-head">
+            <div class="edu-section-title">🏛️ State PSC &amp; Board Portals</div>
+          </div>
+          <!-- State filter -->
+          <div class="state-filter" id="stateFilter">
+            <button class="state-btn active" data-state="all">All States</button>
+          </div>
+          <div class="portal-grid" id="statePortals"></div>
+        </section>
+
+        <!-- RESULTS PORTALS -->
+        <section class="edu-section">
+          <div class="edu-section-head">
+            <div class="edu-section-title">🏆 Results &amp; Marksheet Portals</div>
+          </div>
+          <div class="portal-grid" id="resultsPortals"></div>
+        </section>
+
+        <!-- TENDERS & NOTICES -->
+        <section class="edu-section">
+          <div class="edu-section-head">
+            <div class="edu-section-title">📄 Tenders, Notices &amp; Circulars</div>
+          </div>
+          <div class="portal-grid" id="tendersPortals"></div>
+        </section>
+
+        <!-- SCHOLARSHIP PORTALS -->
+        <section class="edu-section">
+          <div class="edu-section-head">
+            <div class="edu-section-title">🎓 Scholarship Portals</div>
+          </div>
+          <div class="portal-grid" id="scholarshipPortals"></div>
+        </section>
+
+        <!-- EXAM PREP BLOGS -->
+        <section class="edu-section">
+          <div class="edu-section-head">
+            <div class="edu-section-title">📖 Exam Preparation Guides</div>
+            <a href="/pages/category.html?cat=education" class="edu-see-all">See All →</a>
+          </div>
+          <div class="prep-grid" id="prepGrid"></div>
+        </section>
+
+      </div><!-- /main col -->
+
+      <!-- SIDEBAR -->
+      <aside class="edu-sidebar">
+
+        <!-- Quick Portal Access -->
+        <div class="edu-widget">
+          <div class="edu-widget-head">⚡ Quick Portal Access</div>
+          <div class="edu-widget-body">
+            <div class="quick-links">
+              <a href="https://upsc.gov.in" target="_blank" rel="noopener" class="quick-link-item">
+                <span class="quick-link-icon">🏛️</span><span class="quick-link-text">UPSC — Civil Services</span><span class="quick-link-arrow">↗</span>
+              </a>
+              <a href="https://ssc.gov.in" target="_blank" rel="noopener" class="quick-link-item">
+                <span class="quick-link-icon">📋</span><span class="quick-link-text">SSC — CGL / CHSL / MTS</span><span class="quick-link-arrow">↗</span>
+              </a>
+              <a href="https://ibps.in" target="_blank" rel="noopener" class="quick-link-item">
+                <span class="quick-link-icon">🏦</span><span class="quick-link-text">IBPS — Bank PO / Clerk</span><span class="quick-link-arrow">↗</span>
+              </a>
+              <a href="https://nta.ac.in" target="_blank" rel="noopener" class="quick-link-item">
+                <span class="quick-link-icon">🧪</span><span class="quick-link-text">NTA — NEET / JEE / CUET</span><span class="quick-link-arrow">↗</span>
+              </a>
+              <a href="https://jkpsc.nic.in" target="_blank" rel="noopener" class="quick-link-item">
+                <span class="quick-link-icon">🏔️</span><span class="quick-link-text">JKPSC — J&amp;K Civil Services</span><span class="quick-link-arrow">↗</span>
+              </a>
+              <a href="https://jkssb.nic.in" target="_blank" rel="noopener" class="quick-link-item">
+                <span class="quick-link-icon">📝</span><span class="quick-link-text">JKSSB — J&amp;K Services Board</span><span class="quick-link-arrow">↗</span>
+              </a>
+              <a href="https://jkbopee.gov.in" target="_blank" rel="noopener" class="quick-link-item">
+                <span class="quick-link-icon">🏥</span><span class="quick-link-text">BOPEE — Medical J&amp;K</span><span class="quick-link-arrow">↗</span>
+              </a>
+              <a href="https://rrbcdg.gov.in" target="_blank" rel="noopener" class="quick-link-item">
+                <span class="quick-link-icon">🚂</span><span class="quick-link-text">Railway RRB / NTPC</span><span class="quick-link-arrow">↗</span>
+              </a>
+              <a href="https://scholarships.gov.in" target="_blank" rel="noopener" class="quick-link-item">
+                <span class="quick-link-icon">🎓</span><span class="quick-link-text">National Scholarship Portal</span><span class="quick-link-arrow">↗</span>
+              </a>
+              <a href="https://www.digilocker.gov.in" target="_blank" rel="noopener" class="quick-link-item">
+                <span class="quick-link-icon">📱</span><span class="quick-link-text">DigiLocker — Marksheets</span><span class="quick-link-arrow">↗</span>
+              </a>
+              <a href="https://results.nic.in" target="_blank" rel="noopener" class="quick-link-item">
+                <span class="quick-link-icon">🏆</span><span class="quick-link-text">NIC Results Portal</span><span class="quick-link-arrow">↗</span>
+              </a>
+              <a href="https://gem.gov.in" target="_blank" rel="noopener" class="quick-link-item">
+                <span class="quick-link-icon">📄</span><span class="quick-link-text">GeM — Govt Tenders</span><span class="quick-link-arrow">↗</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Upcoming Exams Calendar -->
+        <div class="edu-widget">
+          <div class="edu-widget-head">📅 Upcoming Exam Calendar</div>
+          <div class="edu-widget-body">
+            <div class="upcoming-list" id="upcomingList"></div>
+          </div>
+        </div>
+
+        <!-- Ad -->
+        <div class="edu-widget" data-ad-zone="sidebar">
+          <div class="ad-placeholder"><span class="ad-label">Advertisement</span></div>
+        </div>
+
+        <!-- Defence / SSB Widget -->
+        <div class="edu-widget">
+          <div class="edu-widget-head">⚔️ Defence Exam Portals</div>
+          <div class="edu-widget-body">
+            <div class="quick-links">
+              <a href="https://upsc.gov.in/examinations/nda-na" target="_blank" rel="noopener" class="quick-link-item">
+                <span class="quick-link-icon">🎖️</span><span class="quick-link-text">NDA I &amp; II — UPSC</span><span class="quick-link-arrow">↗</span>
+              </a>
+              <a href="https://upsc.gov.in/examinations/cds" target="_blank" rel="noopener" class="quick-link-item">
+                <span class="quick-link-icon">⚔️</span><span class="quick-link-text">CDS — UPSC Portal</span><span class="quick-link-arrow">↗</span>
+              </a>
+              <a href="https://afcat.cdac.in" target="_blank" rel="noopener" class="quick-link-item">
+                <span class="quick-link-icon">✈️</span><span class="quick-link-text">AFCAT — Air Force</span><span class="quick-link-arrow">↗</span>
+              </a>
+              <a href="https://joinindiannavy.gov.in" target="_blank" rel="noopener" class="quick-link-item">
+                <span class="quick-link-icon">⚓</span><span class="quick-link-text">Indian Navy — SSR/AA</span><span class="quick-link-arrow">↗</span>
+              </a>
+              <a href="https://joinindianarmy.nic.in" target="_blank" rel="noopener" class="quick-link-item">
+                <span class="quick-link-icon">🪖</span><span class="quick-link-text">Indian Army — Recruitment</span><span class="quick-link-arrow">↗</span>
+              </a>
+              <a href="https://ssbcrack.com" target="_blank" rel="noopener" class="quick-link-item">
+                <span class="quick-link-icon">💪</span><span class="quick-link-text">SSB Prep — Strategy Guide</span><span class="quick-link-arrow">↗</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Medical Entrance -->
+        <div class="edu-widget">
+          <div class="edu-widget-head">🏥 Medical &amp; Healthcare Exams</div>
+          <div class="edu-widget-body">
+            <div class="quick-links">
+              <a href="https://nta.ac.in" target="_blank" rel="noopener" class="quick-link-item">
+                <span class="quick-link-icon">🧬</span><span class="quick-link-text">NEET UG — NTA Portal</span><span class="quick-link-arrow">↗</span>
+              </a>
+              <a href="https://natboard.edu.in" target="_blank" rel="noopener" class="quick-link-item">
+                <span class="quick-link-icon">🩺</span><span class="quick-link-text">NEET PG — NBE Portal</span><span class="quick-link-arrow">↗</span>
+              </a>
+              <a href="https://aiapget.nta.nic.in" target="_blank" rel="noopener" class="quick-link-item">
+                <span class="quick-link-icon">🌿</span><span class="quick-link-text">AIAPGET — Ayush PG</span><span class="quick-link-arrow">↗</span>
+              </a>
+              <a href="https://esic.gov.in/careers" target="_blank" rel="noopener" class="quick-link-item">
+                <span class="quick-link-icon">🏥</span><span class="quick-link-text">ESIC Medical / Para-Medical</span><span class="quick-link-arrow">↗</span>
+              </a>
+              <a href="https://jkbopee.gov.in" target="_blank" rel="noopener" class="quick-link-item">
+                <span class="quick-link-icon">🏔️</span><span class="quick-link-text">BOPEE J&amp;K Medical</span><span class="quick-link-arrow">↗</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Second ad -->
+        <div class="edu-widget" data-ad-zone="sidebar2">
+          <div class="ad-placeholder"><span class="ad-label">Advertisement</span></div>
+        </div>
+
+      </aside>
+    </div><!-- /edu-layout -->
+  </div><!-- /container -->
+</main>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="/" class="logo" style="color:#fff">SfriTrav<span class="logo-dot">.</span>com</a>
+        <p>Your complete daily read — news, health, travel, sports, education and more. Independent journalism from India.</p>
+        <div class="footer-social">
+          <a href="#" class="social-btn" aria-label="Facebook">📘</a>
+          <a href="#" class="social-btn" aria-label="Instagram">📸</a>
+          <a href="#" class="social-btn" aria-label="YouTube">▶️</a>
+          <a href="#" class="social-btn" aria-label="Twitter">🐦</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Education Portals</h4>
+        <ul>
+          <li><a href="https://upsc.gov.in" target="_blank" rel="noopener">UPSC Official</a></li>
+          <li><a href="https://ssc.gov.in" target="_blank" rel="noopener">SSC Official</a></li>
+          <li><a href="https://ibps.in" target="_blank" rel="noopener">IBPS Banking</a></li>
+          <li><a href="https://nta.ac.in" target="_blank" rel="noopener">NTA — NEET/JEE</a></li>
+          <li><a href="https://jkpsc.nic.in" target="_blank" rel="noopener">JKPSC</a></li>
+          <li><a href="https://jkssb.nic.in" target="_blank" rel="noopener">JKSSB</a></li>
+          <li><a href="https://scholarships.gov.in" target="_blank" rel="noopener">Scholarships</a></li>
+          <li><a href="https://results.nic.in" target="_blank" rel="noopener">NIC Results</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Categories</h4>
+        <ul>
+          <li><a href="/pages/education.html">Education & Exams</a></li>
+          <li><a href="/pages/category.html?cat=jobs">Jobs in India</a></li>
+          <li><a href="/pages/category.html?cat=india-news">India News</a></li>
+          <li><a href="/pages/category.html?cat=health">Health</a></li>
+          <li><a href="/pages/category.html?cat=technology">Technology</a></li>
+          <li><a href="/pages/category.html?cat=business">Business</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="/pages/about.html">About Us</a></li>
+          <li><a href="/pages/contact.html">Contact</a></li>
+          <li><a href="/privacy-policy.html">Privacy Policy</a></li>
+          <li><a href="/terms.html">Terms of Service</a></li>
+          <li><a href="/disclaimer.html">Disclaimer</a></li>
+          <li><a href="/sitemap.xml">Sitemap</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; <span class="footer-year"></span> SfriTrav.com — All rights reserved. Made in India 🇮🇳</p>
+      <p><a href="/privacy-policy.html">Privacy</a> · <a href="/terms.html">Terms</a> · <a href="/disclaimer.html">Disclaimer</a></p>
+    </div>
+  </div>
+</footer>
+
+<button class="back-top" id="backTop" aria-label="Back to top">↑</button>
+
+<script src="/public/js/app.js" defer></script>
+<script src="/public/js/ads.js" defer></script>
+<script>
+/* ====================================================================
+   EDUCATION PAGE — Main Controller
+   ==================================================================== */
+(function() {
+  'use strict';
+
+  const NOW = new Date();
+  const CY  = NOW.getFullYear();
+
+  // ── EXAM HUB DATA ────────────────────────────────────────────────
+  const EXAM_HUB = [
+    { name:'UPSC CSE',        icon:'🏛️', type:'Central', url:'https://upsc.gov.in',                       status:'ongoing', statusText:'Applications Open',  date:'Prelims Jun 2026' },
+    { name:'SSC CGL',         icon:'📋', type:'Central', url:'https://ssc.gov.in',                        status:'soon',    statusText:'Notification Soon',  date:'Tier I Aug 2026' },
+    { name:'IBPS PO',         icon:'🏦', type:'Banking', url:'https://ibps.in',                           status:'soon',    statusText:'Cycle XIV Soon',     date:'Oct–Nov 2026' },
+    { name:'NEET UG',         icon:'🧬', type:'Medical', url:'https://nta.ac.in',                         status:'result',  statusText:'Results Declared',   date:'May 2026' },
+    { name:'JEE Main',        icon:'⚙️', type:'Engg PG', url:'https://nta.ac.in',                         status:'result',  statusText:'Session II Result',  date:'Apr 2026' },
+    { name:'NDA II 2026',     icon:'🎖️', type:'Defence', url:'https://upsc.gov.in/examinations/nda-na',  status:'soon',    statusText:'Notification Jun',   date:'Sep 2026' },
+    { name:'CDS II 2026',     icon:'⚔️', type:'Defence', url:'https://upsc.gov.in/examinations/cds',     status:'soon',    statusText:'Notification Jul',   date:'Nov 2026' },
+    { name:'AFCAT 02/2026',   icon:'✈️', type:'Defence', url:'https://afcat.cdac.in',                    status:'ongoing', statusText:'Apply Now',          date:'Aug 2026' },
+    { name:'JKPSC KAS',       icon:'🏔️', type:'J&K PSC', url:'https://jkpsc.nic.in',                     status:'ongoing', statusText:'Check Notification', date:'2026' },
+    { name:'JKSSB Posts',     icon:'📝', type:'J&K SSB', url:'https://jkssb.nic.in',                     status:'ongoing', statusText:'Various Posts',      date:'Rolling' },
+    { name:'GATE 2027',       icon:'🔬', type:'PG Engg', url:'https://gate.iitd.ac.in',                  status:'soon',    statusText:'Reg. Aug 2026',      date:'Feb 2027' },
+    { name:'UGC NET',         icon:'🎓', type:'Academic',url:'https://ugcnet.nta.nic.in',                status:'result',  statusText:'Dec Cycle Result',   date:'Jun 2026' },
+    { name:'CAT 2026',        icon:'📊', type:'MBA',     url:'https://iimcat.ac.in',                      status:'soon',    statusText:'Reg. Aug 2026',      date:'Nov 2026' },
+    { name:'CLAT 2027',       icon:'⚖️', type:'Law',     url:'https://consortiumofnlus.ac.in',            status:'soon',    statusText:'Applications Open',  date:'Dec 2026' },
+    { name:'RRB NTPC',        icon:'🚂', type:'Railway', url:'https://rrbcdg.gov.in',                     status:'ongoing', statusText:'Stage II Ongoing',   date:'2026' },
+    { name:'NEET PG',         icon:'🩺', type:'Medical', url:'https://natboard.edu.in',                   status:'soon',    statusText:'Registration Soon',  date:'Jul 2026' },
+  ];
+
+  // ── UPCOMING EXAM CALENDAR ───────────────────────────────────────
+  const UPCOMING = [
+    { day:'15', mon:'Jun', name:'UPSC CSE Prelims 2026',       type:'Central Govt' },
+    { day:'20', mon:'Jun', name:'SSC CHSL Tier I Begins',      type:'Staff Selection' },
+    { day:'01', mon:'Jul', name:'IBPS RRB Notification',       type:'Banking' },
+    { day:'10', mon:'Jul', name:'NDA II 2026 Notification',    type:'Defence / UPSC' },
+    { day:'25', mon:'Jul', name:'JKPSC Combined Services',     type:'J&K PSC' },
+    { day:'03', mon:'Aug', name:'GATE 2027 Registration Opens',type:'IIT Delhi' },
+    { day:'15', mon:'Aug', name:'CAT 2026 Registration',       type:'IIM MBA' },
+    { day:'01', mon:'Sep', name:'NDA II Exam Date',            type:'UPSC Defence' },
+    { day:'18', mon:'Oct', name:'IBPS PO Prelims',             type:'Banking' },
+    { day:'30', mon:'Nov', name:'CAT 2026 Exam',               type:'IIM Ahmedabad' },
+  ];
+
+  // ── PREP BLOG ARTICLES ───────────────────────────────────────────
+  const PREP_ARTICLES = [
+    { tag:'UPSC', tagClass:'edu-tag-psc', emoji:'🏛️', title:'UPSC CSE 2026 Complete Preparation Strategy — Prelims to Mains', link:'/pages/article.html?slug=upsc-cse-2026-complete-strategy', meta:'8 min read · Strategy Guide' },
+    { tag:'SSB',  tagClass:'edu-tag-defence', emoji:'🎖️', title:'SSB Interview 5-Day Process — PPDT, Psychological Tests, GTO & Conference Tips', link:'/pages/article.html?slug=ssb-interview-complete-guide', meta:'12 min read · Defence' },
+    { tag:'BANK', tagClass:'edu-tag-bank', emoji:'🏦', title:'IBPS PO 2026 — Section-wise Preparation Plan with Free Resources', link:'/pages/article.html?slug=ibps-po-2026-preparation-plan', meta:'7 min read · Banking' },
+    { tag:'NEET', tagClass:'edu-tag-medical', emoji:'🧬', title:'NEET UG 2026 Biology High-Yield Topics — Last 10 Years Analysis', link:'/pages/article.html?slug=neet-ug-2026-biology-high-yield', meta:'9 min read · Medical' },
+    { tag:'JKPSC',tagClass:'edu-tag-psc', emoji:'🏔️', title:'JKPSC KAS 2026 — Syllabus Breakdown, Books and Study Schedule', link:'/pages/article.html?slug=jkpsc-kas-2026-complete-guide', meta:'10 min read · J&K PSC' },
+    { tag:'NDA',  tagClass:'edu-tag-defence', emoji:'⚔️', title:'NDA 2026 Maths & GAT — Topic-wise Marks Weightage and Practice Strategy', link:'/pages/article.html?slug=nda-2026-maths-gat-strategy', meta:'8 min read · NDA' },
+  ];
+
+  // ── TYPE → EMOJI MAPPING ─────────────────────────────────────────
+  const TYPE_EMOJI  = { exam:'📋', result:'🏆', admit:'🎫', bank:'🏦', medical:'🏥', defence:'🎖️', psc:'🏛️', scholarship:'🎓', tender:'📄', notice:'📌', academic:'🎓', general:'📰' };
+  const TYPE_CLASS  = { exam:'nt-exam', result:'nt-result', admit:'nt-admit', bank:'nt-bank', medical:'nt-medical', defence:'nt-medical', psc:'nt-exam', scholarship:'nt-result', tender:'nt-general', notice:'nt-general', academic:'nt-result', general:'nt-general' };
+  const TYPE_TAGCLS = { exam:'edu-tag-exam', result:'edu-tag-result', admit:'edu-tag-admit', bank:'edu-tag-bank', medical:'edu-tag-medical', defence:'edu-tag-defence', psc:'edu-tag-psc', scholarship:'edu-tag-scholarship', tender:'edu-tag-tender', notice:'edu-tag-notice', academic:'edu-tag-academic', general:'' };
+
+  // ── DETECT ARTICLE TYPE FROM TITLE ──────────────────────────────
+  function detectType(title, rawType) {
+    const t = title.toLowerCase();
+    if (/admit card|hall ticket|call letter/.test(t)) return 'admit';
+    if (/result|cut.?off|merit list|score card/.test(t)) return 'result';
+    if (/scholarship|fellowship|stipend/.test(t)) return 'scholarship';
+    if (/ibps|sbi|rbi|nabard|bank/.test(t)) return 'bank';
+    if (/neet|aiims|mbbs|bds|medical|nursing/.test(t)) return 'medical';
+    if (/nda|cds|afcat|army|navy|air force|ssb|crpf|bsf|cisf/.test(t)) return 'defence';
+    if (/psc|state service|ias|ips|ifs|civil service/.test(t)) return 'psc';
+    if (/tender|bid|procurement|eprocure/.test(t)) return 'tender';
+    if (/circular|notice|notification|gazette/.test(t)) return 'notice';
+    if (/upsc|ssc|rrb|railway|ntpc/.test(t)) return 'exam';
+    return rawType || 'general';
+  }
+
+  // ── RENDER NEWS FEED ─────────────────────────────────────────────
+  let _allNews = [];
+  let _activeFilter = 'all';
+
+  function newsItemHTML(item) {
+    const type  = detectType(item.title, item.type);
+    const emoji = TYPE_EMOJI[type] || '📰';
+    const tc    = TYPE_CLASS[type] || 'nt-general';
+    const tagC  = TYPE_TAGCLS[type] || '';
+    const link  = item.link ? `<a href="${item.link}" target="_blank" rel="noopener nofollow">${item.title}</a>` : item.title;
+    return `<div class="edu-news-item" data-type="${type}">
+      <div class="edu-news-type ${tc}">${emoji}</div>
+      <div class="edu-news-body">
+        <div class="edu-news-title">${link}</div>
+        <div class="edu-news-meta">
+          <span class="edu-news-src">${item.src || 'Education News'}</span>
+          <span class="edu-news-tag ${tagC}">${type.toUpperCase()}</span>
+          ${item.pubDate ? `<span>${new Date(item.pubDate).toLocaleDateString('en-IN',{day:'numeric',month:'short'}) || ''}</span>` : ''}
+        </div>
+      </div>
+    </div>`;
+  }
+
+  function renderNewsFeed(filter) {
+    const el = document.getElementById('eduNewsFeed');
+    if (!el) return;
+    const data = filter === 'all' ? _allNews : _allNews.filter(n => detectType(n.title, n.type) === filter);
+    if (!data.length) { el.innerHTML = '<p style="color:var(--ink-muted);font-size:.85rem;padding:1rem 0">No updates found for this filter. Try "All Updates".</p>'; return; }
+    el.innerHTML = '<div class="edu-news-list">' + data.slice(0, 30).map(newsItemHTML).join('') + '</div>';
+  }
+
+  // ── RENDER TICKER ────────────────────────────────────────────────
+  function renderTicker(news) {
+    const el = document.getElementById('eduTickerItems');
+    if (!el || !news.length) return;
+    const items = news.slice(0, 20);
+    const doubled = [...items, ...items];
+    el.innerHTML = doubled.map(n => {
+      const type = detectType(n.title, n.type);
+      const link = n.link ? `<a href="${n.link}" target="_blank" rel="noopener nofollow">${n.title}</a>` : n.title;
+      return `<span>${TYPE_EMOJI[type] || '📋'} ${link}</span><span class="edu-tick-sep"> · </span>`;
+    }).join('');
+    // RAF scroll
+    let pos = 0;
+    const track = el;
+    function tick() {
+      pos -= 0.6;
+      const half = track.scrollWidth / 2;
+      if (Math.abs(pos) >= half) pos = 0;
+      track.style.transform = `translateX(${pos}px)`;
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  // ── RENDER EXAM HUB ──────────────────────────────────────────────
+  function renderExamHub() {
+    const el = document.getElementById('examHubGrid');
+    if (!el) return;
+    el.innerHTML = EXAM_HUB.map(e => `
+      <a href="${e.url}" target="_blank" rel="noopener" class="exam-hub-card">
+        <div class="exam-hub-icon">${e.icon}</div>
+        <div class="exam-hub-name">${e.name}</div>
+        <div class="exam-hub-date">${e.date}</div>
+        <span class="exam-hub-status status-${e.status}">${e.statusText}</span>
+      </a>`).join('');
+  }
+
+  // ── RENDER PORTALS ───────────────────────────────────────────────
+  function portalCardHTML(p) {
+    return `<div class="portal-card">
+      <div class="portal-card-top">
+        <div class="portal-name">${p.name}</div>
+        ${p.state ? `<span class="portal-state">${p.state}</span>` : ''}
+      </div>
+      <div class="portal-desc">${p.desc}</div>
+      <a class="portal-link" href="${p.url}" target="_blank" rel="noopener nofollow">Visit Portal</a>
+    </div>`;
+  }
+
+  function renderPortals(portals) {
+    const np = document.getElementById('nationalPortals');
+    const sp = document.getElementById('statePortals');
+    const rp = document.getElementById('resultsPortals');
+    const tp = document.getElementById('tendersPortals');
+    const scP= document.getElementById('scholarshipPortals');
+    const sf = document.getElementById('stateFilter');
+
+    if (np) np.innerHTML = portals.national.map(portalCardHTML).join('');
+    if (rp) rp.innerHTML = portals.results.map(portalCardHTML).join('');
+    if (tp) tp.innerHTML = portals.tenders_notices.map(portalCardHTML).join('');
+    if (scP) scP.innerHTML = portals.scholarship.map(portalCardHTML).join('');
+
+    // State portals with filter
+    const states = ['all', ...new Set(portals.state.map(p => p.state))].sort();
+    if (sf) {
+      sf.innerHTML = states.map(s => `<button class="state-btn${s==='all'?' active':''}" data-state="${s}">${s === 'all' ? 'All States' : s}</button>`).join('');
+      sf.querySelectorAll('.state-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          sf.querySelectorAll('.state-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const st = btn.dataset.state;
+          const filtered = st === 'all' ? portals.state : portals.state.filter(p => p.state === st);
+          if (sp) sp.innerHTML = filtered.map(portalCardHTML).join('');
+        });
+      });
+    }
+    if (sp) sp.innerHTML = portals.state.map(portalCardHTML).join('');
+  }
+
+  // ── RENDER UPCOMING CALENDAR ─────────────────────────────────────
+  function renderUpcoming() {
+    const el = document.getElementById('upcomingList');
+    if (!el) return;
+    el.innerHTML = UPCOMING.map(u => `
+      <div class="upcoming-item">
+        <div class="upcoming-date"><div class="ud-day">${u.day}</div><div class="ud-mon">${u.mon}</div></div>
+        <div class="upcoming-info"><div class="upcoming-name">${u.name}</div><div class="upcoming-type">${u.type}</div></div>
+      </div>`).join('');
+  }
+
+  // ── RENDER PREP ARTICLES ─────────────────────────────────────────
+  function renderPrepArticles() {
+    const el = document.getElementById('prepGrid');
+    if (!el) return;
+    el.innerHTML = PREP_ARTICLES.map(a => `
+      <div class="prep-card">
+        <div class="prep-card-img">${a.emoji}</div>
+        <div class="prep-card-body">
+          <span class="prep-card-tag ${a.tagClass}">${a.tag}</span>
+          <div class="prep-card-title"><a href="${a.link}">${a.title}</a></div>
+          <div class="prep-card-meta">${a.meta}</div>
+        </div>
+      </div>`).join('');
+  }
+
+  // ── SEARCH ───────────────────────────────────────────────────────
+  let _allPortals = [];
+  function buildPortalIndex(portals) {
+    _allPortals = [
+      ...portals.national,
+      ...portals.state,
+      ...portals.results,
+      ...portals.tenders_notices,
+      ...portals.scholarship,
+    ];
+  }
+
+  window.performEduSearch = function() {
+    const q = document.getElementById('eduSearchInput').value.trim().toLowerCase();
+    const el = document.getElementById('searchResults');
+    if (!q || q.length < 2) { el.classList.remove('visible'); return; }
+
+    // Search portals
+    const pMatch = _allPortals.filter(p =>
+      p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q) ||
+      (p.state && p.state.toLowerCase().includes(q)) || (p.type && p.type.toLowerCase().includes(q))
+    ).slice(0, 8);
+
+    // Search news
+    const nMatch = _allNews.filter(n => n.title.toLowerCase().includes(q)).slice(0, 5);
+
+    if (!pMatch.length && !nMatch.length) {
+      el.innerHTML = '<div class="search-result-item"><div class="sri-name">No results found</div><div class="sri-desc">Try searching "UPSC", "JKPSC", "result", "admit card", your state name…</div></div>';
+      el.classList.add('visible'); return;
+    }
+
+    let html = '';
+    if (pMatch.length) {
+      html += pMatch.map(p => `<a href="${p.url}" target="_blank" rel="noopener" class="search-result-item" style="display:block">
+        <div class="sri-name">🔗 ${p.name}${p.state ? ' — '+p.state : ''}</div>
+        <div class="sri-desc">${p.desc}</div>
+      </a>`).join('');
+    }
+    if (nMatch.length) {
+      html += nMatch.map(n => {
+        const link = n.link ? `<a href="${n.link}" target="_blank" rel="noopener" class="search-result-item" style="display:block">` : `<div class="search-result-item">`;
+        const end  = n.link ? `</a>` : `</div>`;
+        return `${link}<div class="sri-name">📰 ${n.title}</div><div class="sri-desc">${n.src}</div>${end}`;
+      }).join('');
+    }
+    el.innerHTML = html;
+    el.classList.add('visible');
+  };
+
+  document.getElementById('eduSearchInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') window.performEduSearch();
+    if (e.key === 'Escape') { document.getElementById('searchResults').classList.remove('visible'); }
+  });
+  document.addEventListener('click', e => {
+    if (!e.target.closest('#eduSearchBar') && !e.target.closest('#searchResults')) {
+      document.getElementById('searchResults').classList.remove('visible');
+    }
+  });
+
+  // ── FILTER TABS ──────────────────────────────────────────────────
+  document.getElementById('eduTabs').addEventListener('click', e => {
+    const tab = e.target.closest('.edu-tab');
+    if (!tab) return;
+    document.querySelectorAll('.edu-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    _activeFilter = tab.dataset.filter;
+    renderNewsFeed(_activeFilter);
+  });
+
+  // ── FETCH EDUCATION API ──────────────────────────────────────────
+  async function loadEducationData() {
+    try {
+      const res  = await fetch('/api/education-news');
+      const data = await res.json();
+
+      if (data.news && data.news.length) {
+        _allNews = data.news;
+        renderTicker(data.news);
+        renderNewsFeed(_activeFilter);
+        const ts = document.getElementById('eduLastUpdated');
+        if (ts) ts.textContent = `Updated ${new Date(data.fetchedAt).toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit'})}`;
+      } else {
+        document.getElementById('eduNewsFeed').innerHTML = '<p style="color:var(--ink-muted);font-size:.85rem;padding:1rem 0">Live feed temporarily unavailable. Browse portals below for direct access.</p>';
+      }
+
+      if (data.portals) {
+        buildPortalIndex(data.portals);
+        renderPortals(data.portals);
+      }
+    } catch(e) {
+      document.getElementById('eduNewsFeed').innerHTML = '<p style="color:var(--ink-muted);font-size:.85rem;padding:1rem 0">Could not load live feed. Browse official portals below for direct access.</p>';
+      // Still render static portals from the PORTALS object embedded in the API
+      // by fetching again or using fallback
+    }
+  }
+
+  // ── INIT ─────────────────────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', function() {
+    renderExamHub();
+    renderUpcoming();
+    renderPrepArticles();
+    loadEducationData();
+
+    // Footer year
+    document.querySelectorAll('.footer-year').forEach(el => el.textContent = new Date().getFullYear());
+
+    // Hamburger
+    const ham = document.getElementById('hamburger');
+    const nav = document.getElementById('mainNav');
+    const closeBtn = document.getElementById('navCloseBtn');
+    if (ham && nav) {
+      ham.addEventListener('click', () => { nav.classList.toggle('open'); ham.classList.toggle('active'); ham.setAttribute('aria-expanded', nav.classList.contains('open')); document.body.style.overflow = nav.classList.contains('open') ? 'hidden' : ''; });
+      if (closeBtn) closeBtn.addEventListener('click', () => { nav.classList.remove('open'); ham.classList.remove('active'); ham.setAttribute('aria-expanded', 'false'); document.body.style.overflow = ''; });
+    }
+
+    // Back to top
+    const btt = document.getElementById('backTop');
+    if (btt) { window.addEventListener('scroll', () => btt.classList.toggle('visible', scrollY > 400), {passive:true}); btt.addEventListener('click', e => { e.preventDefault(); scrollTo({top:0,behavior:'smooth'}); }); }
+
+    // Sticky header
+    const header = document.getElementById('siteHeader');
+    if (header) window.addEventListener('scroll', () => header.classList.toggle('scrolled', scrollY > 50), {passive:true});
+  });
+
+})();
+</script>
+</body>
+</html>
