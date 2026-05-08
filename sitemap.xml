@@ -10,175 +10,175 @@
 
   <!-- Education & Exams — Priority Page -->
   <url>
-    <loc>https://sfritrav.com/pages/education.html</loc>
+    <loc>https://sfritrav.com/pages/education</loc>
     <changefreq>hourly</changefreq>
     <priority>0.95</priority>
   </url>
 
   <!-- Core pages -->
   <url>
-    <loc>https://sfritrav.com/pages/article.html</loc>
+    <loc>https://sfritrav.com/pages/article</loc>
     <changefreq>hourly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://sfritrav.com/pages/search.html</loc>
+    <loc>https://sfritrav.com/pages/search</loc>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
 
   <!-- Category pages -->
   <url>
-    <loc>https://sfritrav.com/pages/category.html?cat=education</loc>
+    <loc>https://sfritrav.com/pages/category?cat=education</loc>
     <changefreq>hourly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://sfritrav.com/pages/category.html?cat=india-news</loc>
+    <loc>https://sfritrav.com/pages/category?cat=india-news</loc>
     <changefreq>hourly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://sfritrav.com/pages/category.html?cat=health</loc>
+    <loc>https://sfritrav.com/pages/category?cat=health</loc>
     <changefreq>daily</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://sfritrav.com/pages/category.html?cat=sports</loc>
+    <loc>https://sfritrav.com/pages/category?cat=sports</loc>
     <changefreq>hourly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://sfritrav.com/pages/category.html?cat=technology</loc>
+    <loc>https://sfritrav.com/pages/category?cat=technology</loc>
     <changefreq>daily</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://sfritrav.com/pages/category.html?cat=business</loc>
+    <loc>https://sfritrav.com/pages/category?cat=business</loc>
     <changefreq>daily</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://sfritrav.com/pages/category.html?cat=jobs</loc>
+    <loc>https://sfritrav.com/pages/category?cat=jobs</loc>
     <changefreq>daily</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://sfritrav.com/pages/category.html?cat=global-news</loc>
+    <loc>https://sfritrav.com/pages/category?cat=global-news</loc>
     <changefreq>hourly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://sfritrav.com/pages/category.html?cat=entertainment</loc>
+    <loc>https://sfritrav.com/pages/category?cat=entertainment</loc>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://sfritrav.com/pages/category.html?cat=women-health</loc>
+    <loc>https://sfritrav.com/pages/category?cat=women-health</loc>
     <changefreq>daily</changefreq>
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://sfritrav.com/pages/category.html?cat=men-health</loc>
+    <loc>https://sfritrav.com/pages/category?cat=men-health</loc>
     <changefreq>daily</changefreq>
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://sfritrav.com/pages/category.html?cat=mental-health</loc>
+    <loc>https://sfritrav.com/pages/category?cat=mental-health</loc>
     <changefreq>daily</changefreq>
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://sfritrav.com/pages/category.html?cat=food</loc>
+    <loc>https://sfritrav.com/pages/category?cat=food</loc>
     <changefreq>daily</changefreq>
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://sfritrav.com/pages/category.html?cat=travel</loc>
+    <loc>https://sfritrav.com/pages/category?cat=travel</loc>
     <changefreq>daily</changefreq>
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://sfritrav.com/pages/category.html?cat=fashion</loc>
+    <loc>https://sfritrav.com/pages/category?cat=fashion</loc>
     <changefreq>daily</changefreq>
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://sfritrav.com/pages/category.html?cat=environment</loc>
+    <loc>https://sfritrav.com/pages/category?cat=environment</loc>
     <changefreq>daily</changefreq>
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://sfritrav.com/pages/category.html?cat=ayurveda</loc>
+    <loc>https://sfritrav.com/pages/category?cat=ayurveda</loc>
     <changefreq>daily</changefreq>
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://sfritrav.com/pages/category.html?cat=kids</loc>
+    <loc>https://sfritrav.com/pages/category?cat=kids</loc>
     <changefreq>daily</changefreq>
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://sfritrav.com/pages/category.html?cat=politics</loc>
+    <loc>https://sfritrav.com/pages/category?cat=politics</loc>
     <changefreq>hourly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <!-- Education article slugs (high SEO value) -->
   <url>
-    <loc>https://sfritrav.com/pages/article.html?slug=upsc-cse-2026-complete-strategy</loc>
+    <loc>https://sfritrav.com/pages/article?slug=upsc-cse-2026-complete-strategy</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://sfritrav.com/pages/article.html?slug=jkpsc-kas-2026-complete-guide</loc>
+    <loc>https://sfritrav.com/pages/article?slug=jkpsc-kas-2026-complete-guide</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://sfritrav.com/pages/article.html?slug=ssb-interview-complete-guide</loc>
+    <loc>https://sfritrav.com/pages/article?slug=ssb-interview-complete-guide</loc>
     <changefreq>monthly</changefreq>
     <priority>0.88</priority>
   </url>
   <url>
-    <loc>https://sfritrav.com/pages/article.html?slug=ibps-po-2026-preparation-plan</loc>
+    <loc>https://sfritrav.com/pages/article?slug=ibps-po-2026-preparation-plan</loc>
     <changefreq>monthly</changefreq>
     <priority>0.88</priority>
   </url>
   <url>
-    <loc>https://sfritrav.com/pages/article.html?slug=neet-ug-2026-biology-high-yield</loc>
+    <loc>https://sfritrav.com/pages/article?slug=neet-ug-2026-biology-high-yield</loc>
     <changefreq>monthly</changefreq>
     <priority>0.88</priority>
   </url>
   <url>
-    <loc>https://sfritrav.com/pages/article.html?slug=nda-2026-maths-gat-strategy</loc>
+    <loc>https://sfritrav.com/pages/article?slug=nda-2026-maths-gat-strategy</loc>
     <changefreq>monthly</changefreq>
     <priority>0.88</priority>
   </url>
 
   <!-- Policy / Legal pages -->
   <url>
-    <loc>https://sfritrav.com/privacy-policy.html</loc>
+    <loc>https://sfritrav.com/privacy-policy</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://sfritrav.com/terms.html</loc>
+    <loc>https://sfritrav.com/terms</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://sfritrav.com/disclaimer.html</loc>
+    <loc>https://sfritrav.com/disclaimer</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://sfritrav.com/pages/about.html</loc>
+    <loc>https://sfritrav.com/pages/about</loc>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://sfritrav.com/pages/contact.html</loc>
+    <loc>https://sfritrav.com/pages/contact</loc>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>

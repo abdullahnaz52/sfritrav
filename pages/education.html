@@ -12,7 +12,7 @@
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://sfritrav.com/images/og-education.jpg">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="canonical" href="https://sfritrav.com/pages/education.html">
+  <link rel="canonical" href="https://sfritrav.com/pages/education">
   <meta name="google-adsense-account" content="ca-pub-7815915531609481">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7815915531609481" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="/public/css/style.css">
@@ -218,18 +218,18 @@
       </button>
       <ul class="nav-list">
         <li><a href="/" class="nav-link">Home</a></li>
-        <li><a href="/pages/category.html?cat=india-news" class="nav-link">India</a></li>
-        <li><a href="/pages/education.html" class="nav-link active">Education</a></li>
-        <li><a href="/pages/category.html?cat=health" class="nav-link">Health</a></li>
-        <li><a href="/pages/category.html?cat=sports" class="nav-link">Sports</a></li>
-        <li><a href="/pages/category.html?cat=technology" class="nav-link">Tech</a></li>
-        <li><a href="/pages/category.html?cat=business" class="nav-link">Business</a></li>
-        <li><a href="/pages/category.html?cat=jobs" class="nav-link">Jobs</a></li>
-        <li><a href="/pages/search.html" class="nav-link" id="mobileSearchLink">🔍 Search</a></li>
+        <li><a href="/pages/category?cat=india-news" class="nav-link">India</a></li>
+        <li><a href="/pages/education" class="nav-link active">Education</a></li>
+        <li><a href="/pages/category?cat=health" class="nav-link">Health</a></li>
+        <li><a href="/pages/category?cat=sports" class="nav-link">Sports</a></li>
+        <li><a href="/pages/category?cat=technology" class="nav-link">Tech</a></li>
+        <li><a href="/pages/category?cat=business" class="nav-link">Business</a></li>
+        <li><a href="/pages/category?cat=jobs" class="nav-link">Jobs</a></li>
+        <li><a href="/pages/search" class="nav-link" id="mobileSearchLink">🔍 Search</a></li>
       </ul>
     </nav>
     <div class="header-actions">
-      <a href="/pages/search.html" class="btn-search" aria-label="Search">🔍</a>
+      <a href="/pages/search" class="btn-search" aria-label="Search">🔍</a>
       <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
     </div>
   </div>
@@ -385,7 +385,7 @@
         <section class="edu-section">
           <div class="edu-section-head">
             <div class="edu-section-title">📖 Exam Preparation Guides</div>
-            <a href="/pages/category.html?cat=education" class="edu-see-all">See All →</a>
+            <a href="/pages/category?cat=education" class="edu-see-all">See All →</a>
           </div>
           <div class="prep-grid" id="prepGrid"></div>
         </section>
@@ -544,29 +544,29 @@
       <div class="footer-col">
         <h4>Categories</h4>
         <ul>
-          <li><a href="/pages/education.html">Education & Exams</a></li>
-          <li><a href="/pages/category.html?cat=jobs">Jobs in India</a></li>
-          <li><a href="/pages/category.html?cat=india-news">India News</a></li>
-          <li><a href="/pages/category.html?cat=health">Health</a></li>
-          <li><a href="/pages/category.html?cat=technology">Technology</a></li>
-          <li><a href="/pages/category.html?cat=business">Business</a></li>
+          <li><a href="/pages/education">Education & Exams</a></li>
+          <li><a href="/pages/category?cat=jobs">Jobs in India</a></li>
+          <li><a href="/pages/category?cat=india-news">India News</a></li>
+          <li><a href="/pages/category?cat=health">Health</a></li>
+          <li><a href="/pages/category?cat=technology">Technology</a></li>
+          <li><a href="/pages/category?cat=business">Business</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h4>Company</h4>
         <ul>
-          <li><a href="/pages/about.html">About Us</a></li>
-          <li><a href="/pages/contact.html">Contact</a></li>
-          <li><a href="/privacy-policy.html">Privacy Policy</a></li>
-          <li><a href="/terms.html">Terms of Service</a></li>
-          <li><a href="/disclaimer.html">Disclaimer</a></li>
+          <li><a href="/pages/about">About Us</a></li>
+          <li><a href="/pages/contact">Contact</a></li>
+          <li><a href="/privacy-policy">Privacy Policy</a></li>
+          <li><a href="/terms">Terms of Service</a></li>
+          <li><a href="/disclaimer">Disclaimer</a></li>
           <li><a href="/sitemap.xml">Sitemap</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
       <p>&copy; <span class="footer-year"></span> SfriTrav.com — All rights reserved. Made in India 🇮🇳</p>
-      <p><a href="/privacy-policy.html">Privacy</a> · <a href="/terms.html">Terms</a> · <a href="/disclaimer.html">Disclaimer</a></p>
+      <p><a href="/privacy-policy">Privacy</a> · <a href="/terms">Terms</a> · <a href="/disclaimer">Disclaimer</a></p>
     </div>
   </div>
 </footer>
@@ -621,12 +621,12 @@
 
   // ── PREP BLOG ARTICLES ───────────────────────────────────────────
   const PREP_ARTICLES = [
-    { tag:'UPSC', tagClass:'edu-tag-psc', emoji:'🏛️', title:'UPSC CSE 2026 Complete Preparation Strategy — Prelims to Mains', link:'/pages/article.html?slug=upsc-cse-2026-complete-strategy', meta:'8 min read · Strategy Guide' },
-    { tag:'SSB',  tagClass:'edu-tag-defence', emoji:'🎖️', title:'SSB Interview 5-Day Process — PPDT, Psychological Tests, GTO & Conference Tips', link:'/pages/article.html?slug=ssb-interview-complete-guide', meta:'12 min read · Defence' },
-    { tag:'BANK', tagClass:'edu-tag-bank', emoji:'🏦', title:'IBPS PO 2026 — Section-wise Preparation Plan with Free Resources', link:'/pages/article.html?slug=ibps-po-2026-preparation-plan', meta:'7 min read · Banking' },
-    { tag:'NEET', tagClass:'edu-tag-medical', emoji:'🧬', title:'NEET UG 2026 Biology High-Yield Topics — Last 10 Years Analysis', link:'/pages/article.html?slug=neet-ug-2026-biology-high-yield', meta:'9 min read · Medical' },
-    { tag:'JKPSC',tagClass:'edu-tag-psc', emoji:'🏔️', title:'JKPSC KAS 2026 — Syllabus Breakdown, Books and Study Schedule', link:'/pages/article.html?slug=jkpsc-kas-2026-complete-guide', meta:'10 min read · J&K PSC' },
-    { tag:'NDA',  tagClass:'edu-tag-defence', emoji:'⚔️', title:'NDA 2026 Maths & GAT — Topic-wise Marks Weightage and Practice Strategy', link:'/pages/article.html?slug=nda-2026-maths-gat-strategy', meta:'8 min read · NDA' },
+    { tag:'UPSC', tagClass:'edu-tag-psc', emoji:'🏛️', title:'UPSC CSE 2026 Complete Preparation Strategy — Prelims to Mains', link:'/pages/article?slug=upsc-cse-2026-complete-strategy', meta:'8 min read · Strategy Guide' },
+    { tag:'SSB',  tagClass:'edu-tag-defence', emoji:'🎖️', title:'SSB Interview 5-Day Process — PPDT, Psychological Tests, GTO & Conference Tips', link:'/pages/article?slug=ssb-interview-complete-guide', meta:'12 min read · Defence' },
+    { tag:'BANK', tagClass:'edu-tag-bank', emoji:'🏦', title:'IBPS PO 2026 — Section-wise Preparation Plan with Free Resources', link:'/pages/article?slug=ibps-po-2026-preparation-plan', meta:'7 min read · Banking' },
+    { tag:'NEET', tagClass:'edu-tag-medical', emoji:'🧬', title:'NEET UG 2026 Biology High-Yield Topics — Last 10 Years Analysis', link:'/pages/article?slug=neet-ug-2026-biology-high-yield', meta:'9 min read · Medical' },
+    { tag:'JKPSC',tagClass:'edu-tag-psc', emoji:'🏔️', title:'JKPSC KAS 2026 — Syllabus Breakdown, Books and Study Schedule', link:'/pages/article?slug=jkpsc-kas-2026-complete-guide', meta:'10 min read · J&K PSC' },
+    { tag:'NDA',  tagClass:'edu-tag-defence', emoji:'⚔️', title:'NDA 2026 Maths & GAT — Topic-wise Marks Weightage and Practice Strategy', link:'/pages/article?slug=nda-2026-maths-gat-strategy', meta:'8 min read · NDA' },
   ];
 
   // ── TYPE → EMOJI MAPPING ─────────────────────────────────────────

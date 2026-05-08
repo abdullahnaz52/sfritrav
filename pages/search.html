@@ -15,11 +15,11 @@
     <a href="/" class="logo">SfriTrav<span class="logo-dot">.</span>com</a>
     <nav class="main-nav" id="mainNav"><ul class="nav-list">
       <li><a href="/" class="nav-link">Home</a></li>
-      <li><a href="/pages/education.html" class="nav-link">📚 Education</a></li>
-      <li><a href="/pages/category.html?cat=health" class="nav-link">Health</a></li>
-      <li><a href="/pages/category.html?cat=sports" class="nav-link">Sports</a></li>
-      <li><a href="/pages/category.html?cat=technology" class="nav-link">Tech</a></li>
-      <li><a href="/pages/category.html?cat=business" class="nav-link">Business</a></li>
+      <li><a href="/pages/education" class="nav-link">📚 Education</a></li>
+      <li><a href="/pages/category?cat=health" class="nav-link">Health</a></li>
+      <li><a href="/pages/category?cat=sports" class="nav-link">Sports</a></li>
+      <li><a href="/pages/category?cat=technology" class="nav-link">Tech</a></li>
+      <li><a href="/pages/category?cat=business" class="nav-link">Business</a></li>
     </ul></nav>
     <div class="header-actions">
       <button class="hamburger" id="hamburger" aria-expanded="false"><span></span><span></span><span></span></button>
@@ -112,12 +112,12 @@ document.addEventListener('DOMContentLoaded', function() {
     grid.innerHTML = results.map((a,i) => {
       const ci = cats[a.category] || { label: a.category, color: 'news' };
       return `<article class="card">
-        <a href="/pages/article.html?slug=${a.slug}" class="card-img-wrap">
+        <a href="/pages/article?slug=${a.slug}" class="card-img-wrap">
           <img class="card-img" src="${getImg(a.category,i)}" alt="${a.title}" loading="lazy">
         </a>
         <div class="card-body">
           <span class="tag ${ci.color}">${ci.label}</span>
-          <h3 class="card-title"><a href="/pages/article.html?slug=${a.slug}">${hi(a.title)}</a></h3>
+          <h3 class="card-title"><a href="/pages/article?slug=${a.slug}">${hi(a.title)}</a></h3>
           <p class="card-excerpt">${hi(a.excerpt)}</p>
           <div class="card-meta"><time>${new Date(a.date).toLocaleDateString('en-IN',{month:'short',day:'numeric',year:'numeric'})}</time><span class="dot">·</span><span>${a.readTime}</span></div>
         </div>

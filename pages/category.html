@@ -9,7 +9,7 @@
   <meta property="og:description" id="ogDesc" content="Your daily read.">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="canonical" id="canonicalLink" href="https://sfritrav.com/pages/category.html">
+  <link rel="canonical" href="https://sfritrav.com/pages/category">
   <meta name="google-adsense-account" content="ca-pub-7815915531609481">
   <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7815915531609481" crossorigin="anonymous"></script> -->
   <link rel="stylesheet" href="/public/css/style.css">
@@ -23,20 +23,20 @@
     <nav class="main-nav" id="mainNav">
       <ul class="nav-list">
         <li><a href="/" class="nav-link">Home</a></li>
-        <li><a href="/pages/category.html?cat=india-news" class="nav-link">India</a></li>
-        <li><a href="/pages/education.html" class="nav-link">📚 Education</a></li>
-        <li><a href="/pages/category.html?cat=health" class="nav-link">Health</a></li>
-        <li><a href="/pages/category.html?cat=sports" class="nav-link">Sports</a></li>
-        <li><a href="/pages/category.html?cat=entertainment" class="nav-link">Entertainment</a></li>
-        <li><a href="/pages/category.html?cat=technology" class="nav-link">Tech</a></li>
-        <li><a href="/pages/category.html?cat=business" class="nav-link">Business</a></li>
-        <li><a href="/pages/category.html?cat=travel" class="nav-link">Travel</a></li>
-        <li><a href="/pages/category.html?cat=food" class="nav-link">Food</a></li>
-        <li><a href="/pages/category.html?cat=jobs" class="nav-link">Jobs</a></li>
+        <li><a href="/pages/category?cat=india-news" class="nav-link">India</a></li>
+        <li><a href="/pages/education" class="nav-link">📚 Education</a></li>
+        <li><a href="/pages/category?cat=health" class="nav-link">Health</a></li>
+        <li><a href="/pages/category?cat=sports" class="nav-link">Sports</a></li>
+        <li><a href="/pages/category?cat=entertainment" class="nav-link">Entertainment</a></li>
+        <li><a href="/pages/category?cat=technology" class="nav-link">Tech</a></li>
+        <li><a href="/pages/category?cat=business" class="nav-link">Business</a></li>
+        <li><a href="/pages/category?cat=travel" class="nav-link">Travel</a></li>
+        <li><a href="/pages/category?cat=food" class="nav-link">Food</a></li>
+        <li><a href="/pages/category?cat=jobs" class="nav-link">Jobs</a></li>
       </ul>
     </nav>
     <div class="header-actions">
-      <a href="/pages/search.html" class="btn-search">🔍</a>
+      <a href="/pages/search" class="btn-search">🔍</a>
       <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
     </div>
   </div>
@@ -73,7 +73,7 @@
 
 <footer class="site-footer">
   <div class="footer-bottom" style="padding:1.25rem 0;text-align:center;font-size:.78rem;color:rgba(255,255,255,.4);">
-    <div class="container"><p>&copy; <span class="footer-year"></span> SfriTrav.com | <a href="/" style="color:rgba(255,255,255,.4)">Home</a> · <a href="/privacy-policy.html" style="color:rgba(255,255,255,.4)">Privacy</a> · <a href="/pages/contact.html" style="color:rgba(255,255,255,.4)">Contact</a></p></div>
+    <div class="container"><p>&copy; <span class="footer-year"></span> SfriTrav.com | <a href="/" style="color:rgba(255,255,255,.4)">Home</a> · <a href="/privacy-policy" style="color:rgba(255,255,255,.4)">Privacy</a> · <a href="/pages/contact" style="color:rgba(255,255,255,.4)">Contact</a></p></div>
   </div>
 </footer>
 
@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('pageDesc').content = catDesc;
   if (document.getElementById('ogTitle')) document.getElementById('ogTitle').content = `${meta.label} — SfriTrav`;
   if (document.getElementById('ogDesc'))  document.getElementById('ogDesc').content  = catDesc;
-  document.getElementById('canonicalLink').href = `https://sfritrav.com/pages/category.html?cat=${cat}`;
+  document.getElementById('canonicalLink').href = `https://sfritrav.com/pages/category?cat=${cat}`;
   document.getElementById('catHeading').textContent = `${meta.emoji || ''} ${meta.label}`;
   document.getElementById('breadcrumbCat').textContent = meta.label;
   const subEl = document.getElementById('catSubheading');
@@ -138,12 +138,12 @@ document.addEventListener('DOMContentLoaded', function() {
     grid.innerHTML = slice.map((a,i) => {
       const catInfo = CATS[a.category] || { label: a.category, color: 'news' };
       return `<article class="card">
-        <a href="/pages/article.html?slug=${a.slug}" class="card-img-wrap">
+        <a href="/pages/article?slug=${a.slug}" class="card-img-wrap">
           <img class="card-img" src="${getImg(a.category, i)}" alt="${a.title}" loading="lazy">
         </a>
         <div class="card-body">
           <span class="tag ${catInfo.color}">${catInfo.label}</span>
-          <h3 class="card-title"><a href="/pages/article.html?slug=${a.slug}">${a.title}</a></h3>
+          <h3 class="card-title"><a href="/pages/article?slug=${a.slug}">${a.title}</a></h3>
           <p class="card-excerpt">${a.excerpt}</p>
           <div class="card-meta"><time>${new Date(a.date).toLocaleDateString('en-IN',{month:'short',day:'numeric',year:'numeric'})}</time><span class="dot">·</span><span>${a.readTime}</span></div>
         </div>

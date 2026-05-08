@@ -781,12 +781,12 @@
   /* ===== CARD HTML ===== */
   function cardHTML(a, i = 0) {
     return `<article class="card">
-      <a href="/pages/article.html?slug=${a.slug}" class="card-img-wrap">
+      <a href="/pages/article?slug=${a.slug}" class="card-img-wrap">
         <img class="card-img" src="${getImg(a.category, i)}" alt="${a.title}" loading="lazy" width="700" height="394">
       </a>
       <div class="card-body">
         <span class="tag ${catColor(a.category)}">${catLabel(a.category)}</span>
-        <h3 class="card-title"><a href="/pages/article.html?slug=${a.slug}">${a.title}</a></h3>
+        <h3 class="card-title"><a href="/pages/article?slug=${a.slug}">${a.title}</a></h3>
         <p class="card-excerpt">${a.excerpt}</p>
         <div class="card-meta"><time datetime="${a.date}">${fmtDate(a.date)}</time><span class="dot">·</span><span>${a.readTime} read</span></div>
       </div>
@@ -809,7 +809,7 @@
 
         const items = [...data.trending, ...data.trending]; // doubled for loop
         const newHTML = items.map(t =>
-          `<a href="/pages/article.html?title=${encodeURIComponent(t.title)}&cat=${encodeURIComponent(t.category||'india-news')}&gen=1" data-cat="${t.category||'india-news'}"><span class="trend-hash">#</span>${t.title}</a><span class="ticker-sep"> · </span>`
+          `<a href="/pages/article?title=${encodeURIComponent(t.title)}&cat=${encodeURIComponent(t.category||'india-news')}&gen=1" data-cat="${t.category||'india-news'}"><span class="trend-hash">#</span>${t.title}</a><span class="ticker-sep"> · </span>`
         ).join('');
 
         // Use RAF scroller if ready, else fallback to innerHTML
@@ -834,12 +834,12 @@
     if (heroMain && featured[0]) {
       const a = featured[0];
       heroMain.innerHTML = `
-        <a href="/pages/article.html?slug=${a.slug}">
+        <a href="/pages/article?slug=${a.slug}">
           <img class="hero-main-img" src="${getImg(a.category,0)}" alt="${a.title}" loading="eager" width="800" height="450">
         </a>
         <div class="hero-main-body">
           <span class="tag ${catColor(a.category)}">${catLabel(a.category)}</span>
-          <h2 class="hero-main-title"><a href="/pages/article.html?slug=${a.slug}">${a.title}</a></h2>
+          <h2 class="hero-main-title"><a href="/pages/article?slug=${a.slug}">${a.title}</a></h2>
           <p class="hero-main-excerpt">${a.excerpt}</p>
           <div class="hero-meta"><time>${fmtDate(a.date)}</time><span class="dot">·</span><span>${a.readTime} read</span></div>
         </div>`;
@@ -854,7 +854,7 @@
           <img class="hero-side-img" src="${getImg(a.category, i)}" alt="${a.title}" loading="lazy">
           <div class="hero-side-body">
             <span class="tag ${catColor(a.category)}">${catLabel(a.category)}</span>
-            <h3 class="hero-side-title"><a href="/pages/article.html?slug=${a.slug}">${a.title}</a></h3>
+            <h3 class="hero-side-title"><a href="/pages/article?slug=${a.slug}">${a.title}</a></h3>
             <div class="hero-side-meta">${fmtDate(a.date)}</div>
           </div>
         </div>`).join('');
@@ -874,7 +874,7 @@
           <div class="num-item">
             <span class="num-badge">${String(i+1).padStart(2,'0')}</span>
             <div>
-              <div class="num-title"><a href="/pages/article.html?slug=${a.slug}">${a.title}</a></div>
+              <div class="num-title"><a href="/pages/article?slug=${a.slug}">${a.title}</a></div>
               <div class="num-meta">${catLabel(a.category)} · ${fmtDate(a.date)}</div>
             </div>
           </div>`).join('')
