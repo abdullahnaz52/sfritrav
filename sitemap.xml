@@ -1,186 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-  <!-- Homepage -->
-  <url>
-    <loc>https://sfritrav.com/</loc>
-    <changefreq>hourly</changefreq>
-    <priority>1.0</priority>
-  </url>
-
-  <!-- Education & Exams — Priority Page -->
-  <url>
-    <loc>https://sfritrav.com/pages/education</loc>
-    <changefreq>hourly</changefreq>
-    <priority>0.95</priority>
-  </url>
-
-  <!-- Core pages -->
-  <url>
-    <loc>https://sfritrav.com/pages/article</loc>
-    <changefreq>hourly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://sfritrav.com/pages/search</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <!-- Category pages -->
-  <url>
-    <loc>https://sfritrav.com/pages/category?cat=education</loc>
-    <changefreq>hourly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://sfritrav.com/pages/category?cat=india-news</loc>
-    <changefreq>hourly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://sfritrav.com/pages/category?cat=health</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://sfritrav.com/pages/category?cat=sports</loc>
-    <changefreq>hourly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://sfritrav.com/pages/category?cat=technology</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://sfritrav.com/pages/category?cat=business</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://sfritrav.com/pages/category?cat=jobs</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://sfritrav.com/pages/category?cat=global-news</loc>
-    <changefreq>hourly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://sfritrav.com/pages/category?cat=entertainment</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://sfritrav.com/pages/category?cat=women-health</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.75</priority>
-  </url>
-  <url>
-    <loc>https://sfritrav.com/pages/category?cat=men-health</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.75</priority>
-  </url>
-  <url>
-    <loc>https://sfritrav.com/pages/category?cat=mental-health</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.75</priority>
-  </url>
-  <url>
-    <loc>https://sfritrav.com/pages/category?cat=food</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.75</priority>
-  </url>
-  <url>
-    <loc>https://sfritrav.com/pages/category?cat=travel</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.75</priority>
-  </url>
-  <url>
-    <loc>https://sfritrav.com/pages/category?cat=fashion</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.75</priority>
-  </url>
-  <url>
-    <loc>https://sfritrav.com/pages/category?cat=environment</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.75</priority>
-  </url>
-  <url>
-    <loc>https://sfritrav.com/pages/category?cat=ayurveda</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.75</priority>
-  </url>
-  <url>
-    <loc>https://sfritrav.com/pages/category?cat=kids</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.75</priority>
-  </url>
-  <url>
-    <loc>https://sfritrav.com/pages/category?cat=politics</loc>
-    <changefreq>hourly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- Education article slugs (high SEO value) -->
-  <url>
-    <loc>https://sfritrav.com/pages/article?slug=upsc-cse-2026-complete-strategy</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://sfritrav.com/pages/article?slug=jkpsc-kas-2026-complete-guide</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://sfritrav.com/pages/article?slug=ssb-interview-complete-guide</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.88</priority>
-  </url>
-  <url>
-    <loc>https://sfritrav.com/pages/article?slug=ibps-po-2026-preparation-plan</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.88</priority>
-  </url>
-  <url>
-    <loc>https://sfritrav.com/pages/article?slug=neet-ug-2026-biology-high-yield</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.88</priority>
-  </url>
-  <url>
-    <loc>https://sfritrav.com/pages/article?slug=nda-2026-maths-gat-strategy</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.88</priority>
-  </url>
-
-  <!-- Policy / Legal pages -->
-  <url>
-    <loc>https://sfritrav.com/privacy-policy</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://sfritrav.com/terms</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://sfritrav.com/disclaimer</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://sfritrav.com/pages/about</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://sfritrav.com/pages/contact</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
-  </url>
-
+<url><loc>https://sfritrav.com/</loc><changefreq>daily</changefreq><priority>1.0</priority><lastmod>2026-06-13</lastmod></url>
+<url><loc>https://sfritrav.com/articles/</loc><changefreq>daily</changefreq><priority>0.9</priority><lastmod>2026-06-13</lastmod></url>
+<url><loc>https://sfritrav.com/articles/morning-habits-transform-health/</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://sfritrav.com/articles/budget-travel-destinations-india/</loc><lastmod>2026-04-14</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://sfritrav.com/articles/india-economic-outlook/</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://sfritrav.com/articles/india-cricket-season-preview/</loc><lastmod>2026-04-12</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://sfritrav.com/articles/skincare-routine-indian-skin/</loc><lastmod>2026-04-11</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://sfritrav.com/articles/best-smartphones-india-budget/</loc><lastmod>2026-04-10</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://sfritrav.com/articles/india-stock-market-outlook/</loc><lastmod>2026-04-09</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://sfritrav.com/articles/ashwagandha-science-benefits/</loc><lastmod>2026-04-08</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://sfritrav.com/articles/government-jobs-india-latest/</loc><lastmod>2026-04-07</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://sfritrav.com/articles/india-climate-heatwave-guide/</loc><lastmod>2026-04-06</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://sfritrav.com/articles/mental-health-india-help-resources/</loc><lastmod>2026-04-05</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://sfritrav.com/articles/indian-street-food-city-guide/</loc><lastmod>2026-04-04</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://sfritrav.com/articles/india-politics-key-issues/</loc><lastmod>2026-04-03</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://sfritrav.com/articles/bollywood-ott-must-watch/</loc><lastmod>2026-04-02</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://sfritrav.com/articles/global-news-round-up/</loc><lastmod>2026-04-01</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://sfritrav.com/articles/mens-health-guide-india/</loc><lastmod>2026-03-30</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://sfritrav.com/articles/fashion-trends-india/</loc><lastmod>2026-03-28</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://sfritrav.com/articles/parenting-tips-india/</loc><lastmod>2026-03-26</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://sfritrav.com/articles/best-health-insurance-india/</loc><lastmod>2026-04-20</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://sfritrav.com/articles/best-mutual-funds-india-beginners/</loc><lastmod>2026-04-19</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://sfritrav.com/articles/best-credit-cards-india/</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://sfritrav.com/articles/work-from-home-jobs-india/</loc><lastmod>2026-04-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://sfritrav.com/articles/diabetes-management-india-guide/</loc><lastmod>2026-04-21</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://sfritrav.com/articles/kashmir-travel-guide-complete/</loc><lastmod>2026-04-20</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://sfritrav.com/articles/how-to-sleep-better-india/</loc><lastmod>2026-04-19</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://sfritrav.com/articles/high-protein-vegetarian-foods-india/</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://sfritrav.com/articles/home-workout-plan-india-no-gym/</loc><lastmod>2026-04-16</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://sfritrav.com/articles/ai-impact-jobs-india/</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://sfritrav.com/articles/pcos-guide-india-women/</loc><lastmod>2026-04-14</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://sfritrav.com/articles/air-pollution-india-protect-health/</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://sfritrav.com/articles/upi-tips-safe-payments-india/</loc><lastmod>2026-04-12</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://sfritrav.com/articles/gut-health-ayurveda-modern-science/</loc><lastmod>2026-04-11</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://sfritrav.com/articles/upsc-cse-2026-complete-strategy/</loc><lastmod>2026-04-20</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://sfritrav.com/articles/jkpsc-kas-2026-complete-guide/</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://sfritrav.com/articles/ssb-interview-complete-guide/</loc><lastmod>2026-04-22</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://sfritrav.com/articles/ibps-po-2026-preparation-plan/</loc><lastmod>2026-04-16</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://sfritrav.com/articles/neet-ug-2026-biology-high-yield/</loc><lastmod>2026-04-10</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://sfritrav.com/pages/category?cat=health</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://sfritrav.com/pages/category?cat=travel</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://sfritrav.com/pages/category?cat=sports</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://sfritrav.com/pages/category?cat=technology</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://sfritrav.com/pages/category?cat=business</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://sfritrav.com/pages/category?cat=india-news</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://sfritrav.com/pages/category?cat=entertainment</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://sfritrav.com/pages/category?cat=food</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://sfritrav.com/pages/category?cat=jobs</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://sfritrav.com/pages/category?cat=education</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
 </urlset>
