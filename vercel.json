@@ -16,6 +16,14 @@
   ],
   "rewrites": [
     {
+      "source": "/articles/:slug",
+      "destination": "/articles/:slug/index.html"
+    },
+    {
+      "source": "/articles",
+      "destination": "/articles/index.html"
+    },
+    {
       "source": "/sitemap.xml",
       "destination": "/api/sitemap"
     },
